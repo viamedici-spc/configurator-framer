@@ -1,0 +1,86 @@
+{
+  "name": "@viamedici-spc/configurator-framer",
+  "version": "0.0.0",
+  "description": "Component library to build configurator apps with Framer based on Viamedici SPC.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viamedici-spc/configurator-framer.git"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "tsc -p ./tsconfig.test.json --noEmit && vitest --run",
+    "test:watch": "vitest watch --reporter default",
+    "dev": "vite build --watch --mode development & vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "viamedici",
+    "product",
+    "configuration",
+    "configurator",
+    "spc",
+    "hca",
+    "csp",
+    "constraint",
+    "satisfaction",
+    "problem",
+    "solver",
+    "framer"
+  ],
+  "author": "Viamedici Software GmbH",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^18.2.42",
+    "@types/react-dom": "^18.2.17",
+    "@vitest/coverage-istanbul": "^0.34.1",
+    "framer": "^2.4.1",
+    "jsdom": "^22.1.0",
+    "npm-sort": "^0.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.8",
+    "vite-plugin-checker": "^0.6.1",
+    "vite-plugin-dts": "^3.5.0",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.26.9",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@viamedici-spc/configurator-react": "0.1.0-alpha0030",
+    "@viamedici-spc/configurator-ts": "1.1.1",
+    "@viamedici-spc/fp-ts-extensions": "1.1.0",
+    "clsx": "^2.1.0",
+    "dyna-guid": "^2.1.2",
+    "fp-ts": "^2.16.2",
+    "hex-to-css-filter": "^5.4.0",
+    "merge-props": "^6.0.0",
+    "react-error-boundary": "^4.0.11",
+    "react-number-format": "^4.9.3",
+    "rgb-hex": "^4.1.0",
+    "styled-components": "^6.1.1",
+    "ts-pattern": "^5.0.6",
+    "use-debounce": "^8.0.4"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "framer": ">=2.4.1"
+  }
+}

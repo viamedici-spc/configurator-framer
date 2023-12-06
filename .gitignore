@@ -1,0 +1,6 @@
+.idea
+node_modules
+/**/dist
+/report/
+.DS_Store
+/packages/configurator-framer/report/tests-results.xml

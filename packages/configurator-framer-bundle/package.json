@@ -1,0 +1,57 @@
+{
+  "name": "@viamedici-spc/configurator-framer-bundle",
+  "version": "0.0.0",
+  "description": "Component library to build configurator apps with Framer based on Viamedici SPC. All dependencies are bundled together.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viamedici-spc/configurator-framer.git"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "preinstall": "npm --prefix ../configurator-framer install",
+    "build": "npm --prefix ../configurator-framer run build && vite build",
+    "test": "npm --prefix ../configurator-framer run test",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "viamedici",
+    "product",
+    "configuration",
+    "configurator",
+    "spc",
+    "hca",
+    "csp",
+    "constraint",
+    "satisfaction",
+    "problem",
+    "solver",
+    "framer"
+  ],
+  "author": "Viamedici Software GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@viamedici-spc/configurator-framer": "file:../configurator-framer",
+    "@viamedici-spc/configurator-react": "0.1.0-alpha0030",
+    "@viamedici-spc/configurator-ts": "1.1.1"
+  },
+  "devDependencies": {
+    "npm-sort": "^0.0.4",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.8",
+    "vite-plugin-checker": "^0.6.1",
+    "vite-plugin-dts": "^3.5.0"
+  }
+}

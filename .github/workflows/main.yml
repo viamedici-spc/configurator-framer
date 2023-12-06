@@ -1,0 +1,26 @@
+name: Build and Publish
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+    build-publish-npm-configurator-framer:
+        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v1
+        with:
+            project-dir: 'packages/configurator-framer'
+            node-version: '18'
+            build-verbs: 'test,build'
+            build-jspm: true
+            skip-publish: false
+        secrets:
+            npm_token: ${{ secrets.NPM_TOKEN }}
+
+    build-publish-npm-configurator-framer-bundle:
+        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v1
+        with:
+            project-dir: 'packages/configurator-framer-bundle'
+            node-version: '18'
+            build-verbs: 'test,build'
+            build-jspm: true
+            skip-publish: false
+        secrets:
+            npm_token: ${{ secrets.NPM_TOKEN }}
