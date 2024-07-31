@@ -1,15 +1,10 @@
 import styled from "styled-components";
 import useExplainProcess from "../../../hooks/useExplainProcess";
-import PopoverClose from "../../popover/PopoverClose";
 import AttributeList from "../common/AttributeList";
 import ShowMoreButton from "./ShowMoreButton";
-import ExplainHeader from "../common/ExplainHeader";
 import ApplySolutionButton from "../common/ApplySolutionButton";
-import {ExplainShell} from "./ExplainShell";
-import {match} from "ts-pattern";
-import {ReactNode} from "react";
-import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import InfoMessage from "../common/InfoMessage";
+import {useExplainPopoverProps} from "../../../props/explainPopoverProps";
 
 const SolutionTitle = styled.div`
     font-weight: 500;
@@ -77,6 +72,8 @@ const StyledInfoMessage = styled(InfoMessage)`
 
 export default function ExplainContent() {
     const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {solutionTitle, applySolutionButtonCaption} = useExplainPopoverProps();
+
 
     if (hasError) {
         return <StyledInfoMessage variant="failedToExplain"/>
@@ -94,7 +91,7 @@ export default function ExplainContent() {
     const desiredDecisions = explanation.solution.decisions.filter(d => d.state != null);
     return (
         <>
-            <SolutionTitle>Solution</SolutionTitle>
+            <SolutionTitle>{solutionTitle}</SolutionTitle>
 
             <Separator/>
             <StyledAttributeList blockingDecisions={explanation.causedByDecisions} desiredDecisions={desiredDecisions}/>
@@ -102,7 +99,7 @@ export default function ExplainContent() {
 
             <Actions>
                 <StyledApplySolutionButton explanation={explanation}>
-                    Apply solution
+                    {applySolutionButtonCaption}
                 </StyledApplySolutionButton>
 
                 {(decisionExplanations.length > 1 || constraintExplanations.length > 0) && <ShowMoreButton/>}

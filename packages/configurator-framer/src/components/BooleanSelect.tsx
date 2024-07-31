@@ -119,7 +119,7 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
             {isFalseAllowed && falseOption}
 
             {(!isTrueAllowed || !isFalseAllowed) && (
-                <optgroup label="Blocked">
+                <optgroup label={props.blockedLabel}>
                     {!isTrueAllowed && trueOption}
                     {!isFalseAllowed && falseOption}
                 </optgroup>

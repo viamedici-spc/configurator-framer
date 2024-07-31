@@ -3,6 +3,7 @@ import useExplainProcess from "../../../hooks/useExplainProcess";
 import DecisionExplanation from "./DecisionExplanation";
 import ConstraintExplanation from "./ConstraintExplanation";
 import InfoMessage from "../common/InfoMessage";
+import {useExplainDialogProps} from "../../../props/explainDialogProps";
 
 const GroupTitle = styled.div`
     font-weight: 500;
@@ -31,6 +32,7 @@ const StyledInfoMessage = styled(InfoMessage)`
 
 export default function ExplainContent() {
     const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {decisionExplanationSolutionsTitle, constraintExplanationSolutionsTitle} = useExplainDialogProps();
 
     if (hasError) {
         return <StyledInfoMessage variant="failedToExplain"/>
@@ -44,7 +46,7 @@ export default function ExplainContent() {
         <Groups>
             {decisionExplanations.length > 0 && (
                 <div>
-                    <GroupTitle>Solutions</GroupTitle>
+                    <GroupTitle>{decisionExplanationSolutionsTitle}</GroupTitle>
                     <Explanations>
                         {decisionExplanations.map(e => <DecisionExplanation key={decisionExplanations.indexOf(e)} explanation={e}/>)}
                     </Explanations>
@@ -53,7 +55,7 @@ export default function ExplainContent() {
 
             {constraintExplanations.length > 0 && (
                 <div>
-                    <GroupTitle>Constraint Explanations</GroupTitle>
+                    <GroupTitle>{constraintExplanationSolutionsTitle}</GroupTitle>
                     <Explanations>
                         {constraintExplanations.map(e => <ConstraintExplanation key={constraintExplanations.indexOf(e)} explanation={e}/>)}
                     </Explanations>

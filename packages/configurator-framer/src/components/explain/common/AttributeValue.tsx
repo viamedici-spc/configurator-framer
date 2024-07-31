@@ -3,6 +3,8 @@ import styled from "styled-components";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
+import {ChoiceValueNames} from "../../../hooks/localization";
+import useCommonExplainProps from "../../../props/useCommonExplainProps";
 
 const Root = styled.div`
     display: flex;
@@ -47,10 +49,11 @@ export type Decision = (CausedByDecision | ExplicitDecision) & {
     intention: "add" | "remove"
 }
 
-export function AttributeValue(props: { decision: Decision }) {
-    const {decision} = props;
+export function AttributeValue(props: { decision: Decision, choiceValuesNames: ChoiceValueNames }) {
+    const {decision, choiceValuesNames} = props;
     const intention = decision.intention;
-    const name = getDecisionStateDisplayName(decision);
+    const commonExplainProps = useCommonExplainProps();
+    const name = getDecisionStateDisplayName(decision, choiceValuesNames, commonExplainProps);
 
     return (
         <Root>

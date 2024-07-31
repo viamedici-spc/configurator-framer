@@ -7,7 +7,7 @@ import Dialog from "../../dialog/Dialog";
 import DialogContent, {defaultOverlayStyle} from "../../dialog/DialogContent";
 import FreezeExplainContext from "../common/FreezeExplainContext";
 import {ExplainShell} from "./ExplainShell";
-import {ExplainDialogProps} from "../../../props/explainDialogProps";
+import {ExplainDialogProps, explainDialogPropsContext} from "../../../props/explainDialogProps";
 import {FloatingOverlay} from "@floating-ui/react";
 
 type Props = ExplainDialogProps & {
@@ -59,13 +59,15 @@ function Animated(props: PropsWithChildren<ExplainDialogProps & { isOpen: boolea
     return (
         <AnimatePresence initial={false}>
             {props.isOpen && (
-                <Root {...props} components={{Overlay}}>
-                    {/*Freeze the explain context otherwise the out-animation won't work correctly.*/}
-                    {/*Freezing is ok okay, as the explain process won't update while displayed.*/}
-                    <FreezeExplainContext>
-                        {props.children}
-                    </FreezeExplainContext>
-                </Root>
+                <explainDialogPropsContext.Provider value={props}>
+                    <Root {...props} components={{Overlay}}>
+                        {/*Freeze the explain context otherwise the out-animation won't work correctly.*/}
+                        {/*Freezing is ok okay, as the explain process won't update while displayed.*/}
+                        <FreezeExplainContext>
+                            {props.children}
+                        </FreezeExplainContext>
+                    </Root>
+                </explainDialogPropsContext.Provider>
             )}
         </AnimatePresence>
     )

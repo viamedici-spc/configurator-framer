@@ -10,6 +10,7 @@ import Singleton from "./Singleton";
 import {ChoiceValueId} from "@viamedici-spc/configurator-ts";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
+import {ChoiceValueNames, useChoiceValueNames} from "../hooks/localization";
 
 type Props = AttributeIdProps & {
     itemTemplate: ReactNode,
@@ -57,36 +58,39 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
         return <span>Choice Value Template not defined</span>
     }
 
-    const renderChoiceValues = (choiceValues: ChoiceValueId[]) => choiceValues.map(v => cloneElement(itemTemplate, {
+    const renderChoiceValues = (choiceValues: ChoiceValueId[], choiceValueNames: ChoiceValueNames) => choiceValues.map(v => cloneElement(itemTemplate, {
             key: v,
             layoutId: `${controlId}_${v}`,
             attributeId: props.attributeId,
             componentPath: props.componentPath,
             sharedConfigurationModel: props.sharedConfigurationModel,
-            choiceValueId: v
+            choiceValueId: v,
+            choiceValueName: choiceValueNames[v] ?? v
         }
     ));
 
     if (renderPlaceholder) {
         return (
             <Inner {...props}>
-                {renderChoiceValues(["Choice Value 1", "Choice Value 2", "Choice Value 3"])}
+                {renderChoiceValues(["Choice Value 1", "Choice Value 2", "Choice Value 3"], {})}
             </Inner>
         )
     }
 
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceAttribute = useChoiceAttribute(globalAttributeId);
-    const choiceValues = useSortedChoiceValues(globalAttributeId);
+    const choiceValueNames = useChoiceValueNames(globalAttributeId);
+    const choiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames);
 
     if (!choiceAttribute) {
         return <span>Choice Attribute not found</span>
     }
+
     const choiceValueIds = choiceValues.map(v => v.id);
 
     return (
         <Inner {...props}>
-            {renderChoiceValues(choiceValueIds)}
+            {renderChoiceValues(choiceValueIds, choiceValueNames)}
         </Inner>
     )
 }))

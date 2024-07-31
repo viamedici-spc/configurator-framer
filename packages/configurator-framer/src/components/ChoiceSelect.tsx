@@ -13,6 +13,7 @@ import {explainableComponent} from "../common/componentComposites";
 import {useControlId} from "../common/controlId";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
+import {useChoiceValueNames} from "../hooks/localization";
 
 const Root = styled.select`
     color: inherit;
@@ -42,15 +43,15 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
     const controlId = useControlId();
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceAttribute = useChoiceAttribute(globalAttributeId);
-    const {explain} = useExplain();
-
     if (!choiceAttribute) {
         return <span>Choice Attribute not found</span>
     }
 
+    const {explain} = useExplain();
+    const choiceValueNames = useChoiceValueNames(globalAttributeId);
     const {attribute, makeDecision, clearDecisions} = choiceAttribute;
-    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, AttributeInterpreter.getAllowedChoiceValues(attribute));
-    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, AttributeInterpreter.getBlockedChoiceValues(attribute));
+    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, AttributeInterpreter.getAllowedChoiceValues(attribute));
+    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, AttributeInterpreter.getBlockedChoiceValues(attribute));
     const isMultiselect = AttributeInterpreter.isMultiSelect(attribute);
     const selectedChoiceValues = AttributeInterpreter.getSelectedChoiceValues(attribute);
     const selectedChoiceValueIds = selectedChoiceValues.map((a) => a.id);
@@ -108,15 +109,15 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
             {allowedChoiceValues.map((v) => (
                 <option key={v.id} value={v.id}>
                     {v.decision?.kind === DecisionKind.Implicit ? props.implicitLabelPrefix : ""}
-                    {v.id}
+                    {choiceValueNames[v.id] ?? v.id}
                 </option>
             ))}
 
             {blockedChoiceValues.length > 0 && (
-                <optgroup label="Blocked">
+                <optgroup label={props.blockedLabel}>
                     {blockedChoiceValues.map((v) => (
                         <option key={v.id} value={v.id}>
-                            {v.id}
+                            {choiceValueNames[v.id] ?? v.id}
                         </option>
                     ))}
                 </optgroup>

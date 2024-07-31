@@ -1,6 +1,8 @@
 import {ControlType, PropertyControls} from "framer";
+import {createContext, useContext} from "react";
+import {commonExplainPropertyControls, CommonExplainProps} from "./commonExplainProps";
 
-export type ExplainDialogProps = {
+export type ExplainDialogProps = CommonExplainProps & {
     attributeValueFill: string
     attributeValueAddFill: string
     attributeValueAddColor: string
@@ -16,6 +18,8 @@ export type ExplainDialogProps = {
     explanationCard: string
     scrollShadowBorder: string
     backdropFilter: string
+    decisionExplanationSolutionsTitle: string
+    constraintExplanationSolutionsTitle: string
 }
 
 export const explainDialogPropertyControls = {
@@ -93,5 +97,19 @@ export const explainDialogPropertyControls = {
         title: "Backdrop Filter",
         type: ControlType.String,
         defaultValue: "blur(10px) saturate(200%)"
-    }
+    },
+    decisionExplanationSolutionsTitle: {
+        title: "Decision Explanation Solutions Title",
+        type: ControlType.String,
+        defaultValue: "Solutions"
+    },
+    constraintExplanationSolutionsTitle: {
+        title: "Constraint Explanation Solutions Title",
+        type: ControlType.String,
+        defaultValue: "Constraint Explanations"
+    },
+    ...commonExplainPropertyControls
 } satisfies PropertyControls<ExplainDialogProps>;
+
+export const explainDialogPropsContext = createContext<ExplainDialogProps>(null);
+export const useExplainDialogProps = (): ExplainDialogProps => useContext(explainDialogPropsContext);

@@ -1,7 +1,8 @@
 import {ControlType, PropertyControls} from "framer";
-import {createContext} from "react";
+import {createContext, useContext} from "react";
+import {commonExplainPropertyControls, CommonExplainProps} from "./commonExplainProps";
 
-export type ExplainPopoverProps = {
+export type ExplainPopoverProps = CommonExplainProps & {
     attributeValueFill: string;
     attributeValueAddFill: string;
     attributeValueAddColor: string;
@@ -16,6 +17,9 @@ export type ExplainPopoverProps = {
     applySolutionButtonColor: string;
     applySolutionButtonOutline: string;
     showMoreButtonOutline: string;
+    solutionTitle: string;
+    showMoreButtonCaption: string;
+    showConstraintsButtonCaption: string;
 }
 
 export const explainPopoverPropertyControls = {
@@ -88,7 +92,24 @@ export const explainPopoverPropertyControls = {
         title: "Show More Button Outline",
         type: ControlType.Color,
         defaultValue: "rgba(255, 255, 255, 0.8)"
-    }
+    },
+    solutionTitle: {
+        title: "Solution Title",
+        type: ControlType.String,
+        defaultValue: "Solution"
+    },
+    showMoreButtonCaption: {
+        title: "Show More Button Caption",
+        type: ControlType.String,
+        defaultValue: "Show more ({{amount}})"
+    },
+    showConstraintsButtonCaption: {
+        title: "Show Constraints Button Caption",
+        type: ControlType.String,
+        defaultValue: "Show Constraints"
+    },
+    ...commonExplainPropertyControls
 } satisfies PropertyControls<ExplainPopoverProps>;
 
 export const explainPopoverPropsContext = createContext<ExplainPopoverProps>(null);
+export const useExplainPopoverProps = (): ExplainPopoverProps => useContext(explainPopoverPropsContext);

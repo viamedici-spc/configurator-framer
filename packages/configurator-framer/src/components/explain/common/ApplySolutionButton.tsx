@@ -1,7 +1,6 @@
 import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 import useExplainProcess from "../../../hooks/useExplainProcess";
-import styled from "styled-components";
-import {ButtonHTMLAttributes, DetailedHTMLProps, HTMLProps, PropsWithChildren} from "react";
+import {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
 
 type Props = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
     explanation: DecisionExplanation

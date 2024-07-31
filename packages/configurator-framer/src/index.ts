@@ -15,7 +15,9 @@ import useDebounceValue from "./hooks/useDebounceValue";
 import useRenderPlaceholder from "./hooks/useRenderPlaceholder";
 import withFullSize from "./hoc/withFullSize";
 import ScrollIntoView from "./components/ScrollIntoView";
-import ChoiceValueListRenderer from "./components/./ChoiceValueListRenderer";
+import ChoiceValueListRenderer from "./components/ChoiceValueListRenderer";
+import AttributeName from "./components/AttributeName";
+import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
 import useSortedChoiceValues from "./hooks/useSortedChoiceValues";
 
@@ -34,6 +36,8 @@ export {
     Colorize,
     InitializationRetry,
     ChoiceValueListRenderer,
+    AttributeName,
+    ChoiceValueName,
     Singleton,
     ScrollIntoView,
     useDebounceValue,

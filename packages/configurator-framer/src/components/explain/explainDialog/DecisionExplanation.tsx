@@ -3,6 +3,7 @@ import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import AttributeList from "../common/AttributeList";
 import ExplanationCard from "./ExplanationCard";
+import {useExplainDialogProps} from "../../../props/explainDialogProps";
 
 const StyledAttributeList = styled(AttributeList)`
     display: grid;
@@ -31,13 +32,14 @@ const StyledApplySolutionButton = styled(ApplySolutionButton)`
 
 export default function DecisionExplanation(props: { explanation: DecisionExplanation }) {
     const {explanation} = props;
+    const {applySolutionButtonCaption} = useExplainDialogProps();
     const desiredDecisions = explanation.solution.decisions.filter(d => d.state != null);
 
     return (
         <ExplanationCard>
             <StyledAttributeList blockingDecisions={explanation.causedByDecisions} desiredDecisions={desiredDecisions}/>
             <StyledApplySolutionButton explanation={explanation}>
-                Apply solution
+                {applySolutionButtonCaption}
             </StyledApplySolutionButton>
         </ExplanationCard>
     )

@@ -1,7 +1,7 @@
-import {addPropertyControls, ControlType} from "framer"
+import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
 import {AllowedRulesInExplainType, ClientSideLifeTimeHandlerOptions, ConfigurationModelSourceType, createClient, ServerSideLifeTimeHandlerOptions,} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration, ConfigurationSuspender,} from "@viamedici-spc/configurator-react"
-import {PropsWithChildren, Suspense, useMemo} from "react"
+import {PropsWithChildren, Suspense, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
@@ -16,8 +16,10 @@ import {O, pipe} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";
 import {ChoiceValueSorting, choiceValueSortingPropertyControls, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
 import {choiceValueSortingContext} from "../hooks/useSortedChoiceValues";
+import {Localization, localizationPropertyControls, LocalizationProps} from "../props/localizationProps";
+import {localizationContext} from "../hooks/localization";
 
-type Props = InitializationErrorProps & ChoiceValueSortingProps & {
+type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & {
     hcaBaseUrl: string
     sessionCreation: "client-side" | "server-side"
     accessToken?: string,
@@ -49,6 +51,13 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         sessionDeleteUrl, deploymentName, channel, children, explainDialogProps,
         explainPopoverProps, explainConstraints
     } = props
+
+    const {activeLocale} = useLocaleInfo();
+    const localeCode = activeLocale.code;
+
+    useEffect(() => {
+        console.info("Current locale code:", localeCode)
+    }, [localeCode]);
 
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
@@ -91,6 +100,17 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         } satisfies ChoiceValueSorting))
     ), [props.choiceValueSorting]);
 
+    // TODO: Schema validation with Summons
+    const localization = useMemo(() => pipe(
+        O.fromNullable(props.localization?.jsonDefinition),
+        O.filter(d => d.length > 0),
+        O.map(d => JSON.parse(d) as Localization),
+        O.getOrElse(() => ({
+            attributes: [],
+            choiceValues: []
+        } satisfies Localization))
+    ), [props.localization]);
+
     return (
         <>
             <ViaConfiguration configuratorClient={client}
@@ -106,14 +126,16 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
 
                 <Suspense>
                     <ConfigurationSuspender>
-                        <ExplainController explainConstraints={explainConstraints}>
-                            <explainPopoverPropsContext.Provider value={explainPopoverProps}>
-                                <choiceValueSortingContext.Provider value={choiceValueSorting}>
-                                    {children}
-                                </choiceValueSortingContext.Provider>
-                            </explainPopoverPropsContext.Provider>
-                            <ExplainDialog {...explainDialogProps}/>
-                        </ExplainController>
+                        <localizationContext.Provider value={localization}>
+                            <ExplainController explainConstraints={explainConstraints}>
+                                <explainPopoverPropsContext.Provider value={explainPopoverProps}>
+                                    <choiceValueSortingContext.Provider value={choiceValueSorting}>
+                                        {children}
+                                    </choiceValueSortingContext.Provider>
+                                </explainPopoverPropsContext.Provider>
+                                <ExplainDialog {...explainDialogProps}/>
+                            </ExplainController>
+                        </localizationContext.Provider>
                     </ConfigurationSuspender>
                 </Suspense>
 
@@ -221,6 +243,7 @@ addPropertyControls(Configuration, {
             }
         }
     },
-    ...choiceValueSortingPropertyControls
+    ...choiceValueSortingPropertyControls,
+    ...localizationPropertyControls
 })
 

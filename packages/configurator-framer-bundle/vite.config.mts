@@ -20,7 +20,7 @@ export default defineConfig(() => {
             },
             rollupOptions: {
                 // Externalize dependencies which already come with Framer
-                external: ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/]
+                external: ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/, /^framer-motion.*/]
             },
         },
         plugins: [

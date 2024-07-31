@@ -120,7 +120,7 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
             {isExcludedAllowed && excludedOption}
 
             {(!isIncludedAllowed || !isExcludedAllowed) && (
-                <optgroup label="Blocked">
+                <optgroup label={props.blockedLabel}>
                     {!isIncludedAllowed && includedOption}
                     {!isExcludedAllowed && excludedOption}
                 </optgroup>

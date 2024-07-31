@@ -1,5 +1,8 @@
 import useExplainProcess from "../../../hooks/useExplainProcess";
 import styled from "styled-components";
+import {useExplainPopoverProps} from "../../../props/explainPopoverProps";
+import {useMemo} from "react";
+import Mustache from "mustache";
 
 const Root = styled.div`
     display: flex;
@@ -34,13 +37,15 @@ const Button = styled.button`
 
 export default function ShowMoreButton() {
     const {decisionExplanations, switchMode} = useExplainProcess();
+    const {showConstraintsButtonCaption, showMoreButtonCaption} = useExplainPopoverProps();
     const more = decisionExplanations.length - 1;
+    const showMoreText = useMemo(() => more > 0 && Mustache.render(showMoreButtonCaption, {amount: more}), [showMoreButtonCaption, more])
 
     return (
         <Root>
             <Button onClick={() => switchMode("dialog")}>
-                {more > 0 && <span>Show more ({more})</span>}
-                {more === 0 && <span>Show Constraints</span>}
+                {more > 0 && <span>{showMoreText}</span>}
+                {more === 0 && <span>{showConstraintsButtonCaption}</span>}
             </Button>
         </Root>
     )

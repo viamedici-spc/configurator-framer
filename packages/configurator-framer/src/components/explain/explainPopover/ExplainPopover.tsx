@@ -11,7 +11,7 @@ import {AnimatePresence, motion} from "framer";
 import {match} from "ts-pattern";
 import FreezeExplainContext from "../common/FreezeExplainContext";
 import {ExplainShell} from "./ExplainShell";
-import {ExplainPopoverProps, explainPopoverPropsContext} from "../../../props/explainPopoverProps";
+import {ExplainPopoverProps, useExplainPopoverProps} from "../../../props/explainPopoverProps";
 
 type Props = {
     content?: ReactNode;
@@ -94,7 +94,7 @@ export default function ExplainPopover(props: PropsWithChildren<Props>) {
 }
 
 function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
-    const explainPopoverProps = useContext(explainPopoverPropsContext);
+    const explainPopoverProps = useExplainPopoverProps();
     const {middlewareData, arrow, placement} = usePopoverContext();
     const arrowX = middlewareData.arrow?.x ?? 0;
     const arrowY = middlewareData.arrow?.y ?? 0;

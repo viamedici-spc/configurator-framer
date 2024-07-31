@@ -4,6 +4,7 @@ import {getInputStyle, inputPropertyControls, InputProps} from "./inputProps";
 
 export type SelectProps = InputProps & {
     resetLabel: string,
+    blockedLabel: string,
     appearance: "auto" | "none",
     textAlign: "initial" | "start" | "center" | "end"
 }
@@ -14,6 +15,11 @@ export const selectPropertyControls = {
         title: "Reset Label",
         type: ControlType.String,
         defaultValue: "Reset"
+    },
+    blockedLabel: {
+        title: "Blocked Label",
+        type: ControlType.String,
+        defaultValue: "Blocked"
     },
     appearance: {
         title: "Appearance",

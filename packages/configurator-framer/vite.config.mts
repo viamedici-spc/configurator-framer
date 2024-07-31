@@ -2,14 +2,14 @@ import {defineConfig} from "vite";
 import checker from "vite-plugin-checker";
 import dts from "vite-plugin-dts";
 
-const alwaysExternalize = ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/];
+const alwaysExternalize = ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/, /^framer-motion.*/];
 
 /*
     During development additional dependencies should not be externalized because there is no instance to create the required import map.
     At production JSPM creates the important map, so we can externalize all dependencies.
 */
 const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/,
-    /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/];
+    /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/];
 
 export default defineConfig(({command, mode, ssrBuild}) => {
     const isProduction = mode === "production";
