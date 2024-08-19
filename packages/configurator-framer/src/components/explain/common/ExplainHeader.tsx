@@ -17,14 +17,15 @@ export default function ExplainHeader(props: HTMLProps<HTMLDivElement>) {
     const {explainQuestion} = useExplainProcess();
     const {
         configurationSubjectTitle, componentDecisionStateIncludedLabel, componentDecisionStateExcludedLabel,
-        booleanDecisionStateFalseLabel, booleanDecisionStateTrueLabel, isBlockedSuffix, isNotSatisfiedSuffix
+        booleanDecisionStateFalseLabel, booleanDecisionStateTrueLabel, isBlockedSuffix, isNotSatisfiedSuffix,
+        generalConflictTitle
     } = useCommonExplainProps();
 
     if (!explainQuestion) {
         // This occurs by a setMany conflict
         return (
             <div {...props}>
-                Conflict
+                {generalConflictTitle}
             </div>
         )
     }

@@ -3,6 +3,7 @@ import {ControlType, PropertyControls} from "framer";
 export type CommonExplainProps = {
     applySolutionButtonCaption: string;
     configurationSubjectTitle: string;
+    generalConflictTitle: string;
     componentDecisionStateIncludedLabel: string;
     componentDecisionStateExcludedLabel: string;
     booleanDecisionStateTrueLabel: string;
@@ -21,6 +22,11 @@ export const commonExplainPropertyControls = {
         title: "Configuration Subject Title",
         type: ControlType.String,
         defaultValue: "Configuration"
+    },
+    generalConflictTitle: {
+        title: "General Conflict Title",
+        type: ControlType.String,
+        defaultValue: "Conflict"
     },
     componentDecisionStateIncludedLabel: {
         title: "Component Decision State Included Label",
