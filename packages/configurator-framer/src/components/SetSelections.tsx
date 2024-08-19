@@ -21,7 +21,6 @@ import {PropsWithChildren, ReactNode, useEffect} from "react";
 import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
 import {match} from "ts-pattern";
 import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
-import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {showMakeDecisionFailure} from "../common/failureAlerts";

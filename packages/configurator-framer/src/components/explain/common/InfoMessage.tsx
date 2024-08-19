@@ -1,5 +1,5 @@
 import useExplainProcess from "../../../hooks/useExplainProcess";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {HTMLProps, ReactNode} from "react";
 import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 
@@ -14,6 +14,7 @@ export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant
         .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => "why your selection is not possible")
         .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration}, () => "why your configuration is not satisfied")
         .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute}, () => "why your attribute is not satisfied")
+        .with(P.nullish, () => "why your selections are not possible")
         .exhaustive()
 
     const content = match(variant)
