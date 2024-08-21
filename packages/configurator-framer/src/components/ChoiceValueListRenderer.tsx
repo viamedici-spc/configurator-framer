@@ -7,14 +7,24 @@ import withErrorBoundary from "../common/withErrorBoundary";
 import withControlId, {useControlId} from "../common/controlId";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "./Singleton";
-import {ChoiceValueId} from "@viamedici-spc/configurator-ts";
+import {ChoiceValueDecisionState, ChoiceValueId, DecisionKind} from "@viamedici-spc/configurator-ts";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
 import {ChoiceValueNames, useChoiceValueNames} from "../hooks/localization";
+import {match} from "ts-pattern";
+
+type SelectionState = "undefined" | "included" | "excluded";
+type Condition = "none" | "explicit" | "implicit" | "blocked";
+
+type Filter = {
+    selection: SelectionState,
+    condition: Condition
+}
 
 type Props = AttributeIdProps & {
     itemTemplate: ReactNode,
-    style: CSSProperties
+    style: CSSProperties,
+    filter: Filter[]
 }
 
 const Root = styled.div`
@@ -79,13 +89,29 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
 
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceAttribute = useChoiceAttribute(globalAttributeId);
-    const choiceValueNames = useChoiceValueNames(globalAttributeId);
-    const choiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames);
-
     if (!choiceAttribute) {
         return <span>Choice Attribute not found</span>
     }
 
+    const choiceValueNames = useChoiceValueNames(globalAttributeId);
+    const filter = props.filter ?? new Array<Filter>();
+    const filteredChoiceValues = choiceAttribute.attribute.values.filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
+        .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
+        .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
+        .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)
+        .with({selection: "included", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Included)
+
+        .with({selection: "excluded", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
+        .with({selection: "excluded", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit)
+        .with({selection: "excluded", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit)
+        .with({selection: "excluded", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded)
+
+        .with({selection: "undefined"}, () => v.decision == null)
+
+        .otherwise(() => false))
+    )
+
+    const choiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, filteredChoiceValues);
     const choiceValueIds = choiceValues.map(v => v.id);
 
     return (
@@ -116,6 +142,27 @@ const propertyControls: PropertyControls<Props> = {
     itemTemplate: {
         title: "Choice Value Template",
         type: ControlType.ComponentInstance
+    },
+    filter: {
+        title: "Filter",
+        type: ControlType.Array,
+        control: {
+            type: ControlType.Object,
+            controls: {
+                selection: {
+                    title: "Selection",
+                    type: ControlType.Enum,
+                    defaultValue: "undefined",
+                    options: ["undefined", "included", "excluded"],
+                },
+                condition: {
+                    title: "Condition",
+                    type: ControlType.Enum,
+                    defaultValue: "none",
+                    options: ["none", "explicit", "implicit", "blocked"],
+                }
+            }
+        }
     }
 }
 
