@@ -19,6 +19,7 @@ import ChoiceValueListRenderer from "./components/ChoiceValueListRenderer";
 import AttributeName from "./components/AttributeName";
 import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
+import Slot from "./components/Slot";
 import useSortedChoiceValues from "./hooks/useSortedChoiceValues";
 
 export {
@@ -39,6 +40,7 @@ export {
     AttributeName,
     ChoiceValueName,
     Singleton,
+    Slot,
     ScrollIntoView,
     useDebounceValue,
     useRenderPlaceholder,
