@@ -24,7 +24,7 @@ type Props = AttributeIdProps & ExplainProps & {
 const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildren<Props>>((props, ref) => {
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
-        return props.satisfiedChildren;
+        return props.unsatisfiedChildren;
     }
 
     const controlId = useControlId();
