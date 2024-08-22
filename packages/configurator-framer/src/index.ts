@@ -20,6 +20,8 @@ import AttributeName from "./components/AttributeName";
 import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
 import Slot from "./components/Slot";
+import StoreConfiguration from "./components/StoreConfiguration";
+import RestoreConfiguration from "./components/RestoreConfiguration";
 import useSortedChoiceValues from "./hooks/useSortedChoiceValues";
 
 export {
@@ -41,6 +43,8 @@ export {
     ChoiceValueName,
     Singleton,
     Slot,
+    StoreConfiguration,
+    RestoreConfiguration,
     ScrollIntoView,
     useDebounceValue,
     useRenderPlaceholder,
