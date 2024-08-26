@@ -25,7 +25,9 @@
     "build": "npm --prefix ../configurator-framer run build && vite build",
     "test": "npm --prefix ../configurator-framer run test",
     "preview": "vite preview  --port 3000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack" : "cp ../../README.md README.md",
+    "postpack" : "rm README.md"
   },
   "keywords": [
     "viamedici",

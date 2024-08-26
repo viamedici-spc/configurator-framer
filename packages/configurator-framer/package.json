@@ -25,7 +25,9 @@
     "test": "tsc -p ./tsconfig.test.json --noEmit && vitest --run",
     "test:watch": "vitest watch --reporter default",
     "dev": "vite build --watch --mode development & vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack" : "cp ../../README.md README.md",
+    "postpack" : "rm README.md"
   },
   "keywords": [
     "viamedici",
