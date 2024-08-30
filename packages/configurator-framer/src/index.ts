@@ -23,7 +23,18 @@ import Slot from "./components/Slot";
 import StoreConfiguration from "./components/StoreConfiguration";
 import RestoreConfiguration from "./components/RestoreConfiguration";
 import SelectedNumericValue from "./components/SelectedNumericValue";
+import ReplaceText from "./components/ReplaceText";
 import useSortedChoiceValues from "./hooks/useSortedChoiceValues";
+import withErrorBoundary from "./common/withErrorBoundary";
+import withControlId, {useControlId} from "./common/controlId";
+import parseGlobalAttributeId from "./common/parseGlobalAttributeId";
+import cloneChildrenWithProps from "./common/cloneChildrenWithProps";
+import {AttributeIdProps, attributeIdPropertyControls} from "./props/attributeIdProps";
+import {ChoiceValueIdProps, choiceValueIdPropertyControls} from "./props/choiceValueIdProps";
+import {explainableComponent} from "./common/componentComposites";
+import {ChoiceValueNames, useAttributeName, useChoiceValueNames, useChoiceValueName} from "./hooks/localization";
+import useExplain, {UseExplainResult} from "./hooks/useExplain";
+import useExplainProcess, {UseExplainProcessResult} from "./hooks/useExplainProcess";
 
 export {
     Configuration,
@@ -51,5 +62,24 @@ export {
     useDebounceValue,
     useRenderPlaceholder,
     useSortedChoiceValues,
-    withFullSize
+    withFullSize,
+    withErrorBoundary,
+    type AttributeIdProps,
+    attributeIdPropertyControls,
+    parseGlobalAttributeId,
+    cloneChildrenWithProps,
+    ReplaceText,
+    withControlId,
+    useControlId,
+    explainableComponent,
+    type ChoiceValueIdProps,
+    choiceValueIdPropertyControls,
+    type ChoiceValueNames,
+    useAttributeName,
+    useChoiceValueNames,
+    useChoiceValueName,
+    useExplain,
+    type UseExplainResult,
+    useExplainProcess,
+    type UseExplainProcessResult,
 };
