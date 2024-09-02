@@ -22,6 +22,7 @@ import Singleton from "./components/Singleton";
 import Slot from "./components/Slot";
 import StoreConfiguration from "./components/StoreConfiguration";
 import RestoreConfiguration from "./components/RestoreConfiguration";
+import SelectedNumericValue from "./components/SelectedNumericValue";
 import useSortedChoiceValues from "./hooks/useSortedChoiceValues";
 
 export {
@@ -45,6 +46,7 @@ export {
     Slot,
     StoreConfiguration,
     RestoreConfiguration,
+    SelectedNumericValue,
     ScrollIntoView,
     useDebounceValue,
     useRenderPlaceholder,

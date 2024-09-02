@@ -1,15 +1,14 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {ReactNode} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
 import {useAttributeName} from "../hooks/localization";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {Replacer} from "../common/react-element-replace/Replacer";
 import {useAttributes} from "@viamedici-spc/configurator-react";
+import ReplaceText from "./ReplaceText";
+import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
 
-type Props = AttributeIdProps & {
-    children: ReactNode,
+type Props = AttributeIdProps & ReplaceTextProps & {
     customName?: string
 }
 
@@ -33,26 +32,18 @@ const AttributeName = withErrorBoundary((props: Props) => {
     }
 
     const name = hasCustomName ? customName : renderPlaceholder ? attributeId : getAttributeName();
-
-    return (
-        <Replacer match={n => typeof n === "string"} replace={s => s === "<AttributeName>" ? name : s}>
-            {children}
-        </Replacer>
-    )
+    return <ReplaceText {...props} text={name}/>
 })
 
 export default AttributeName;
 
 const propertyControls: PropertyControls<Props> = {
-    children: {
-        title: "Content",
-        type: ControlType.ComponentInstance,
-    },
     ...attributeIdPropertyControls,
     customName: {
         title: "Custom Name",
         type: ControlType.String
-    }
+    },
+    ...replaceTextPropertyControls("<AttributeName>")
 }
 
 addPropertyControls(AttributeName, propertyControls);

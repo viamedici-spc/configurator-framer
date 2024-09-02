@@ -9,14 +9,11 @@ import {Replacer} from "../common/react-element-replace/Replacer";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
 import normalizePropName from "../common/normalizePropName";
+import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
+import ReplaceText from "./ReplaceText";
 
-type Props = AttributeIdProps & ChoiceValueIdProps & {
-    children: ReactNode,
-    customName?: string,
-    mode: "replace" | "set-prop",
-    replaceString: string,
-    elementName: string,
-    propName: string
+type Props = AttributeIdProps & ChoiceValueIdProps & ReplaceTextProps & {
+    customName?: string
 }
 
 /**
@@ -49,60 +46,19 @@ const ChoiceValueName = withErrorBoundary((props: Props) => {
     }
 
     const name = hasCustomName ? customName : renderPlaceholder ? choiceValueId.length > 0 ? choiceValueId : "Choice Value" : getChoiceValueName();
-    if (mode === "replace") {
-        return (
-            <Replacer match={n => typeof n === "string"}
-                      replace={s => s === replaceString ? name : s}>
-                {children}
-            </Replacer>
-        )
-    } else if (mode === "set-prop") {
-        return (
-            <Replacer match={(e: ReactElement) => (e.type as any)?.displayName === elementName}
-                      replace={(element: ReactElement) => cloneElement(element, {[normalizePropName(propName)]: name})}>
-                {children}
-            </Replacer>
-        )
-    }
-    return children
+    return <ReplaceText {...props} text={name}/>
 })
 
 export default ChoiceValueName;
 
 const propertyControls: PropertyControls<Props> = {
-    children: {
-        title: "Content",
-        type: ControlType.ComponentInstance,
-    },
     ...attributeIdPropertyControls,
     ...choiceValueIdPropertyControls,
     customName: {
         title: "Custom Name",
         type: ControlType.String
     },
-    mode: {
-        title: "Mode",
-        type: ControlType.Enum,
-        defaultValue: "replace",
-        options: ["replace", "set-prop"],
-        displaySegmentedControl: true
-    },
-    replaceString: {
-        title: "Replace Text",
-        type: ControlType.String,
-        defaultValue: "<ChoiceValueName>",
-        hidden: p => p.mode !== "replace"
-    },
-    elementName: {
-        title: "Element Name",
-        type: ControlType.String,
-        hidden: p => p.mode !== "set-prop"
-    },
-    propName: {
-        title: "Property Name",
-        type: ControlType.String,
-        hidden: p => p.mode !== "set-prop"
-    }
+    ...replaceTextPropertyControls("<ChoiceValueName>")
 }
 
 addPropertyControls(ChoiceValueName, propertyControls);
