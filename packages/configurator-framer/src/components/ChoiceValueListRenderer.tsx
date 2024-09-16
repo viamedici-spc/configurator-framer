@@ -47,8 +47,7 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
     const controlId = useControlId();
     const renderPlaceholder = useRenderPlaceholder();
 
-    const getItemTemplateDesignTime = () => Children.toArray(props.itemTemplate)[0];
-    const getItemTemplateRuntimeTime = () => {
+    const getItemTemplate = () => {
         const findItemTemplate = c => {
             const component = Children.toArray(c)[0] as any;
             const children = component.props?.children;
@@ -63,7 +62,7 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
         return findItemTemplate(props.itemTemplate);
     };
 
-    const itemTemplate = renderPlaceholder ? getItemTemplateDesignTime() : getItemTemplateRuntimeTime();
+    const itemTemplate = getItemTemplate();
     if (!itemTemplate) {
         return <span>Choice Value Template not defined</span>
     }
