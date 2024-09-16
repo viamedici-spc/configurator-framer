@@ -3,7 +3,12 @@ import {CSSProperties} from "react";
 
 export type TextProps = {
     color: string,
-    fontSize: number
+    text: {
+        fontFamily: string,
+        fontSize: string,
+        fontStyle: string,
+        fontWeight: string
+    }
 }
 
 export const textPropertyControls = {
@@ -12,14 +17,16 @@ export const textPropertyControls = {
         type: ControlType.Color,
         defaultValue: "black",
     },
-    fontSize: {
-        title: "Font size",
-        type: ControlType.Number,
-        defaultValue: 16,
+    text: {
+        title: "Text",
+        type: ControlType.Font,
+        controls: "basic",
+        displayTextAlignment: true,
+        displayFontSize: true
     }
 } satisfies PropertyControls<TextProps>;
 
 export const getTextStyle = (props: TextProps): CSSProperties => ({
-    color: props.color,
-    fontSize: props.fontSize
+    ...props.text,
+    color: props.color
 });

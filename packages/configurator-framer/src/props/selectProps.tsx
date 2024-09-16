@@ -5,8 +5,7 @@ import {getInputStyle, inputPropertyControls, InputProps} from "./inputProps";
 export type SelectProps = InputProps & {
     resetLabel: string,
     blockedLabel: string,
-    appearance: "auto" | "none",
-    textAlign: "initial" | "start" | "center" | "end"
+    appearance: "auto" | "none"
 }
 
 export const selectPropertyControls = {
@@ -28,17 +27,10 @@ export const selectPropertyControls = {
         displaySegmentedControl: true,
         segmentedControlDirection: "horizontal",
         options: ["auto", "none"]
-    },
-    textAlign: {
-        title: "Text Align",
-        type: ControlType.Enum,
-        defaultValue: "initial",
-        options: ["initial", "start", "center", "end"]
     }
 } satisfies PropertyControls<SelectProps>
 
 export const getSelectStyle = (props: SelectProps, isSatisfied: boolean, isImplicitSelected: boolean): CSSProperties => ({
     ...getInputStyle(props, isSatisfied, isImplicitSelected),
-    appearance: props.appearance,
-    textAlign: props.textAlign,
+    appearance: props.appearance
 });
