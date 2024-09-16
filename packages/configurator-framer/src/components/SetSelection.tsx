@@ -89,7 +89,7 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
             const targetDecision = mapSelectionStateToDecision();
             const isComponentStatePossible = isComponentAttribute ? AttributeInterpreter.isComponentStatePossible(attribute, targetDecision as ComponentDecisionState) : false;
             const isBooleanStatePossible = isBooleanAttribute ? AttributeInterpreter.isBooleanValuePossible(attribute, targetDecision as boolean) : false;
-            const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.some(s => s === targetDecision) : false;
+            const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
             const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
 
             if (isNumericAttribute || isAnyStatePossible || targetDecision == null) {
