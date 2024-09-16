@@ -25,6 +25,8 @@ import {explainPropertyControls, ExplainProps} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import useExplain from "../hooks/useExplain";
 
+// TODO: Use logic from configurator-ts v2
+
 type Props = ExplainProps & {
     source: "file" | "clipboard"
     fileExtension: string,

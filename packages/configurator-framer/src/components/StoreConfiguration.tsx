@@ -8,6 +8,8 @@ import {pipe, RA} from "@viamedici-spc/fp-ts-extensions";
 import {BooleanDecision, ChoiceDecision, ComponentDecision, NumericDecision, StoredConfiguration, StoredConfigurationEnvelop, Decision} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 
+// TODO: Use logic from configurator-ts v2
+
 type Props = {
     target: "file" | "clipboard"
     fileName: string,
