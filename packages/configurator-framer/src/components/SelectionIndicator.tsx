@@ -12,6 +12,7 @@ import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 
 type SelectionState = "undefined" | "included" | "excluded" | "true" | "false" | "numeric";
 type Condition = "none" | "explicit" | "implicit" | "blocked";
+type FilterMode = "some" | "every"
 
 type Variant = {
     selection: SelectionState,
@@ -21,6 +22,7 @@ type Variant = {
 }
 
 type Props = AttributeIdProps & ChoiceValueIdProps & {
+    filterMode: FilterMode
     variants: Variant[],
     content1: ReactNode,
     content2: ReactNode,
@@ -79,7 +81,10 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
     }
 
     const evaluateChoiceAttribute = (predicate: (v: ChoiceValue) => boolean) => () =>
-        choiceValue ? predicate(choiceValue) : [...(attribute as ChoiceAttribute).values.values()].some(predicate)
+        choiceValue ? predicate(choiceValue) : match(props.filterMode)
+            .with("some", () => [...(attribute as ChoiceAttribute).values.values()].some(predicate))
+            .with("every", () => [...(attribute as ChoiceAttribute).values.values()].every(predicate))
+            .exhaustive()
 
     const variant = [...props.variants]
         .find(({selection, condition}) => match({selection, condition, attribute})
@@ -122,7 +127,7 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
             .with({attribute: {type: AttributeType.Numeric}, selection: "numeric", condition: "none"}, ({attribute}) => attribute.decision != null)
 
             // Undefined for all attributes
-            .with({attribute: {type: AttributeType.Choice}, selection: "undefined"}, () => choiceValue.decision == null)
+            .with({attribute: {type: AttributeType.Choice}, selection: "undefined"}, evaluateChoiceAttribute(v => v.decision == null))
             .with(
                 {attribute: {type: AttributeType.Boolean}, selection: "undefined"},
                 {attribute: {type: AttributeType.Component}, selection: "undefined"},
@@ -139,6 +144,14 @@ export default SelectionIndicator;
 const propertyControls: PropertyControls<Props> = {
     ...attributeIdPropertyControls,
     ...choiceValueIdPropertyControls,
+    filterMode: {
+        title: "Filter Mode",
+        type: ControlType.Enum,
+        defaultValue: "some",
+        options: ["some", "every"],
+        displaySegmentedControl: true,
+        description: "Only applies for Choice Attributes without a specified Choice Value."
+    },
     variants: {
         title: "Variants",
         type: ControlType.Array,
