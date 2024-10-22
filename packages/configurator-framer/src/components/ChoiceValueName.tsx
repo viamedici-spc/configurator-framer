@@ -37,7 +37,7 @@ const ChoiceValueName = withErrorBoundary((props: Props) => {
             return "Choice Value Id missing";
         }
 
-        let choiceValue = choiceAttribute.attribute.values.find((v) => v.id === choiceValueId);
+        let choiceValue = choiceAttribute.attribute.values.get(choiceValueId);
         if (choiceValue == null) {
             return "Choice Value not found";
         }

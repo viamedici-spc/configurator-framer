@@ -9,7 +9,7 @@ const alwaysExternalize = ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/, /
     At production JSPM creates the important map, so we can externalize all dependencies.
 */
 const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/,
-    /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/];
+    /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/, /^url-join.*/];
 
 export default defineConfig(({command, mode, ssrBuild}) => {
     const isProduction = mode === "production";

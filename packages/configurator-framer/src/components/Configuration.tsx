@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
-import {AllowedRulesInExplainType, ClientSideLifeTimeHandlerOptions, ConfigurationModelSourceType, createClient, ServerSideLifeTimeHandlerOptions,} from "@viamedici-spc/configurator-ts"
-import {Configuration as ViaConfiguration, ConfigurationSuspender,} from "@viamedici-spc/configurator-react"
+import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext,} from "@viamedici-spc/configurator-ts"
+import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
 import {PropsWithChildren, Suspense, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
@@ -72,14 +72,6 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         );
     }
 
-    const client = useMemo(() => createClient({
-        hcaEngineBaseUrl: urlJoin(hcaBaseUrl, "api", "engine"),
-        sessionHandler: match(sessionCreation)
-            .with("client-side", () => ({accessToken}) satisfies ClientSideLifeTimeHandlerOptions)
-            .with("server-side", () => ({sessionCreateUrl, sessionDeleteUrl}) satisfies ServerSideLifeTimeHandlerOptions)
-            .exhaustive()
-    }), [hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl, sessionDeleteUrl])
-
     // TODO: Schema validation with Summons
     const attributeRelations = useMemo(() => pipe(
         O.fromNullable(props.attributeRelations?.jsonDefinition),
@@ -111,32 +103,37 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         } satisfies Localization))
     ), [props.localization]);
 
+    const sessionContext = useMemo(() => ({
+        apiBaseUrl: urlJoin(hcaBaseUrl, "api", "engine"),
+        sessionInitialisationOptions: match(sessionCreation)
+            .with("client-side", () => ({accessToken}) satisfies ClientSideSessionInitialisationOptions)
+            .with("server-side", () => ({sessionCreateUrl}) satisfies ServerSideSessionInitialisationOptions)
+            .exhaustive(),
+        configurationModelSource: {
+            type: ConfigurationModelSourceType.Channel,
+            channel,
+            deploymentName,
+        },
+        attributeRelations,
+        allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}}
+    } satisfies SessionContext), [hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl, sessionDeleteUrl, channel, deploymentName, attributeRelations])
+
     return (
         <>
-            <ViaConfiguration configuratorClient={client}
-                              configurationModelSource={{
-                                  type: ConfigurationModelSourceType.Channel,
-                                  channel,
-                                  deploymentName,
-                              }}
-                              attributeRelations={attributeRelations}
-                              allowedInExplain={{rules: {type: AllowedRulesInExplainType.all}}}>
-
+            <ViaConfiguration sessionContext={sessionContext}>
                 <InitializationError {...props}/>
 
                 <Suspense>
-                    <ConfigurationSuspender>
-                        <localizationContext.Provider value={localization}>
-                            <ExplainController explainConstraints={explainConstraints}>
-                                <explainPopoverPropsContext.Provider value={explainPopoverProps}>
-                                    <choiceValueSortingContext.Provider value={choiceValueSorting}>
-                                        {children}
-                                    </choiceValueSortingContext.Provider>
-                                </explainPopoverPropsContext.Provider>
-                                <ExplainDialog {...explainDialogProps}/>
-                            </ExplainController>
-                        </localizationContext.Provider>
-                    </ConfigurationSuspender>
+                    <localizationContext.Provider value={localization}>
+                        <ExplainController explainConstraints={explainConstraints}>
+                            <explainPopoverPropsContext.Provider value={explainPopoverProps}>
+                                <choiceValueSortingContext.Provider value={choiceValueSorting}>
+                                    {children}
+                                </choiceValueSortingContext.Provider>
+                            </explainPopoverPropsContext.Provider>
+                            <ExplainDialog {...explainDialogProps}/>
+                        </ExplainController>
+                    </localizationContext.Provider>
                 </Suspense>
 
             </ViaConfiguration>

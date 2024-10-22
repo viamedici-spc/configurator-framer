@@ -61,7 +61,7 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceValueId = props.choiceValueId ?? "";
     const hasChoiceValueId = choiceValueId.length > 0;
-    const attribute = useAttributes([globalAttributeId])[0];
+    const attribute = useAttributes([globalAttributeId], false)[0];
 
     if (!attribute) {
         return <span>Attribute not found</span>;
@@ -73,17 +73,13 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
         return <span>Attribute is not a Choice Attribute</span>;
     }
 
-    // if (isChoiceAttribute && !hasChoiceValueId) {
-    //     return <span>Choice Value Id missing</span>;
-    // }
-
-    let choiceValue: ChoiceValue = isChoiceAttribute && hasChoiceValueId ? attribute.values.find((v) => v.id === choiceValueId) : null;
+    const choiceValue: ChoiceValue = isChoiceAttribute && hasChoiceValueId ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
 
     const evaluateChoiceAttribute = (predicate: (v: ChoiceValue) => boolean) => () =>
-        choiceValue ? predicate(choiceValue) : (attribute as ChoiceAttribute).values.some(predicate)
+        choiceValue ? predicate(choiceValue) : [...(attribute as ChoiceAttribute).values.values()].some(predicate)
 
     const variant = [...props.variants]
         .find(({selection, condition}) => match({selection, condition, attribute})

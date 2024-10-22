@@ -12,6 +12,7 @@ import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
 import {ChoiceValueNames, useChoiceValueNames} from "../hooks/localization";
 import {match} from "ts-pattern";
+import {RM} from "@viamedici-spc/fp-ts-extensions";
 
 type SelectionState = "undefined" | "included" | "excluded";
 type Condition = "none" | "explicit" | "implicit" | "blocked";
@@ -74,14 +75,14 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
             componentPath: props.componentPath,
             sharedConfigurationModel: props.sharedConfigurationModel,
             choiceValueId: v,
-            choiceValueName: choiceValueNames[v] ?? v
+            choiceValueName: choiceValueNames.get(v) ?? v
         }
     ));
 
     if (renderPlaceholder) {
         return (
             <Inner {...props}>
-                {renderChoiceValues(["Choice Value 1", "Choice Value 2", "Choice Value 3"], {})}
+                {renderChoiceValues(["Choice Value 1", "Choice Value 2", "Choice Value 3"], RM.empty)}
             </Inner>
         )
     }
@@ -94,7 +95,7 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
 
     const choiceValueNames = useChoiceValueNames(globalAttributeId);
     const filter = props.filter ?? new Array<Filter>();
-    const filteredChoiceValues = choiceAttribute.attribute.values.filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
+    const filteredChoiceValues = [...choiceAttribute.attribute.values.values()].filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
         .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
         .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
         .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)

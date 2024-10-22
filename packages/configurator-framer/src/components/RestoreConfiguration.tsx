@@ -1,31 +1,16 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
-import {useDecision} from "@viamedici-spc/configurator-react";
-import {
-    AttributeType,
-    AutomaticConflictResolution,
-    DecisionsExplainAnswer,
-    ExplicitBooleanDecision,
-    ExplicitChoiceDecision,
-    ExplicitComponentDecision,
-    ExplicitDecision,
-    ExplicitNumericDecision,
-    FailureResult,
-    FailureType,
-    ManualConflictResolution,
-    SetManyDropExistingDecisionsMode
-} from "@viamedici-spc/configurator-ts";
+import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
+import {AutomaticConflictResolution, ConfiguratorError, ConfiguratorErrorType, DecisionsExplainAnswer, ManualConflictResolution, DropExistingDecisionsMode, StoredConfiguration} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
 import {E, Either, left, O, Option, pipe, right, TaskEither, TE, TO} from "@viamedici-spc/fp-ts-extensions";
-import {StoredConfiguration, StoredConfigurationEnvelop} from "../common/StoredConfiguration";
+import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {explainableComponent} from "../common/componentComposites";
 import {explainPropertyControls, ExplainProps} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import useExplain from "../hooks/useExplain";
-
-// TODO: Use logic from configurator-ts v2
 
 type Props = ExplainProps & {
     source: "file" | "clipboard"
@@ -36,7 +21,6 @@ type Props = ExplainProps & {
 enum Error {
     parseError,
     noConfiguration,
-    unsupportedSchemaVersion,
     noFileSelected,
     fileReadError,
     noClipboardData,
@@ -56,7 +40,7 @@ const RestoreConfiguration = explainableComponent<HTMLElement, PropsWithChildren
     }
 
     const controlId = useControlId();
-    const {setManyDecision} = useDecision();
+    const {restoreConfiguration} = useConfigurationStoring();
     const {handleExplainAnswer} = useExplain();
 
     const onClick = async () => {
@@ -65,7 +49,7 @@ const RestoreConfiguration = explainableComponent<HTMLElement, PropsWithChildren
             return
         }
 
-        const mode: SetManyDropExistingDecisionsMode = ({
+        const mode: DropExistingDecisionsMode = ({
             type: "DropExistingDecisions",
             conflictHandling: match(props.autoResolveConflicts)
                 .with(false, () => ({
@@ -79,16 +63,20 @@ const RestoreConfiguration = explainableComponent<HTMLElement, PropsWithChildren
         })
 
         try {
-            const decisions = mapDecisions(storedConfiguration)
-            await setManyDecision(decisions, mode);
+            await restoreConfiguration(storedConfiguration, mode);
         } catch (e) {
-            const failureResult = e as FailureResult;
-            console.debug("Failed to restore stored configuration", failureResult)
+            const error = e as ConfiguratorError;
+            console.debug("Failed to restore stored configuration", error)
 
-            const hasConflict = failureResult?.type === FailureType.ConfigurationSetManyConflict && failureResult.decisionExplanations;
+            if (error.type === ConfiguratorErrorType.StoredConfigurationInvalid) {
+                alert("The specific configuration is not supported. Maybe the configuration was created with new application version than the current one.")
+                return;
+            }
+
+            const hasConflict = error?.type === ConfiguratorErrorType.MakeManyDecisionsConflict && error.decisionExplanations;
             if (hasConflict) {
                 if (props.explain !== "disabled") {
-                    await handleExplainAnswer(failureResult satisfies DecisionsExplainAnswer, props.explain, controlId);
+                    await handleExplainAnswer(error satisfies DecisionsExplainAnswer, props.explain, controlId);
                 }
                 return;
             }
@@ -132,16 +120,6 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
 }
 
 addPropertyControls(RestoreConfiguration, propertyControls);
-
-function mapDecisions(configuration: StoredConfiguration): ReadonlyArray<ExplicitDecision> {
-    return configuration.explicitDecisions.map(d => match(d)
-        .returnType<ExplicitDecision>()
-        .with({type: AttributeType.Choice}, d => ({type: AttributeType.Choice, attributeId: d.attributeId, choiceValueId: d.choiceValueId, state: d.state} satisfies ExplicitChoiceDecision))
-        .with({type: AttributeType.Numeric}, d => ({type: AttributeType.Numeric, attributeId: d.attributeId, state: d.state} satisfies ExplicitNumericDecision))
-        .with({type: AttributeType.Boolean}, d => ({type: AttributeType.Boolean, attributeId: d.attributeId, state: d.state} satisfies ExplicitBooleanDecision))
-        .with({type: AttributeType.Component}, d => ({type: AttributeType.Component, attributeId: d.attributeId, state: d.state} satisfies ExplicitComponentDecision))
-        .exhaustive())
-}
 
 function openFile(fileExtension: string): TaskEither<Error, string> {
     return () => new Promise<Either<Error, string>>(resolve => {
@@ -195,8 +173,6 @@ function loadStoredConfiguration(source: "file" | "clipboard", fileExtension: st
         source === "file" ? openFile(fileExtension) : readFromClipboard(),
         TE.chainEitherK(a => E.tryCatch(() => JSON.parse(a) as StoredConfigurationEnvelop, () => Error.parseError)),
         TE.filterOrElse(s => s.type === "spc-stored-configuration", () => Error.noConfiguration),
-        TE.filterOrElse(s => s.storedConfiguration?.schemaVersion === 1, () => Error.unsupportedSchemaVersion),
-        // TODO: Summon schema validation of StoredConfiguration
         TE.map(s => s.storedConfiguration),
         TE.doIfLeft(e => () => {
             console.debug(`Failed to load stored configuration: ${Error[e]}`)
@@ -208,8 +184,6 @@ function loadStoredConfiguration(source: "file" | "clipboard", fileExtension: st
                 } else if (source === "clipboard") {
                     alert("The clipboard doesn't contain a valid configuration.")
                 }
-            } else if (e == Error.unsupportedSchemaVersion) {
-                alert("The specific configuration is not supported. Maybe the configuration was created with new application version than the current one.")
             } else if (e == Error.clipboardReadError) {
                 alert("Can't read the clipboard. Make to give a permission for reading the clipboard.")
             } else if (e == Error.noClipboardData) {

@@ -1,13 +1,13 @@
 import {createContext, useContext, useMemo} from "react";
-import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEquals} from "@viamedici-spc/configurator-ts";
+import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import {LocalizableText, Localization} from "../props/localizationProps";
 import {useLocaleInfo} from "framer";
-import {flow, O, Option, pipe, RA, RR} from "@viamedici-spc/fp-ts-extensions";
+import {flow, O, Option, pipe, RA, RM, RR} from "@viamedici-spc/fp-ts-extensions";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 
 export const localizationContext = createContext<Localization>(null);
-export type ChoiceValueNames = Record<ChoiceValueId, string>;
+export type ChoiceValueNames = ReadonlyMap<ChoiceValueId, string>;
 
 export function useAttributeName(attributeId: GlobalAttributeId): string | undefined {
     const {attributes} = useContext(localizationContext);
@@ -16,7 +16,7 @@ export function useAttributeName(attributeId: GlobalAttributeId): string | undef
 
     return useMemo(() => pipe(
         attributes,
-        RA.findFirst(a => globalAttributeIdEquals(parseGlobalAttributeId(a), attributeId)),
+        RA.findFirst(a => globalAttributeIdEq.equals(parseGlobalAttributeId(a), attributeId)),
         O.map(a => a.name),
         RA.fromOption,
         RA.flatten,
@@ -30,12 +30,13 @@ export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValue
     const {activeLocale} = useLocaleInfo();
     const choiceAttribute = useChoiceAttribute(attributeId);
     if (!choiceAttribute) {
-        return {};
+        return RM.empty;
     }
 
+    // TODO: Maybe to dictionary to improve performance. Keep new SourceAttributeId in mind!
     const attributeLocalizations = useMemo(() => pipe(
         choiceValueLocalizations,
-        RA.filter(c => globalAttributeIdEquals(parseGlobalAttributeId(c), attributeId))
+        RA.filter(c => globalAttributeIdEq.equals(parseGlobalAttributeId(c), attributeId))
     ), [choiceValueLocalizations, attributeId.localId, attributeId.componentPath, attributeId.sharedConfigurationModelId]);
 
     const localeCode = activeLocale.code;
@@ -43,17 +44,15 @@ export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValue
 
     return useMemo(() => pipe(
         values,
-        RA.map(v => pipe(
+        RM.mapWithIndex((k, _) => pipe(
             attributeLocalizations,
-            RA.findFirst(c => c.choiceValueId === v.id),
+            RA.findFirst(c => c.choiceValueId === k),
             O.map(c => c.name),
             RA.fromOption,
             RA.flatten,
             getLocalizedName(localeCode),
-            O.map(l => [v.id, l] as [ChoiceValueId, string])
         )),
-        RA.compact,
-        RR.fromEntries
+        RM.compact
     ), [values, attributeLocalizations, localeCode]);
 }
 
@@ -64,7 +63,7 @@ export function useChoiceValueName(attributeId: GlobalAttributeId, choiceValueId
 
     return useMemo(() => pipe(
         choiceValues,
-        RA.findFirst(v => globalAttributeIdEquals(parseGlobalAttributeId(v), attributeId) && v.choiceValueId === choiceValueId),
+        RA.findFirst(v => globalAttributeIdEq.equals(parseGlobalAttributeId(v), attributeId) && v.choiceValueId === choiceValueId),
         O.map(v => v.name),
         RA.fromOption,
         RA.flatten,

@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import styled from "styled-components"
-import {DecisionKind, FailureResult, FailureType, NumericAttribute} from "@viamedici-spc/configurator-ts"
+import {ConfiguratorError, ConfiguratorErrorType, DecisionKind, NumericAttribute} from "@viamedici-spc/configurator-ts"
 import {useNumericAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {getInputStyle, inputPropertyControls, InputProps} from "../props/inputProps";
@@ -70,8 +70,8 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
         try {
             await makeDecision(value);
         } catch (e) {
-            const failureResult = e as FailureResult;
-            const isValueNotPossible = failureResult.type === FailureType.ConfigurationModelNotFeasible || failureResult.type === FailureType.ConfigurationConflict;
+            const error = e as ConfiguratorError;
+            const isValueNotPossible = error.type === ConfiguratorErrorType.SetDecisionConflict;
             if (!isValueNotPossible) {
                 showMakeDecisionFailure();
             } else if (props.explain !== "disabled") {

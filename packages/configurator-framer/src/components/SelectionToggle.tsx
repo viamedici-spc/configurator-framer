@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {AttributeInterpreter, AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, DecisionKind, ExplainQuestionSubject, ExplainQuestionType, ExplicitDecision, WhyIsStateNotPossible} from "@viamedici-spc/configurator-ts"
-import {useAttributes, useDecision} from "@viamedici-spc/configurator-react"
+import {AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, DecisionKind, ExplainQuestionSubject, ExplainQuestionType, ExplicitDecision, WhyIsStateNotPossible} from "@viamedici-spc/configurator-ts"
+import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren} from "react";
@@ -37,12 +37,12 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
     }
 
     const controlId = useControlId();
-    const {makeDecision} = useDecision();
+    const {makeDecision} = useMakeDecision();
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceValueId = props.choiceValueId ?? "";
     const hasChoiceValueId = choiceValueId.length > 0;
 
-    const attribute = useAttributes([globalAttributeId])[0];
+    const attribute = useAttributes([globalAttributeId], false)[0];
     const {explain} = useExplain();
 
     if (!attribute) {
@@ -62,7 +62,7 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
         return <span>Numeric Attribute is not supported</span>;
     }
 
-    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.find((v) => v.id === choiceValueId) : null;
+    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
@@ -101,23 +101,12 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
         const targetState = isToggleToActive ? props.toggleFrom : props.toggleTo;
         const targetDecision = mapToggleStateToDecision(targetState);
 
-        const isComponentStatePossible = isComponentAttribute ? AttributeInterpreter.isComponentStatePossible(attribute, targetDecision as ComponentDecisionState) : false;
-        const isBooleanStatePossible = isBooleanAttribute ? AttributeInterpreter.isBooleanValuePossible(attribute, targetDecision as boolean) : false;
+        const isComponentStatePossible = isComponentAttribute ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState) : false;
+        const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
         const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
         const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
-
-        if (isAnyStatePossible || targetDecision == null) {
-            try {
-                await makeDecision({
-                    type: attribute.type,
-                    attributeId: globalAttributeId,
-                    choiceValueId: choiceValueId,
-                    state: targetDecision
-                } as ExplicitDecision)
-            } catch {
-                showMakeDecisionFailure();
-            }
-        } else if (props.explain !== "disabled") {
+        const explainMode = props.explain;
+        const maybeExplain = explainMode !== "disabled" && (async () => {
             const subject = match({isComponentAttribute, isBooleanAttribute, isChoiceAttribute})
                 .returnType<ExplainQuestionSubject | null>()
                 .with({isChoiceAttribute: true}, () => ExplainQuestionSubject.choiceValue)
@@ -132,8 +121,28 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
                     attributeId: globalAttributeId,
                     choiceValueId: choiceValueId,
                     state: targetDecision
-                } as WhyIsStateNotPossible, props.explain, controlId);
+                } as WhyIsStateNotPossible, explainMode, controlId);
             }
+        });
+
+        if (isAnyStatePossible || targetDecision == null) {
+            try {
+                await makeDecision({
+                    type: attribute.type,
+                    attributeId: globalAttributeId,
+                    choiceValueId: choiceValueId,
+                    state: targetDecision
+                } as ExplicitDecision)
+            } catch (e) {
+                const error = e as ConfiguratorError;
+                if (error.type === ConfiguratorErrorType.ConflictWithConsequence && maybeExplain) {
+                    await maybeExplain();
+                    return;
+                }
+                showMakeDecisionFailure();
+            }
+        } else if (maybeExplain) {
+            await maybeExplain()
         }
     }
 

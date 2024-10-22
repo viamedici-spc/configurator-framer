@@ -1,6 +1,6 @@
 import {ChoiceValueSorting, SortingRule} from "../props/choiceValueSortingProps";
 import {Bool, Num, O, Option, Ord, OrdT, pipe, RA, Str, MO} from "@viamedici-spc/fp-ts-extensions";
-import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEquals} from "@viamedici-spc/configurator-ts";
+import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {match, P} from "ts-pattern";
 import parseGlobalAttributeId from "./parseGlobalAttributeId";
 import {Ordering} from "fp-ts/Ordering";
@@ -32,7 +32,7 @@ export const numericModeOrd = Num.Ord;
 export function getOrdForAttribute(attributeId: GlobalAttributeId, sorting: ChoiceValueSorting): OrdT<ChoiceValueId> {
     return pipe(
         sorting?.attributes ?? [],
-        RA.findFirst(a => globalAttributeIdEquals(parseGlobalAttributeId(a), attributeId)),
+        RA.findFirst(a => globalAttributeIdEq.equals(parseGlobalAttributeId(a), attributeId)),
         O.map(a => [
             getOrdForExplicitChoiceValueSorting(a.choiceValues ?? []),
             getOrdForSortingRules(a.rules ?? [])

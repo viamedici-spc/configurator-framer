@@ -1,9 +1,9 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {
-    AttributeInterpreter, AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType,
-    ExplicitDecision, FailureResult, FailureType, WhyIsStateNotPossible
+    AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, ExplainQuestionSubject, ExplainQuestionType,
+    ExplicitDecision, WhyIsStateNotPossible
 } from "@viamedici-spc/configurator-ts"
-import {useAttributes, useChoiceAttribute, useDecision} from "@viamedici-spc/configurator-react"
+import {useAttributes, useChoiceAttribute, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren} from "react";
@@ -41,11 +41,11 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
     }
 
     const controlId = useControlId();
-    const {makeDecision} = useDecision();
+    const {makeDecision} = useMakeDecision();
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceValueId = props.choiceValueId ?? "";
     const hasChoiceValueId = choiceValueId.length > 0;
-    const attribute = useAttributes([globalAttributeId])[0];
+    const attribute = useAttributes([globalAttributeId], false)[0];
     const choiceAttribute = useChoiceAttribute(globalAttributeId);
     const {explain} = useExplain();
 
@@ -62,7 +62,7 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
         return <span>Attribute is not a Choice Attribute</span>;
     }
 
-    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.find((v) => v.id === choiceValueId) : null;
+    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
@@ -87,10 +87,30 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
             }
         } else {
             const targetDecision = mapSelectionStateToDecision();
-            const isComponentStatePossible = isComponentAttribute ? AttributeInterpreter.isComponentStatePossible(attribute, targetDecision as ComponentDecisionState) : false;
-            const isBooleanStatePossible = isBooleanAttribute ? AttributeInterpreter.isBooleanValuePossible(attribute, targetDecision as boolean) : false;
+            const isComponentStatePossible = isComponentAttribute ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState) : false;
+            const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
             const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
             const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
+            const explainMode = props.explain;
+            const maybeExplain = explainMode !== "disabled" && (async () => {
+                const subject = match({isComponentAttribute, isBooleanAttribute, isChoiceAttribute, isNumericAttribute})
+                    .returnType<ExplainQuestionSubject | null>()
+                    .with({isChoiceAttribute: true}, () => ExplainQuestionSubject.choiceValue)
+                    .with({isBooleanAttribute: true}, () => ExplainQuestionSubject.boolean)
+                    .with({isComponentAttribute: true}, () => ExplainQuestionSubject.component)
+                    .with({isNumericAttribute: true}, () => ExplainQuestionSubject.numeric)
+                    .otherwise(() => null);
+
+                if (subject) {
+                    await explain({
+                        question: ExplainQuestionType.whyIsStateNotPossible,
+                        subject: subject,
+                        attributeId: globalAttributeId,
+                        choiceValueId: choiceValueId,
+                        state: targetDecision
+                    } as WhyIsStateNotPossible, explainMode, controlId);
+                }
+            });
 
             if (isNumericAttribute || isAnyStatePossible || targetDecision == null) {
                 try {
@@ -101,31 +121,15 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
                         state: targetDecision
                     } as ExplicitDecision);
                 } catch (e) {
-                    const failureResult = e as FailureResult;
-                    const isValueNotPossible = isNumericAttribute && (failureResult.type === FailureType.ConfigurationModelNotFeasible || failureResult.type === FailureType.ConfigurationConflict);
-                    if (!isValueNotPossible) {
-                        showMakeDecisionFailure();
-                    } else if (props.explain !== "disabled") {
-                        await explain(b => b.whyIsStateNotPossible.numeric(attribute.id).state(targetDecision as number), props.explain, controlId);
+                    const error = e as ConfiguratorError;
+                    if ((error.type === ConfiguratorErrorType.ConflictWithConsequence || error.type === ConfiguratorErrorType.SetDecisionConflict) && maybeExplain) {
+                        await maybeExplain();
+                        return;
                     }
+                    showMakeDecisionFailure();
                 }
-            } else if (props.explain !== "disabled") {
-                const subject = match({isComponentAttribute, isBooleanAttribute, isChoiceAttribute})
-                    .returnType<ExplainQuestionSubject | null>()
-                    .with({isChoiceAttribute: true}, () => ExplainQuestionSubject.choiceValue)
-                    .with({isBooleanAttribute: true}, () => ExplainQuestionSubject.boolean)
-                    .with({isComponentAttribute: true}, () => ExplainQuestionSubject.component)
-                    .otherwise(() => null);
-
-                if (subject) {
-                    await explain({
-                        question: ExplainQuestionType.whyIsStateNotPossible,
-                        subject: subject,
-                        attributeId: globalAttributeId,
-                        choiceValueId: choiceValueId,
-                        state: targetDecision
-                    } as WhyIsStateNotPossible, props.explain, controlId);
-                }
+            } else if (maybeExplain) {
+                await maybeExplain()
             }
         }
     }

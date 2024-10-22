@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import styled from "styled-components"
-import {AttributeInterpreter, ComponentAttribute, ComponentDecisionState, DecisionKind} from "@viamedici-spc/configurator-ts"
+import {AttributeInterpreter, ComponentAttribute, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
 import {useComponentAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {getSelectStyle, selectPropertyControls, SelectProps} from "../props/selectProps";
@@ -52,15 +52,22 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     const {attribute, makeDecision} = componentAttribute;
 
     const makeDecisionWithExplain = async (state: ComponentDecisionState) => {
-        const isStatePossible = AttributeInterpreter.isComponentStatePossible(attribute, state);
+        const isStatePossible = attribute.possibleDecisionStates.includes(state);
+        const explainMode = props.explain;
+        const maybeExplain = explainMode !== "disabled" && (() => explain(b => b.whyIsStateNotPossible.component(attribute.id).state(state), explainMode, controlId));
         if (isStatePossible) {
             try {
                 await makeDecision(state);
-            } catch {
+            } catch (e) {
+                const error = e as ConfiguratorError;
+                if (error.type === ConfiguratorErrorType.ConflictWithConsequence && maybeExplain) {
+                    await maybeExplain();
+                    return;
+                }
                 showMakeDecisionFailure();
             }
-        } else if (props.explain !== "disabled") {
-            await explain(b => b.whyIsStateNotPossible.component(attribute.id).state(state), props.explain, controlId);
+        } else if (maybeExplain) {
+            await maybeExplain();
         }
     };
 
@@ -83,8 +90,8 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     const canReset = attribute.decision?.kind === DecisionKind.Explicit;
     const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit;
     const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected);
-    const isIncludedAllowed = AttributeInterpreter.isComponentStatePossible(attribute, ComponentDecisionState.Included);
-    const isExcludedAllowed = AttributeInterpreter.isComponentStatePossible(attribute, ComponentDecisionState.Excluded);
+    const isIncludedAllowed = attribute.possibleDecisionStates.includes(ComponentDecisionState.Included);
+    const isExcludedAllowed = attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded);
 
     const includedOption = (
         <option value={includedValue}>
