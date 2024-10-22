@@ -6,7 +6,7 @@ import {CommonExplainProps} from "../../../props/commonExplainProps";
 export default function getDecisionStateDisplayName(decision: ExplicitDecision | CausedByDecision, choiceValueNames: ChoiceValueNames, commonExplainProps: CommonExplainProps): string {
     return match(decision)
         .returnType<string>()
-        .with({type: AttributeType.Choice}, m => choiceValueNames[m.choiceValueId] ?? m.choiceValueId)
+        .with({type: AttributeType.Choice}, m => choiceValueNames.get(m.choiceValueId) ?? m.choiceValueId)
         .with({type: AttributeType.Boolean, state: true}, () => commonExplainProps.booleanDecisionStateTrueLabel)
         .with({type: AttributeType.Boolean, state: false}, () => commonExplainProps.booleanDecisionStateFalseLabel)
         .with({type: AttributeType.Component, state: ComponentDecisionState.Included}, () => commonExplainProps.componentDecisionStateIncludedLabel)

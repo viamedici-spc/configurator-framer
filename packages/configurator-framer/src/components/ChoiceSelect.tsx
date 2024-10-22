@@ -1,6 +1,6 @@
 import {addPropertyControls, PropertyControls} from "framer"
 import styled from "styled-components"
-import {AttributeInterpreter, ChoiceValueDecisionState, ChoiceValueId, DecisionKind,} from "@viamedici-spc/configurator-ts"
+import {ChoiceValueDecisionState, ChoiceValueId, ConfiguratorError, ConfiguratorErrorType, DecisionKind,} from "@viamedici-spc/configurator-ts"
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {getSelectStyle, selectPropertyControls, SelectProps} from "../props/selectProps";
@@ -50,11 +50,10 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
 
     const {explain} = useExplain();
     const choiceValueNames = useChoiceValueNames(globalAttributeId);
-    const {attribute, makeDecision, clearDecisions} = choiceAttribute;
-    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, AttributeInterpreter.getAllowedChoiceValues(attribute));
-    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, AttributeInterpreter.getBlockedChoiceValues(attribute));
-    const isMultiselect = AttributeInterpreter.isMultiSelect(attribute);
-    const selectedChoiceValues = AttributeInterpreter.getSelectedChoiceValues(attribute);
+    const {attribute, makeDecision, clearDecisions, isMultiSelect, getIncludedChoiceValues, getBlockedChoiceValues, getAllowedChoiceValues} = choiceAttribute;
+    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, getAllowedChoiceValues());
+    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, getBlockedChoiceValues());
+    const selectedChoiceValues = getIncludedChoiceValues();
     const selectedChoiceValueIds = selectedChoiceValues.map((a) => a.id);
     const selectedChoiceValueId = selectedChoiceValueIds[0] ?? nothingValue;
     const canReset = selectedChoiceValues.some(v => v.decision?.kind === DecisionKind.Explicit);
@@ -63,6 +62,12 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
     const noOptionsAvailable = allowedChoiceValues.length === 0;
 
     const onChange = async (choiceValueId: ChoiceValueId) => {
+        const explainMode = props.explain;
+        const maybeExplain = explainMode !== "disabled" && (() => explain(
+            b => b.whyIsStateNotPossible.choice(attribute.id).choiceValue(choiceValueId).state(ChoiceValueDecisionState.Included),
+            explainMode, controlId
+        ));
+
         if (choiceValueId === resetValue) {
             try {
                 await clearDecisions();
@@ -76,14 +81,16 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
 
             try {
                 await makeDecision(choiceValueId, state);
-            } catch {
+            } catch (e) {
+                const error = e as ConfiguratorError;
+                if (error.type === ConfiguratorErrorType.ConflictWithConsequence && maybeExplain) {
+                    await maybeExplain();
+                    return;
+                }
                 showMakeDecisionFailure();
             }
-        } else if (blockedChoiceValues.some((v) => v.id === choiceValueId) && props.explain !== "disabled") {
-            await explain(
-                b => b.whyIsStateNotPossible.choice(attribute.id).choiceValue(choiceValueId).state(ChoiceValueDecisionState.Included),
-                props.explain, controlId
-            );
+        } else if (blockedChoiceValues.some((v) => v.id === choiceValueId) && maybeExplain) {
+            await maybeExplain();
         }
     }
 
@@ -91,12 +98,12 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
 
     return (
         <Root ref={ref}
-              value={isMultiselect ? selectedChoiceValueIds : selectedChoiceValueId}
-              multiple={isMultiselect}
+              value={isMultiSelect() ? selectedChoiceValueIds : selectedChoiceValueId}
+              multiple={isMultiSelect()}
               onChange={(e) => onChange(e.currentTarget.value)}
               style={style}>
 
-            {!hasSelections && !isMultiselect && (
+            {!hasSelections && !isMultiSelect() && (
                 <option value={nothingValue}>
                 </option>
             )}
@@ -110,7 +117,7 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
             {allowedChoiceValues.map((v) => (
                 <option key={v.id} value={v.id}>
                     {v.decision?.kind === DecisionKind.Implicit ? props.implicitLabelPrefix : ""}
-                    {choiceValueNames[v.id] ?? v.id}
+                    {choiceValueNames.get(v.id) ?? v.id}
                 </option>
             ))}
 
@@ -118,7 +125,7 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
                 <optgroup label={props.blockedLabel}>
                     {blockedChoiceValues.map((v) => (
                         <option key={v.id} value={v.id}>
-                            {choiceValueNames[v.id] ?? v.id}
+                            {choiceValueNames.get(v.id) ?? v.id}
                         </option>
                     ))}
                 </optgroup>

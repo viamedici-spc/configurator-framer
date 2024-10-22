@@ -4,11 +4,9 @@ import {
     AutomaticConflictResolution,
     ChoiceValue,
     ChoiceValueDecisionState,
-    ComponentDecisionState,
+    ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType,
     DecisionKind, DecisionsExplainAnswer,
     ExplicitDecision,
-    FailureResult,
-    FailureType,
     ManualConflictResolution,
     SetManyDropExistingDecisionsMode,
     SetManyKeepExistingDecisionsMode,
@@ -59,7 +57,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
     const {setManyDecision} = useDecision();
     const {handleExplainAnswer} = useExplain();
     const globalAttributeIds = props.attributes.map(parseGlobalAttributeId);
-    const attributes: { getDecisions?: () => ExplicitDecision[], error?: ReactNode }[] = useAttributes(globalAttributeIds).map((attribute, i) => {
+    const attributes: { getDecisions?: () => ExplicitDecision[], error?: ReactNode }[] = useAttributes(globalAttributeIds, false).map((attribute, i) => {
         if (!attribute) {
             return {
                 error: <span>Attribute not found</span>
@@ -80,7 +78,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
             };
         }
 
-        let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.find((v) => v.id === choiceValueId) : null;
+        let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
         if (hasChoiceValueId && choiceValue == null) {
             return {
                 error: <span>Choice Value not found</span>
@@ -101,7 +99,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
         return {
             getDecisions: () => {
                 if (isChoiceAttribute && !hasChoiceValueId && attributeProps.setSelection === "undefined") {
-                    return attribute.values
+                    return [...attribute.values.values()]
                         .filter(v => v.decision?.kind === DecisionKind.Explicit)
                         .map(v => ({
                             type: attribute.type,
@@ -148,18 +146,18 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
         try {
             await setManyDecision(decisions, mode);
         } catch (e) {
-            const failureResult = e as FailureResult;
-            console.debug("SetMany failed", failureResult)
+            const error = e as ConfiguratorError;
+            console.debug("SetMany failed", error)
 
-            const hasConflict = failureResult?.type === FailureType.ConfigurationSetManyConflict && failureResult.decisionExplanations;
+            const hasConflict = error?.type === ConfiguratorErrorType.SetManyDecisionsConflict && error.decisionExplanations;
             if (hasConflict) {
                 if (props.explain !== "disabled") {
-                    await handleExplainAnswer(failureResult satisfies DecisionsExplainAnswer, props.explain, controlId);
+                    await handleExplainAnswer(error satisfies DecisionsExplainAnswer, props.explain, controlId);
                 }
                 return;
             }
 
-            // TODO: This can only be displayed with configurator-ts v2 and a more precise setMany()
+            // TODO: This can only be displayed with RestApi V3 and a more precise setMany()
             // const rejected = failureResult?.type === FailureType.ConfigurationRejectedDecisionsConflict;
             // if (rejected) {
             //     alert("Some selections could not be applied because of a conflict")

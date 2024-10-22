@@ -1,10 +1,9 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {useAttributes, useConfiguration} from "@viamedici-spc/configurator-react"
+import {useAttributes, useConfigurationSatisfaction} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren, ReactNode} from "react";
 import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
-import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {explainPropertyControls, ExplainProps} from "../props/explainProps";
@@ -28,14 +27,14 @@ const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildre
     }
 
     const controlId = useControlId();
-    const {configuration} = useConfiguration();
+    const {isSatisfied: isConfigurationSatisfied} = useConfigurationSatisfaction();
     const {explain} = useExplain();
 
     const attributeId = props.attributeId.length > 0 ? [parseGlobalAttributeId(props)] : [];
     const attributeIds = [...attributeId, ...props.attributes.map(parseGlobalAttributeId)];
 
     const getAttributesSatisfied = () => {
-        const attributes: { isSatisfied?: boolean, error?: ReactNode }[] = useAttributes(attributeIds).map(attribute => {
+        const attributes: { isSatisfied?: boolean, error?: ReactNode }[] = useAttributes(attributeIds, false).map(attribute => {
             if (!attribute) {
                 return {
                     error: <span>Attribute not found</span>
@@ -64,7 +63,7 @@ const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildre
         }
     }
 
-    const isSatisfied = attributeIds.length > 0 ? getAttributesSatisfied() : configuration.isSatisfied;
+    const isSatisfied = attributeIds.length > 0 ? getAttributesSatisfied() : isConfigurationSatisfied;
     return isSatisfied ? props.satisfiedChildren : cloneChildrenWithProps(props.unsatisfiedChildren, {onClick, ref});
 })
 

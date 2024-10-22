@@ -1,14 +1,9 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
-import {useConfiguration} from "@viamedici-spc/configurator-react";
-import {AttributeType, Configuration, DecisionKind} from "@viamedici-spc/configurator-ts";
-import {match} from "ts-pattern";
-import {pipe, RA} from "@viamedici-spc/fp-ts-extensions";
-import {BooleanDecision, ChoiceDecision, ComponentDecision, NumericDecision, StoredConfiguration, StoredConfigurationEnvelop, Decision} from "../common/StoredConfiguration";
+import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
+import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-
-// TODO: Use logic from configurator-ts v2
 
 type Props = {
     target: "file" | "clipboard"
@@ -28,10 +23,10 @@ export default function StoreConfiguration(props: PropsWithChildren<Props>) {
         return children
     }
 
-    const {configuration} = useConfiguration()
+    const {storeConfiguration} = useConfigurationStoring();
 
     const onClick = async () => {
-        const storedConfiguration = mapStoredConfiguration(configuration)
+        const storedConfiguration = await storeConfiguration();
         const envelop = {type: "spc-stored-configuration", storedConfiguration: storedConfiguration} satisfies StoredConfigurationEnvelop
         if (target === "file") {
             downloadJsonFile(envelop, `${fileName}.${fileExtension}`)
@@ -72,21 +67,6 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
 }
 
 addPropertyControls(StoreConfiguration, propertyControls);
-
-function mapStoredConfiguration(configuration: Configuration): StoredConfiguration {
-    const explicitDecisions = pipe(
-        configuration.attributes,
-        RA.chain(a => match(a)
-            .returnType<Decision[]>()
-            .with({type: AttributeType.Choice}, a => a.values.filter(v => v.decision?.kind === DecisionKind.Explicit).map(v => ({type: AttributeType.Choice, attributeId: a.id, choiceValueId: v.id, state: v.decision!.state} satisfies ChoiceDecision)))
-            .with({type: AttributeType.Numeric}, a => a.decision?.kind === DecisionKind.Explicit ? [{type: AttributeType.Numeric, attributeId: a.id, state: a.decision!.state} satisfies NumericDecision] : [])
-            .with({type: AttributeType.Boolean}, a => a.decision?.kind === DecisionKind.Explicit ? [{type: AttributeType.Boolean, attributeId: a.id, state: a.decision!.state} satisfies BooleanDecision] : [])
-            .with({type: AttributeType.Component}, a => a.decision?.kind === DecisionKind.Explicit ? [{type: AttributeType.Component, attributeId: a.id, state: a.decision!.state} satisfies ComponentDecision] : [])
-            .exhaustive()
-        )
-    )
-    return {schemaVersion: 1, explicitDecisions: explicitDecisions}
-}
 
 function downloadJsonFile(data: Object, filename: string) {
     const json = JSON.stringify(data)

@@ -4,7 +4,7 @@ import {ChoiceValue, ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/conf
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import {createOrdCacheProvider} from "../common/ordCaching";
 import {getOrdForAttribute} from "../common/choiceValueSorting";
-import {O, Ord, pipe, RA, RR, Str} from "@viamedici-spc/fp-ts-extensions";
+import {Ord, pipe, RA, Str} from "@viamedici-spc/fp-ts-extensions";
 import {ChoiceValueNames} from "./localization";
 
 const ordCacheProvider = createOrdCacheProvider();
@@ -16,11 +16,7 @@ export default function useSortedChoiceValues(attributeId: GlobalAttributeId, ch
     const ord = useMemo(() => pipe(
         getOrdForAttribute(attributeId, choiceValueSorting),
         ord => ordCacheProvider.getCache<ChoiceValueId>(Str.Eq, ord),
-        Ord.contramap((value: ChoiceValue) => pipe(
-            choiceValueNames,
-            RR.lookup(value.id),
-            O.match(() => value.id, n => n)
-        ))
+        Ord.contramap((value: ChoiceValue) => choiceValueNames.get(value.id) ?? value.id)
     ), [choiceValueNames]);
 
     const {attribute} = useChoiceAttribute(attributeId);

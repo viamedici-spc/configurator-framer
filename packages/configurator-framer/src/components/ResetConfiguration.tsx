@@ -1,9 +1,7 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {AttributeType, DecisionKind} from "@viamedici-spc/configurator-ts"
-import {useConfiguration, useDecision} from "@viamedici-spc/configurator-react"
+import {useConfigurationReset} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {ReactNode} from "react";
-import {match} from "ts-pattern";
 import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {showResetConfigurationFailure} from "../common/failureAlerts";
@@ -23,37 +21,20 @@ const ResetConfiguration = withErrorBoundary((props: Props) => {
         return props.enabledChildren;
     }
 
-    const {configuration} = useConfiguration();
-    const {setManyDecision} = useDecision();
-    // TODO: Move this to ClientLib Interpreter
-    const canReset = configuration.attributes.some(a => match(a)
-        .with({type: AttributeType.Choice}, a => a.values.some(v => v.decision?.kind === DecisionKind.Explicit))
-        .with({type: AttributeType.Boolean}, a => a.decision?.kind === DecisionKind.Explicit)
-        .with({type: AttributeType.Numeric}, a => a.decision?.kind === DecisionKind.Explicit)
-        .with({type: AttributeType.Component}, a => a.decision?.kind === DecisionKind.Explicit)
-        .exhaustive()
-    )
-
-    const onClick = () => {
-        if (!canReset) {
+    const {canResetConfiguration, resetConfiguration} = useConfigurationReset();
+    const onClick = async () => {
+        if (!canResetConfiguration) {
             return;
         }
 
-        // TODO: Add clearDecisions() to useDecisions hook
         try {
-            setManyDecision([], {
-                type: "DropExistingDecisions",
-                conflictHandling: {
-                    type: "Manual",
-                    includeConstraintsInConflictExplanation: false
-                }
-            })
+            await resetConfiguration()
         } catch {
             showResetConfigurationFailure();
         }
     }
 
-    const children = canReset ? props.enabledChildren : props.disabledChildren;
+    const children = canResetConfiguration ? props.enabledChildren : props.disabledChildren;
     return cloneChildrenWithProps(children, {onClick})
 })
 

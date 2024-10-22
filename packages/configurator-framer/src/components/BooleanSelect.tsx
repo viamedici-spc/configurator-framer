@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import styled from "styled-components"
-import {AttributeInterpreter, BooleanAttribute, DecisionKind} from "@viamedici-spc/configurator-ts"
+import {BooleanAttribute, ConfiguratorError, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
 import {useBooleanAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {getSelectStyle, selectPropertyControls, SelectProps} from "../props/selectProps";
@@ -52,7 +52,7 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
     const {attribute, makeDecision} = booleanAttribute;
 
     const onChange = async (optionValue: string) => {
-        const hasExplicitDecision = AttributeInterpreter.getBooleanDecision(attribute) != null;
+        const hasExplicitDecision = attribute.decision?.kind === DecisionKind.Explicit;
         if (optionValue === resetValue && hasExplicitDecision) {
             try {
                 await makeDecision(undefined);
@@ -61,15 +61,23 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
             }
         } else {
             const value = optionValue === trueValue;
-            const isValuePossible = AttributeInterpreter.isBooleanValuePossible(attribute, value);
+            const isValuePossible = attribute.possibleDecisionStates.includes(value);
+            const explainMode = props.explain;
+            const maybeExplain = explainMode !== "disabled" && (() => explain(b => b.whyIsStateNotPossible.boolean(attribute.id).state(value), explainMode, controlId));
+
             if (isValuePossible) {
                 try {
                     await makeDecision(value);
-                } catch {
+                } catch (e) {
+                    const error = e as ConfiguratorError;
+                    if (error.type === ConfiguratorErrorType.ConflictWithConsequence && maybeExplain) {
+                        await maybeExplain();
+                        return;
+                    }
                     showMakeDecisionFailure();
                 }
-            } else if (props.explain !== "disabled") {
-                await explain(b => b.whyIsStateNotPossible.boolean(attribute.id).state(value), props.explain, controlId);
+            } else if (maybeExplain) {
+                await maybeExplain();
             }
         }
     };
@@ -82,8 +90,8 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
     const canReset = attribute.decision?.kind === DecisionKind.Explicit;
     const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit;
     const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected);
-    const isTrueAllowed = AttributeInterpreter.isBooleanValuePossible(attribute, true);
-    const isFalseAllowed = AttributeInterpreter.isBooleanValuePossible(attribute, false);
+    const isTrueAllowed = attribute.possibleDecisionStates.includes(true);
+    const isFalseAllowed = attribute.possibleDecisionStates.includes(false);
 
     const trueOption = (
         <option value={trueValue}>
