@@ -65,10 +65,9 @@ export default function ExplainController(props: PropsWithChildren<Props>) {
         setExplainProcess(null);
     }, []);
 
-    const applySolutionFn = useCallback<UseExplainResult["applySolution"]>(async (solution) => {
-        const result = await applySolution(solution);
+    const applySolutionFn = useCallback<UseExplainResult["applySolution"]>((solution) => {
         dismiss();
-        return result;
+        return applySolution(solution);
     }, [applySolution, dismiss]);
 
     const switchMode = useCallback<ExplainContext["switchMode"]>((displayMode) => {
