@@ -13,6 +13,7 @@ import {showMakeDecisionFailure} from "../common/failureAlerts";
 
 const Root = styled.select`
     color: inherit;
+    cursor: inherit;
 `
 
 const resetValue = "<reset>";

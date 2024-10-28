@@ -17,6 +17,7 @@ import {useChoiceValueNames} from "../hooks/localization";
 
 const Root = styled.select`
     color: inherit;
+    cursor: inherit;
 `
 
 const resetValue = "<reset>";
