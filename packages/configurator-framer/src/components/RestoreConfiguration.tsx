@@ -2,7 +2,7 @@ import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
-import {AutomaticConflictResolution, ConfiguratorError, ConfiguratorErrorType, DecisionsExplainAnswer, ManualConflictResolution, SetManyDropExistingDecisionsMode, StoredConfiguration} from "@viamedici-spc/configurator-ts";
+import {AutomaticConflictResolution, ConfiguratorError, ConfiguratorErrorType, DecisionsExplainAnswer, ManualConflictResolution, DropExistingDecisionsMode, StoredConfiguration} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
 import {E, Either, left, O, Option, pipe, right, TaskEither, TE, TO} from "@viamedici-spc/fp-ts-extensions";
 import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
@@ -49,7 +49,7 @@ const RestoreConfiguration = explainableComponent<HTMLElement, PropsWithChildren
             return
         }
 
-        const mode: SetManyDropExistingDecisionsMode = ({
+        const mode: DropExistingDecisionsMode = ({
             type: "DropExistingDecisions",
             conflictHandling: match(props.autoResolveConflicts)
                 .with(false, () => ({
@@ -73,7 +73,7 @@ const RestoreConfiguration = explainableComponent<HTMLElement, PropsWithChildren
                 return;
             }
 
-            const hasConflict = error?.type === ConfiguratorErrorType.SetManyDecisionsConflict && error.decisionExplanations;
+            const hasConflict = error?.type === ConfiguratorErrorType.MakeManyDecisionsConflict && error.decisionExplanations;
             if (hasConflict) {
                 if (props.explain !== "disabled") {
                     await handleExplainAnswer(error satisfies DecisionsExplainAnswer, props.explain, controlId);

@@ -1,6 +1,6 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, DecisionKind, ExplainQuestionSubject, ExplainQuestionType, ExplicitDecision, WhyIsStateNotPossible} from "@viamedici-spc/configurator-ts"
-import {useAttributes, useDecision} from "@viamedici-spc/configurator-react"
+import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren} from "react";
@@ -37,7 +37,7 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
     }
 
     const controlId = useControlId();
-    const {makeDecision} = useDecision();
+    const {makeDecision} = useMakeDecision();
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceValueId = props.choiceValueId ?? "";
     const hasChoiceValueId = choiceValueId.length > 0;

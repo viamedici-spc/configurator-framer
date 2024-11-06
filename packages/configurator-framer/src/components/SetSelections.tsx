@@ -8,11 +8,11 @@ import {
     DecisionKind, DecisionsExplainAnswer,
     ExplicitDecision,
     ManualConflictResolution,
-    SetManyDropExistingDecisionsMode,
-    SetManyKeepExistingDecisionsMode,
-    SetManyMode
+    DropExistingDecisionsMode,
+    KeepExistingDecisionsMode,
+    MakeManyDecisionsMode
 } from "@viamedici-spc/configurator-ts"
-import {useAttributes, useDecision} from "@viamedici-spc/configurator-react"
+import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren, ReactNode, useEffect} from "react";
@@ -54,7 +54,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
     }
 
     const controlId = useControlId();
-    const {setManyDecision} = useDecision();
+    const {makeManyDecisions} = useMakeDecision();
     const {handleExplainAnswer} = useExplain();
     const globalAttributeIds = props.attributes.map(parseGlobalAttributeId);
     const attributes: { getDecisions?: () => ExplicitDecision[], error?: ReactNode }[] = useAttributes(globalAttributeIds, false).map((attribute, i) => {
@@ -127,8 +127,8 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
 
     const trigger = async () => {
         const decisions = attributes.reduce((xs, x) => [...xs, ...x.getDecisions()], new Array<ExplicitDecision>());
-        const mode: SetManyMode = match(props.existingSelections)
-            .with("keep", () => ({type: "KeepExistingDecisions"}) satisfies SetManyKeepExistingDecisionsMode)
+        const mode: MakeManyDecisionsMode = match(props.existingSelections)
+            .with("keep", () => ({type: "KeepExistingDecisions"}) satisfies KeepExistingDecisionsMode)
             .with("drop", () => ({
                 type: "DropExistingDecisions",
                 conflictHandling: match(props.autoResolveConflicts)
@@ -140,16 +140,16 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
                         type: "Automatic"
                     }) satisfies AutomaticConflictResolution)
                     .exhaustive()
-            }) satisfies SetManyDropExistingDecisionsMode)
+            }) satisfies DropExistingDecisionsMode)
             .exhaustive()
 
         try {
-            await setManyDecision(decisions, mode);
+            await makeManyDecisions(decisions, mode);
         } catch (e) {
             const error = e as ConfiguratorError;
             console.debug("SetMany failed", error)
 
-            const hasConflict = error?.type === ConfiguratorErrorType.SetManyDecisionsConflict && error.decisionExplanations;
+            const hasConflict = error?.type === ConfiguratorErrorType.MakeManyDecisionsConflict && error.decisionExplanations;
             if (hasConflict) {
                 if (props.explain !== "disabled") {
                     await handleExplainAnswer(error satisfies DecisionsExplainAnswer, props.explain, controlId);

@@ -3,7 +3,7 @@ import {
     AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, ExplainQuestionSubject, ExplainQuestionType,
     ExplicitDecision, WhyIsStateNotPossible
 } from "@viamedici-spc/configurator-ts"
-import {useAttributes, useChoiceAttribute, useDecision} from "@viamedici-spc/configurator-react"
+import {useAttributes, useChoiceAttribute, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {PropsWithChildren} from "react";
@@ -41,7 +41,7 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
     }
 
     const controlId = useControlId();
-    const {makeDecision} = useDecision();
+    const {makeDecision} = useMakeDecision();
     const globalAttributeId = parseGlobalAttributeId(props);
     const choiceValueId = props.choiceValueId ?? "";
     const hasChoiceValueId = choiceValueId.length > 0;
