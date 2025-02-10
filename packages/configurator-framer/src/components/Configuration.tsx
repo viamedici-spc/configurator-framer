@@ -1,7 +1,7 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
 import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext,} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
-import {PropsWithChildren, Suspense, useEffect, useMemo} from "react"
+import {PropsWithChildren, ReactNode, Suspense, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
@@ -12,12 +12,15 @@ import ExplainDialog from "./explain/explainDialog/ExplainDialog";
 import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explainDialogProps";
 import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
-import {O, pipe} from "@viamedici-spc/fp-ts-extensions";
+import {O, pipe, E} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";
 import {ChoiceValueSorting, choiceValueSortingPropertyControls, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
 import {choiceValueSortingContext} from "../hooks/useSortedChoiceValues";
 import {Localization, localizationPropertyControls, LocalizationProps} from "../props/localizationProps";
 import {localizationContext} from "../hooks/localization";
+import useParseRawLocalization from "../hooks/useParseRawLocalization";
+import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSorting";
+import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
 
 type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & {
     hcaBaseUrl: string
@@ -72,36 +75,34 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         );
     }
 
-    // TODO: Schema validation with Summons
+    const parsedRawAttributeRelations = useParseRawAttributeRelations(props.attributeRelations?.jsonDefinition);
     const attributeRelations = useMemo(() => pipe(
-        O.fromNullable(props.attributeRelations?.jsonDefinition),
-        O.filter(d => d.length > 0),
-        O.map(d => JSON.parse(d)),
+        parsedRawAttributeRelations,
+        O.fromEither,
         O.toNullable
-    ), [props.attributeRelations]);
+    ), [parsedRawAttributeRelations]);
 
-    // TODO: Schema validation with Summons
+    const parsedRawChoiceValueSorting = useParseRawChoiceValueSorting(props.choiceValueSorting?.jsonDefinition);
     const choiceValueSorting = useMemo(() => pipe(
-        O.fromNullable(props.choiceValueSorting?.jsonDefinition),
-        O.filter(d => d.length > 0),
-        O.map(d => JSON.parse(d) as ChoiceValueSorting),
-        O.orElse(() => O.fromNullable(props.choiceValueSorting as ChoiceValueSorting)),
-        O.getOrElse(() => ({
+        parsedRawChoiceValueSorting,
+        E.orElse(() => pipe(
+            props.choiceValueSorting as ChoiceValueSorting,
+            E.fromNullable<ReactNode>(null)
+        )),
+        E.getOrElse(() => ({
             attributes: [],
             defaultRules: []
         } satisfies ChoiceValueSorting))
-    ), [props.choiceValueSorting]);
+    ), [parsedRawChoiceValueSorting, props.choiceValueSorting]);
 
-    // TODO: Schema validation with Summons
+    const parsedRawLocalization = useParseRawLocalization(props.localization?.jsonDefinition);
     const localization = useMemo(() => pipe(
-        O.fromNullable(props.localization?.jsonDefinition),
-        O.filter(d => d.length > 0),
-        O.map(d => JSON.parse(d) as Localization),
-        O.getOrElse(() => ({
+        parsedRawLocalization,
+        E.getOrElse(() => ({
             attributes: [],
             choiceValues: []
         } satisfies Localization))
-    ), [props.localization]);
+    ), [parsedRawLocalization]);
 
     const sessionContext = useMemo(() => ({
         apiBaseUrl: urlJoin(hcaBaseUrl, "api", "engine"),
@@ -121,6 +122,10 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     return (
         <>
             <ViaConfiguration sessionContext={sessionContext}>
+                {pipe(parsedRawLocalization, E.swap, O.fromEither, O.toNullable)}
+                {pipe(parsedRawChoiceValueSorting, E.swap, O.fromEither, O.toNullable)}
+                {pipe(parsedRawAttributeRelations, E.swap, O.fromEither, O.toNullable)}
+
                 <InitializationError {...props}/>
 
                 <Suspense>
