@@ -8,7 +8,10 @@ const alwaysExternalize = ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/, /
     During development additional dependencies should not be externalized because there is no instance to create the required import map.
     At production JSPM creates the important map, so we can externalize all dependencies.
 */
-const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/,
+// TODO: Fix issue with fp-ts. If it is externalized, it breaks the bundle package build.
+// const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/,
+//     /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/, /^url-join.*/];
+const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^dyna-guid.*/, /^@fortawesome.*/,
     /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/, /^url-join.*/];
 
 export default defineConfig(({command, mode, ssrBuild}) => {
@@ -31,7 +34,7 @@ export default defineConfig(({command, mode, ssrBuild}) => {
             rollupOptions: {
                 // make sure to externalize deps that shouldn't be bundled into your library
                 external: isProduction ? productionExternalize : alwaysExternalize,
-                treeshake: isProduction ? "recommended": false
+                treeshake: isProduction ? "recommended" : false
             },
         },
         plugins: [
