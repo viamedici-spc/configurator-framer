@@ -22,15 +22,19 @@ const Title = styled.h3`
     margin: 0 0 var(--space-xs);
 `
 
+const Message = styled.div`
+    white-space: break-spaces;
+`
+
 export function InitializationErrorMessage(props: { title: ReactNode, message: ReactNode, type: "warning" | "error" }) {
     return (
         <Root className={props.type}>
             <Title>
                 {props.title}
             </Title>
-            <div>
+            <Message>
                 {props.message}
-            </div>
+            </Message>
         </Root>
     )
 }

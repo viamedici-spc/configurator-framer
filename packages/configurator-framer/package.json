@@ -83,7 +83,9 @@
     "ts-pattern": "^5.0.6",
     "use-debounce": "^8.0.4",
     "mustache" : "^4.2.0",
-    "url-join" : "^5.0.0"
+    "url-join" : "^5.0.0",
+    "zod": "^3.24.2",
+    "zod-validation-error": "^3.4.0"
   },
   "peerDependencies": {
     "react": ">=17.0.1",

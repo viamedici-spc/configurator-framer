@@ -1,26 +1,18 @@
-import {E, Either, flow, O, Option, P, pipe, RA, some, Str} from "@viamedici-spc/fp-ts-extensions";
+import {E, Either, flow, O, P, pipe, Str} from "@viamedici-spc/fp-ts-extensions";
 import {ReactNode, useMemo} from "react";
-import type {Create} from "@morphic-ts/io-ts-interpreters/lib/create";
-import {summonFor} from "@morphic-ts/batteries/lib/summoner-ESBAST";
-import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 import {AttributeIdProps} from "../props/attributeIdProps";
 import {json} from "fp-ts";
 import {InitializationErrorMessage} from "../components/InitializationErrorMessage";
+import {z, ZodType} from "zod";
+import {fromError} from 'zod-validation-error';
 
-const {summon} = summonFor<{}>({});
+export const GlobalAttributeId_ = z.object({
+    localId: z.string(),
+    componentPath: z.string().array().optional().nullish(),
+    sharedConfigurationModelId: z.string().optional().nullish(),
+});
 
-export const GlobalAttributeId_ = summon(F => F.interface({
-    localId: F.string(),
-    componentPath: F.optional(F.array(F.string())),
-    sharedConfigurationModelId: F.optional(F.string()),
-}, "GlobalAttributeId"));
-
-type PipelineError = {
-    message: string;
-    originalError: Option<unknown>;
-}
-
-export function mapAttributeId(attributeId: GlobalAttributeId): AttributeIdProps {
+export function mapAttributeId(attributeId: z.infer<typeof GlobalAttributeId_>): AttributeIdProps {
     return {
         sharedConfigurationModel: attributeId.sharedConfigurationModelId ?? "",
         componentPath: attributeId.componentPath?.join(" -> ") ?? "",
@@ -28,7 +20,7 @@ export function mapAttributeId(attributeId: GlobalAttributeId): AttributeIdProps
     };
 }
 
-export function useGenericParseRawData<R, O>(name: string, createRawData: Create<R>, mapper: (rawData: R) => O) {
+export function useGenericParseRawData<R, O>(name: string, zodType: ZodType<R>, mapper: (rawData: R) => O) {
     return (jsonDefinition: string): Either<ReactNode, O> => {
         return useMemo(() => pipe(
             // A missing JSON is considered an error but without returning an error output.
@@ -39,43 +31,19 @@ export function useGenericParseRawData<R, O>(name: string, createRawData: Create
             E.fromOption<ReactNode>(() => null),
             E.chain(flow(
                 json.parse,
-                E.mapLeft(l => ({
-                    message: "Error while parsing JSON.",
-                    originalError: some(l)
-                } satisfies PipelineError)),
+                E.mapLeft(l => "The JSON content could not be parsed. Please check for syntax errors.\n" + l.toString()),
                 E.chain(o => pipe(
-                    E.tryCatch(() => createRawData(o as any), e => e),
-                    E.flatten,
-                    E.mapLeft(l => ({
-                        message: "Format is invalid.",
-                        originalError: some(l)
-                    } satisfies PipelineError)),
+                    zodType.safeParse(o),
+                    pr => pr.success ? E.right(pr.data) : E.left(pr.error),
+                    E.mapLeft(fromError),
+                    E.mapLeft(e => "The JSON schema is invalid. Ensure all required fields and types are correctly defined.\n" + e.toString())
                 )),
                 E.map(mapper),
-                E.doIfLeft(l => () => {
-                    console.log(name, l.message, ...pipe(
-                        l.originalError,
-                        RA.fromOption,
-                        RA.prepend("Additional information:")
-                    ))
-                }),
-                E.mapLeft<PipelineError, ReactNode>(s =>
+                E.mapLeft<string, ReactNode>(s =>
                     <InitializationErrorMessage
                         type="warning"
                         title={name + " definition is invalid and was ignored"}
-                        message={(
-                            <>
-                                {s.message}
-                                {O.isSome(s.originalError) && (
-                                    <>
-                                        <br/>
-                                        <div>
-                                            See developer console for more information.
-                                        </div>
-                                    </>
-                                )}
-                            </>
-                        )}/>
+                        message={s}/>
                 )
             ))
         ), [jsonDefinition]);

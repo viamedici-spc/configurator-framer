@@ -9,9 +9,9 @@ const alwaysExternalize = ["react", /^react\/.*/, /^react-dom.*/, /^framer.*/, /
     At production JSPM creates the important map, so we can externalize all dependencies.
 */
 // TODO: Fix issue with fp-ts. If it is externalized, it breaks the bundle package build.
-// const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/,
+// const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^fp-ts.*/, /^dyna-guid.*/, /^@fortawesome.*/, /^@zod.*/, /^@zod-validation-error.*/,
 //     /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/, /^url-join.*/];
-const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^dyna-guid.*/, /^@fortawesome.*/,
+const productionExternalize = [...alwaysExternalize, /^@viamedici-spc.*/, /^ts-pattern.*/, /^styled-components.*/, /^dyna-guid.*/, /^@fortawesome.*/, /^zod.*/, /^zod-validation-error.*/,
     /^react-error-boundary.*/, /^react-number-format.*/, /^use-debounce.*/, /^clsx.*/, /^hex-to-css-filter.*/, /^rgb-hex.*/, /^merge-props.*/, /^camelcase.*/, /^mustache.*/, /^url-join.*/];
 
 export default defineConfig(({command, mode, ssrBuild}) => {

@@ -1,16 +1,13 @@
-import {identity} from "@viamedici-spc/fp-ts-extensions";
-import {summonFor} from "@morphic-ts/batteries/lib/summoner-ESBAST";
 import {AttributeRelations} from "@viamedici-spc/configurator-ts";
 import {GlobalAttributeId_, useGenericParseRawData} from "../common/RawDataParsing";
+import {z} from "zod";
 
-const {summon} = summonFor<{}>({});
+const DecisionToRespect_ = z.object({
+    attributeId: GlobalAttributeId_,
+    decisions: GlobalAttributeId_.array()
+});
 
-const DecisionToRespect_ = summon(F => F.interface({
-    attributeId: GlobalAttributeId_(F),
-    decisions: F.array(GlobalAttributeId_(F))
-}, "DecisionToRespect"));
+const RawAttributeRelations_ = DecisionToRespect_.array();
 
-const RawAttributeRelations_ = summon(F => F.array(DecisionToRespect_(F)));
-
-const useParseRawAttributeRelations = useGenericParseRawData("AttributeRelations", RawAttributeRelations_.create, identity<AttributeRelations>);
+const useParseRawAttributeRelations = useGenericParseRawData("AttributeRelations", RawAttributeRelations_, x => x as AttributeRelations);
 export default useParseRawAttributeRelations;
