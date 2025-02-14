@@ -5,6 +5,7 @@ const Root = styled.div`
     padding: var(--space-md);
     margin: var(--space-md);
     border-radius: var(--shape-border-radius-sm);
+    background: white;
 
     &.warning {
         border: 1px solid orange;
