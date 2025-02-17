@@ -35,7 +35,7 @@ export function useGenericParseRawData<R, O>(name: string, zodType: ZodType<R>, 
                 E.chain(o => pipe(
                     zodType.safeParse(o),
                     pr => pr.success ? E.right(pr.data) : E.left(pr.error),
-                    E.mapLeft(fromError),
+                    E.mapLeft(e => fromError(e, {maxIssuesInMessage: 5, issueSeparator: "\n- "})),
                     E.mapLeft(e => "The JSON schema is invalid. Ensure all required fields and types are correctly defined.\n" + e.toString())
                 )),
                 E.map(mapper),
