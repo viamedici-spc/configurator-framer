@@ -51,8 +51,8 @@ const ChoiceSelect = explainableComponent<HTMLSelectElement, Props>((props, ref)
     const {explain} = useExplain();
     const choiceValueNames = useChoiceValueNames(globalAttributeId);
     const {attribute, makeDecision, clearDecisions, isMultiSelect, getIncludedChoiceValues, getBlockedChoiceValues, getAllowedChoiceValues} = choiceAttribute;
-    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, getAllowedChoiceValues());
-    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, getBlockedChoiceValues());
+    const allowedChoiceValues = useSortedChoiceValues(globalAttributeId, getAllowedChoiceValues());
+    const blockedChoiceValues = useSortedChoiceValues(globalAttributeId, getBlockedChoiceValues());
     const selectedChoiceValues = getIncludedChoiceValues();
     const selectedChoiceValueIds = selectedChoiceValues.map((a) => a.id);
     const selectedChoiceValueId = selectedChoiceValueIds[0] ?? nothingValue;

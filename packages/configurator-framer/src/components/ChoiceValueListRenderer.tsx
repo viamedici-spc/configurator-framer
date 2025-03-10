@@ -111,7 +111,7 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
         .otherwise(() => false))
     )
 
-    const choiceValues = useSortedChoiceValues(globalAttributeId, choiceValueNames, filteredChoiceValues);
+    const choiceValues = useSortedChoiceValues(globalAttributeId, filteredChoiceValues);
     const choiceValueIds = choiceValues.map(v => v.id);
 
     return (
