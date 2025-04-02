@@ -33,7 +33,7 @@ export default function InitializationError(props: Props) {
         case ConfiguratorErrorType.ConfigurationModelNotFound:
             return Children.toArray(props.configurationModelNotFoundContent).length > 0
                 ? props.configurationModelNotFoundContent
-                : standardErrorMessage("Configuration Model not found for the specified deployment name.");
+                : standardErrorMessage("The Configuration Model was not found for the specified deployment name.");
 
         case ConfiguratorErrorType.AuthenticationFailure:
             return Children.toArray(props.accessTokenInvalidContent).length > 0
@@ -46,7 +46,13 @@ export default function InitializationError(props: Props) {
                 : standardErrorMessage("The HCA access token does not permit using the specified Configuration Model.");
 
         case ConfiguratorErrorType.DecisionsToRespectInvalid:
-            return standardErrorMessage("The definition of Attribute Relations is invalid.");
+            const attributeIdText = `Attribute Id: ${error.globalAttributeId?.localId ?? ""}`;
+            const componentPathText = `Component Path: ${error.globalAttributeId.componentPath?.join(" -> ") ?? ""}`;
+            const sharedConfigurationModelText = `Shared Configuration Model: ${error.globalAttributeId?.sharedConfigurationModelId ?? ""}`;
+            return standardErrorMessage(`The definition of Attribute Relations is invalid: ${error.validationMessage}\n\n${attributeIdText}\n${componentPathText}\n${sharedConfigurationModelText}`);
+
+        case ConfiguratorErrorType.SessionParametersInvalid:
+            return standardErrorMessage(`Configuration Session parameters are invalid: ${error.detail}`);
 
         default:
             return Children.toArray(props.errorContent).length > 0

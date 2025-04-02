@@ -1,5 +1,5 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
-import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext,} from "@viamedici-spc/configurator-ts"
+import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
 import {PropsWithChildren, ReactNode, Suspense, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
@@ -12,7 +12,7 @@ import ExplainDialog from "./explain/explainDialog/ExplainDialog";
 import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explainDialogProps";
 import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
-import {O, pipe, E} from "@viamedici-spc/fp-ts-extensions";
+import {O, pipe, E, RA} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";
 import {ChoiceValueSorting, choiceValueSortingPropertyControls, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
 import {choiceValueSortingContext} from "../hooks/useSortedChoiceValues";
@@ -21,8 +21,10 @@ import {localizationContext} from "../hooks/localization";
 import useParseRawLocalization from "../hooks/useParseRawLocalization";
 import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSorting";
 import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
+import {wizardAttributeRelationsPropertyControls, WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
+import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 
-type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & {
+type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & {
     hcaBaseUrl: string
     sessionCreation: "client-side" | "server-side"
     accessToken?: string,
@@ -83,7 +85,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     ), [parsedRawAttributeRelations]);
 
     const parsedRawChoiceValueSorting = useParseRawChoiceValueSorting(props.choiceValueSorting?.jsonDefinition);
-    const choiceValueSorting = useMemo(() => pipe(
+    const choiceValueSorting = useMemo<ChoiceValueSorting>(() => pipe(
         parsedRawChoiceValueSorting,
         E.orElse(() => pipe(
             props.choiceValueSorting as ChoiceValueSorting,
@@ -96,13 +98,21 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     ), [parsedRawChoiceValueSorting, props.choiceValueSorting]);
 
     const parsedRawLocalization = useParseRawLocalization(props.localization?.jsonDefinition);
-    const localization = useMemo(() => pipe(
+    const localization = useMemo<Localization>(() => pipe(
         parsedRawLocalization,
         E.getOrElse(() => ({
             attributes: [],
             choiceValues: []
         } satisfies Localization))
     ), [parsedRawLocalization]);
+
+    const wizardAttributeRelations = pipe(
+        props.wizardAttributeRelations?.wizardSteps,
+        O.fromNullable,
+        O.filter(RA.isNonEmpty),
+        O.map(RA.map(s => ({attributes: pipe(s.attributes, RA.map(parseGlobalAttributeId))} satisfies WizardStep))),
+        O.toNullable
+    )
 
     const sessionContext = useMemo(() => ({
         apiBaseUrl: urlJoin(hcaBaseUrl, "api", "engine"),
@@ -116,6 +126,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
             deploymentName,
         },
         attributeRelations,
+        wizardAttributeRelations,
         allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}}
     } satisfies SessionContext), [hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl, sessionDeleteUrl, channel, deploymentName, attributeRelations])
 
@@ -245,6 +256,7 @@ addPropertyControls(Configuration, {
             }
         }
     },
+    ...wizardAttributeRelationsPropertyControls,
     ...choiceValueSortingPropertyControls,
     ...localizationPropertyControls
 })
