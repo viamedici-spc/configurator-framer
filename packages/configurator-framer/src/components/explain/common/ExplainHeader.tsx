@@ -34,7 +34,7 @@ export default function ExplainHeader(props: HTMLProps<HTMLDivElement>) {
         .returnType<ReactNode>()
         .with({subject: ExplainQuestionSubject.configuration}, () => configurationSubjectTitle)
         .with({subject: ExplainQuestionSubject.attribute}, q => useAttributeName(q.attributeId) ?? q.attributeId.localId)
-        .with({subject: ExplainQuestionSubject.choiceValue}, q => useChoiceValueNames(q.attributeId)[q.choiceValueId] ?? q.choiceValueId)
+        .with({subject: ExplainQuestionSubject.choiceValue}, q => useChoiceValueNames(q.attributeId).get(q.choiceValueId) ?? q.choiceValueId)
         .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Included}, () => componentDecisionStateIncludedLabel)
         .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Excluded}, () => componentDecisionStateExcludedLabel)
         .with({subject: ExplainQuestionSubject.boolean, state: true}, () => booleanDecisionStateTrueLabel)
