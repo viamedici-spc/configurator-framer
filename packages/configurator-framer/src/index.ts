@@ -35,6 +35,7 @@ import {explainableComponent} from "./common/componentComposites";
 import {ChoiceValueNames, useAttributeName, useChoiceValueNames, useChoiceValueName} from "./hooks/localization";
 import useExplain, {UseExplainResult} from "./hooks/useExplain";
 import useExplainProcess, {UseExplainProcessResult} from "./hooks/useExplainProcess";
+import PropagateHeight from "./components/PropagateHeight";
 
 export {
     Configuration,
@@ -82,4 +83,5 @@ export {
     type UseExplainResult,
     useExplainProcess,
     type UseExplainProcessResult,
+    PropagateHeight
 };
