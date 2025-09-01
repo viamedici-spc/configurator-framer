@@ -5,17 +5,15 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
 import {ChoiceValueNames} from "../../../hooks/localization";
 import useCommonExplainProps from "../../../props/useCommonExplainProps";
+import {getPaddingStyle} from "../../../props/paddingProps";
+import {match} from "ts-pattern";
+import {getTextStyle} from "../../../props/textProps";
+import {getBorderStyle} from "../../../props/borderProps";
 
 const Root = styled.div`
     display: flex;
     gap: var(--space-xs);
     align-items: center;
-    background-color: var(--color-explain-attribute-value-fill);
-    border-radius: 360px;
-    padding-right: var(--space-sm);
-    font-size: 0.9em;
-    font-family: var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif);
-    font-weight: 500;
     min-width: 0;
 `
 
@@ -27,16 +25,6 @@ const Icon = styled.div`
     height: 1.5em;
     width: 1.5em;
     flex-shrink: 0;
-
-    &.mode-add {
-        background-color: var(--color-explain-attribute-value-add-fill);
-        color: var(--color-explain-attribute-value-add-color);
-    }
-
-    &.mode-remove {
-        background-color: var(--color-explain-attribute-value-remove-fill);
-        color: var(--color-explain-attribute-value-remove-color);
-    }
 `
 
 const Name = styled.div`
@@ -54,10 +42,19 @@ export function AttributeValue(props: { decision: Decision, choiceValuesNames: C
     const intention = decision.intention;
     const commonExplainProps = useCommonExplainProps();
     const name = getDecisionStateDisplayName(decision, choiceValuesNames, commonExplainProps);
+    const indentProps = match(intention)
+        .with("remove", () => commonExplainProps.attributeValue.remove)
+        .with("add", () => commonExplainProps.attributeValue.add)
+        .exhaustive();
 
     return (
-        <Root>
-            <Icon className={`mode-${intention}`}>
+        <Root style={{
+            ...getPaddingStyle(commonExplainProps.attributeValue),
+            ...getTextStyle(indentProps),
+            ...getBorderStyle(indentProps),
+            backgroundColor: indentProps.fill
+        }}>
+            <Icon style={{backgroundColor: indentProps.iconFill, color: indentProps.iconColor}}>
                 {intention === "remove" && <FontAwesomeIcon icon={faMinus}/>}
                 {intention === "add" && <FontAwesomeIcon icon={faPlus}/>}
             </Icon>

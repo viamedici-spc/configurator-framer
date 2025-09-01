@@ -5,9 +5,9 @@ import styled from "styled-components";
 import {HTMLProps, ReactNode} from "react";
 import {useAttributeName, useChoiceValueNames} from "../../../hooks/localization";
 import useCommonExplainProps from "../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../props/textProps";
 
 const Value = styled.span`
-    color: var(--color-explain-header-value-color);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -15,38 +15,34 @@ const Value = styled.span`
 
 export default function ExplainHeader(props: HTMLProps<HTMLDivElement>) {
     const {explainQuestion} = useExplainProcess();
-    const {
-        configurationSubjectTitle, componentDecisionStateIncludedLabel, componentDecisionStateExcludedLabel,
-        booleanDecisionStateFalseLabel, booleanDecisionStateTrueLabel, isBlockedSuffix, isNotSatisfiedSuffix,
-        generalConflictTitle
-    } = useCommonExplainProps();
+    const {header, attributeValue} = useCommonExplainProps();
 
     if (!explainQuestion) {
         // This occurs by a setMany conflict
         return (
             <div {...props}>
-                {generalConflictTitle}
+                {header.subject.generalConflictTitle}
             </div>
         )
     }
 
     const subjectName = match(explainQuestion)
         .returnType<ReactNode>()
-        .with({subject: ExplainQuestionSubject.configuration}, () => configurationSubjectTitle)
+        .with({subject: ExplainQuestionSubject.configuration}, () => header.subject.configurationSubjectTitle)
         .with({subject: ExplainQuestionSubject.attribute}, q => useAttributeName(q.attributeId) ?? q.attributeId.localId)
         .with({subject: ExplainQuestionSubject.choiceValue}, q => useChoiceValueNames(q.attributeId).get(q.choiceValueId) ?? q.choiceValueId)
-        .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Included}, () => componentDecisionStateIncludedLabel)
-        .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Excluded}, () => componentDecisionStateExcludedLabel)
-        .with({subject: ExplainQuestionSubject.boolean, state: true}, () => booleanDecisionStateTrueLabel)
-        .with({subject: ExplainQuestionSubject.boolean, state: false}, () => booleanDecisionStateFalseLabel)
+        .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Included}, () => attributeValue.componentDecisionStateIncludedLabel)
+        .with({subject: ExplainQuestionSubject.component, state: ComponentDecisionState.Excluded}, () => attributeValue.componentDecisionStateExcludedLabel)
+        .with({subject: ExplainQuestionSubject.boolean, state: true}, () => attributeValue.booleanDecisionStateTrueLabel)
+        .with({subject: ExplainQuestionSubject.boolean, state: false}, () => attributeValue.booleanDecisionStateFalseLabel)
         .with({subject: ExplainQuestionSubject.numeric}, q => q.state.toString())
         .exhaustive()
 
     const question = match(explainQuestion)
         .returnType<ReactNode>()
-        .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => isBlockedSuffix)
-        .with({question: ExplainQuestionType.whyIsNotSatisfied}, () => isNotSatisfiedSuffix)
+        .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => header.suffix.isBlockedSuffix)
+        .with({question: ExplainQuestionType.whyIsNotSatisfied}, () => header.suffix.isNotSatisfiedSuffix)
         .exhaustive()
 
-    return <div {...props}><Value>{subjectName}</Value>&nbsp;{question}</div>
+    return <div {...props} style={getTextStyle(header.suffix)}><Value style={getTextStyle(header.subject)}>{subjectName}</Value>&nbsp;{question}</div>
 }

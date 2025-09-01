@@ -1,7 +1,7 @@
-import {CommonExplainProps} from "./commonExplainProps";
+import {CommonExplainProps} from "./explain/commonExplainProps";
 import {useContext} from "react";
-import {explainPopoverPropsContext} from "./explainPopoverProps";
-import {explainDialogPropsContext} from "./explainDialogProps";
+import {explainPopoverPropsContext} from "./explain/explainPopoverProps";
+import {explainDialogPropsContext} from "./explain/explainDialogProps";
 
 const useCommonExplainProps = (): CommonExplainProps => useContext(explainPopoverPropsContext) || useContext(explainDialogPropsContext);
 

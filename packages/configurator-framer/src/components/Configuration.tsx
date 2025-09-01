@@ -9,8 +9,8 @@ import InitializationError, {InitializationErrorProps} from "./InitializationErr
 import withErrorBoundary from "../common/withErrorBoundary";
 import DesignSystem from "../designSystem/DesignSystem";
 import ExplainDialog from "./explain/explainDialog/ExplainDialog";
-import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explainDialogProps";
-import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explainPopoverProps";
+import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explain/explainDialogProps";
+import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explain/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
 import {O, pipe, E, RA} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";

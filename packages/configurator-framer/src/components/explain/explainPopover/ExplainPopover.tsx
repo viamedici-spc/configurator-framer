@@ -11,30 +11,21 @@ import {AnimatePresence, motion} from "framer";
 import {match} from "ts-pattern";
 import FreezeExplainContext from "../common/FreezeExplainContext";
 import {ExplainShell} from "./ExplainShell";
-import {ExplainPopoverProps, useExplainPopoverProps} from "../../../props/explainPopoverProps";
+import {ExplainPopoverProps, useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
 
 type Props = {
     content?: ReactNode;
 }
 
 const Root = styled(PopoverContent)<ExplainPopoverProps>`
-    --color-explain-attribute-value-fill: ${p => p.attributeValueFill};
-    --color-explain-attribute-value-add-fill: ${p => p.attributeValueAddFill};
-    --color-explain-attribute-value-add-color: ${p => p.attributeValueAddColor};
-    --color-explain-attribute-value-remove-fill: ${p => p.attributeValueRemoveFill};
-    --color-explain-attribute-value-remove-color: ${p => p.attributeValueRemoveColor};
-    --color-explain-header-value-color: ${p => p.headerValueColor};
-    --color-explain-popover-fill: ${p => p.fill};
-    --color-explain-popover-color: ${p => p.color};
-    --color-explain-popover-close-button-outline: ${p => p.closeButtonOutline};
+    --color-explain-popover-box-fill: ${p => p.popoverBox.fill};
+    --size-explain-popover-box-padding-top: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingTop : p.popoverBox.padding}px;
+    --size-explain-popover-box-padding-right: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingRight : p.popoverBox.padding}px;
+    --size-explain-popover-box-padding-bottom: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingBottom : p.popoverBox.padding}px;
+    --size-explain-popover-box-padding-left: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingLeft : p.popoverBox.padding}px;
     --color-explain-popover-list-separator: ${p => p.listSeparator};
-    --color-explain-popover-apply-solution-button-fill: ${p => p.applySolutionButtonFill};
-    --color-explain-popover-apply-solution-button-color: ${p => p.applySolutionButtonColor};
-    --color-explain-popover-apply-solution-button-outline: ${p => p.applySolutionButtonOutline};
-    --color-explain-popover-show-more-button-outline: ${p => p.showMoreButtonOutline};
 
     z-index: 10;
-    filter: var(--shadows-popover);
 
     &:focus {
         outline: none;
@@ -42,7 +33,7 @@ const Root = styled(PopoverContent)<ExplainPopoverProps>`
 `
 
 const StyledFloatingArrow = styled(FloatingArrow)`
-    fill: var(--color-explain-popover-fill);
+    fill: var(--color-explain-popover-box-fill);
 `
 
 const animationVariants = {

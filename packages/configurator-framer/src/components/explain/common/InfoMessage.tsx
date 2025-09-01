@@ -2,12 +2,15 @@ import useExplainProcess from "../../../hooks/useExplainProcess";
 import {match, P} from "ts-pattern";
 import {HTMLProps, ReactNode} from "react";
 import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
+import useCommonExplainProps from "../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../props/textProps";
 
 type Variant = 'failedToExplain' | 'noExplanationFound' | 'noSolutionFound';
 
 export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant: Variant }) {
     const {variant, ...restProps} = props;
     const {explainQuestion} = useExplainProcess();
+    const {infoMessage} = useCommonExplainProps();
 
     const question = match(explainQuestion)
         .returnType<ReactNode>()
@@ -30,7 +33,7 @@ export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant
         .exhaustive();
 
     return (
-        <div {...restProps}>
+        <div {...restProps} style={getTextStyle(infoMessage)}>
             {content}
         </div>
     )

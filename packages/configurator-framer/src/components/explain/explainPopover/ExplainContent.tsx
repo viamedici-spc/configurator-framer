@@ -4,19 +4,18 @@ import AttributeList from "../common/AttributeList";
 import ShowMoreButton from "./ShowMoreButton";
 import ApplySolutionButton from "../common/ApplySolutionButton";
 import InfoMessage from "../common/InfoMessage";
-import {useExplainPopoverProps} from "../../../props/explainPopoverProps";
+import {useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
+import {getStaticTextStyle} from "../../../props/staticTextProps";
 
 const SolutionTitle = styled.div`
-    font-weight: 500;
-    font-family: var(--font-heading);
     margin-bottom: var(--space-xs);
 `
 
 const Separator = styled.div`
     height: 1px;
     background-color: var(--color-explain-popover-list-separator);
-    margin-left: -1.1em;
-    margin-right: -1.1em;
+    margin-left: calc(var(--size-explain-popover-box-padding-left) * -1);
+    margin-right: calc(var(--size-explain-popover-box-padding-right) * -1);
 
     @media only screen and (min-resolution: 2dppx) {
         height: 0.5px;
@@ -24,6 +23,8 @@ const Separator = styled.div`
 `
 
 const Actions = styled.div`
+    display: flex;
+    flex-direction: column;
     container: explain-actions / inline-size;
 `
 
@@ -33,37 +34,19 @@ const StyledAttributeList = styled(AttributeList)`
     gap: var(--space-sm);
     padding-top: var(--space-xs);
     padding-bottom: var(--space-xs);
-    padding-right: 1.1em;
-    margin-right: -1.1em;
+    padding-right: var(--size-explain-popover-box-padding-right);
+    margin-right: calc(var(--size-explain-popover-box-padding-right) * -1);
     overflow: auto;
     max-height: 200px;
 `
 
 const StyledApplySolutionButton = styled(ApplySolutionButton)`
-    border-radius: 360px;
-    background-color: var(--color-explain-popover-apply-solution-button-fill);
-    color: var(--color-explain-popover-apply-solution-button-color);
-    font-size: 0.9em;
-    font-family: var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif);
-    font-weight: 600;
-    appearance: none;
-    padding: 0.6em 2em;
-    border: none;
-    width: 100%;
-    margin-top: 1.1em;
+    align-self: stretch;
 
-    &:focus {
-        outline: 2px solid var(--color-explain-popover-apply-solution-button-outline);
-        outline-offset: 1px;
+    @container explain-actions (min-width: 300px) {
+        align-self: center;
     }
-
-    // The Webstorm formatter doesn't support container queries and would be break it.
-    // @formatter:off
-@container explain-actions (min-width: 300px) {
-    width: auto;
-}
 `
-// @formatter:on
 
 const StyledInfoMessage = styled(InfoMessage)`
     width: min-content;
@@ -72,8 +55,7 @@ const StyledInfoMessage = styled(InfoMessage)`
 
 export default function ExplainContent() {
     const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
-    const {solutionTitle, applySolutionButtonCaption} = useExplainPopoverProps();
-
+    const {subline} = useExplainPopoverProps();
 
     if (hasError) {
         return <StyledInfoMessage variant="failedToExplain"/>
@@ -91,16 +73,14 @@ export default function ExplainContent() {
     const desiredDecisions = explanation.solution.decisions.filter(d => d.state != null);
     return (
         <>
-            <SolutionTitle>{solutionTitle}</SolutionTitle>
+            <SolutionTitle style={getStaticTextStyle(subline)}>{subline.staticText}</SolutionTitle>
 
             <Separator/>
             <StyledAttributeList blockingDecisions={explanation.causedByDecisions} desiredDecisions={desiredDecisions}/>
             <Separator/>
 
             <Actions>
-                <StyledApplySolutionButton explanation={explanation}>
-                    {applySolutionButtonCaption}
-                </StyledApplySolutionButton>
+                <StyledApplySolutionButton explanation={explanation}/>
 
                 {(decisionExplanations.length > 1 || constraintExplanations.length > 0) && <ShowMoreButton/>}
             </Actions>

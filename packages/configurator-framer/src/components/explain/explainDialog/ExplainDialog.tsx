@@ -7,7 +7,7 @@ import Dialog from "../../dialog/Dialog";
 import DialogContent, {defaultOverlayStyle} from "../../dialog/DialogContent";
 import FreezeExplainContext from "../common/FreezeExplainContext";
 import {ExplainShell} from "./ExplainShell";
-import {ExplainDialogProps, explainDialogPropsContext} from "../../../props/explainDialogProps";
+import {ExplainDialogProps, explainDialogPropsContext} from "../../../props/explain/explainDialogProps";
 import {FloatingOverlay} from "@floating-ui/react";
 
 type Props = ExplainDialogProps & {
@@ -15,21 +15,11 @@ type Props = ExplainDialogProps & {
 }
 
 const Root = styled(DialogContent)<ExplainDialogProps>`
-    --color-explain-attribute-value-fill: ${p => p.attributeValueFill};
-    --color-explain-attribute-value-add-fill: ${p => p.attributeValueAddFill};
-    --color-explain-attribute-value-add-color: ${p => p.attributeValueAddColor};
-    --color-explain-attribute-value-remove-fill: ${p => p.attributeValueRemoveFill};
-    --color-explain-attribute-value-remove-color: ${p => p.attributeValueRemoveColor};
-    --color-explain-header-value-color: ${p => p.headerValueColor};
-    --color-explain-dialog-fill: ${p => p.fill};
-    --color-explain-dialog-color: ${p => p.color};
-    --color-explain-dialog-close-button-outline: ${p => p.closeButtonOutline};
-    --color-explain-dialog-apply-solution-button-fill: ${p => p.applySolutionButtonFill};
-    --color-explain-dialog-apply-solution-button-color: ${p => p.applySolutionButtonColor};
-    --color-explain-dialog-apply-solution-button-outline: ${p => p.applySolutionButtonOutline};
-    --color-explain-dialog-explanation-card: ${p => p.explanationCard};
+    --size-explain-dialog-box-padding-top: ${p => p.dialogBox.isMixedPadding ? p.dialogBox.paddingTop : p.dialogBox.padding}px;
+    --size-explain-dialog-box-padding-right: ${p => p.dialogBox.isMixedPadding ? p.dialogBox.paddingRight : p.dialogBox.padding}px;
+    --size-explain-dialog-box-padding-bottom: ${p => p.dialogBox.isMixedPadding ? p.dialogBox.paddingBottom : p.dialogBox.padding}px;
+    --size-explain-dialog-box-padding-left: ${p => p.dialogBox.isMixedPadding ? p.dialogBox.paddingLeft : p.dialogBox.padding}px;
     --color-explain-dialog-scroll-shadow-border: ${p => p.scrollShadowBorder};
-    --backdrop-filter-explain-dialog: ${p => p.backdropFilter};
 
     display: grid;
 

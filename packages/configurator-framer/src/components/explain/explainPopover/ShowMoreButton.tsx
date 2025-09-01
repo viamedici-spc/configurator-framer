@@ -1,52 +1,41 @@
 import useExplainProcess from "../../../hooks/useExplainProcess";
 import styled from "styled-components";
-import {useExplainPopoverProps} from "../../../props/explainPopoverProps";
+import {useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
 import {useMemo} from "react";
 import Mustache from "mustache";
+import {getButtonStyle} from "../../../props/buttonProps";
+import {getMarginStyle} from "../../../props/marginProps";
 
-const Root = styled.div`
-    display: flex;
-    justify-content: center;
-
-    // The Webstorm formatter doesn't support container queries and would be break it.
-    // @formatter:off
-@container explain-actions (min-width: 300px) {
-    justify-content: start;
-}
-`
-// @formatter:on
-
-const Button = styled.button`
-    color: inherit;
-    font-size: 0.9em;
-    font-family: var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif);
-    font-weight: 500;
+const Root = styled.button`
     appearance: none;
     border: none;
-    border-radius: var(--shape-border-radius-xs);
-    margin-top: 0.9em;
     text-decoration: underline;
     cursor: pointer;
-    background-color: transparent;
+    align-self: center;
+
+    &:hover {
+        background-color: var(--color-button-fill-hover) !important;
+    }
 
     &:focus {
-        outline: 2px solid var(--color-explain-popover-show-more-button-outline);
-        outline-offset: 1px;
+        outline: var(--size-button-focus-outline) solid var(--color-button-focus-outline);
+        outline-offset: var(--size-button-focus-outline-offset);
     }
 `
 
 export default function ShowMoreButton() {
     const {decisionExplanations, switchMode} = useExplainProcess();
-    const {showConstraintsButtonCaption, showMoreButtonCaption} = useExplainPopoverProps();
+    const {showMoreButton, showConstraintsButton} = useExplainPopoverProps();
     const more = decisionExplanations.length - 1;
-    const showMoreText = useMemo(() => more > 0 && Mustache.render(showMoreButtonCaption, {amount: more}), [showMoreButtonCaption, more])
+    const showMoreText = useMemo(() => more > 0 && Mustache.render(showMoreButton.staticText, {amount: more}), [showMoreButton.text, more])
+    const activeProps = more > 0 ? showMoreButton : showConstraintsButton;
 
     return (
-        <Root>
-            <Button onClick={() => switchMode("dialog")}>
-                {more > 0 && <span>{showMoreText}</span>}
-                {more === 0 && <span>{showConstraintsButtonCaption}</span>}
-            </Button>
+        <Root onClick={() => switchMode("dialog")} style={{
+            ...getButtonStyle(activeProps),
+            ...getMarginStyle(activeProps)
+        }}>
+            {showMoreText || activeProps.staticText}
         </Root>
     )
 }

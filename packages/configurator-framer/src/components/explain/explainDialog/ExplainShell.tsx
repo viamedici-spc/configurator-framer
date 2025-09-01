@@ -6,22 +6,18 @@ import DialogClose from "../../dialog/DialogClose";
 import ExplainHeader from "../common/ExplainHeader";
 import ScrollShadow from "./ScrollShadow";
 import {motion} from "framer";
+import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
+import {getBoxStyle} from "../../../props/boxProps";
+import {getButtonStyle} from "../../../props/buttonProps";
 
 const Root = styled(motion.div)`
     position: relative;
-    background-color: var(--color-explain-dialog-fill);
-    backdrop-filter: var(--backdrop-filter-explain-dialog);
-    color: var(--color-explain-dialog-color);
     outline-offset: -1px;
-    padding-top: 1.1em;
-    border-radius: var(--shape-border-radius-md);
-    box-shadow: var(--shadows-dialog);
-    font-size: var(--text-base-size);
-    font-family: var(--font-primary);
     display: grid;
     grid-template-rows: [header] auto [content] auto;
     grid-template-columns: [header content] 1fr;
     align-content: start;
+    padding-top: var(--size-explain-dialog-box-padding-top) !important;
     min-height: min(calc(100vh - var(--space-md) * 2), 350px);
     max-height: min(calc(100vh - var(--space-md) * 2), 700px);
     max-width: min(calc(100vw - var(--space-md) * 2), 700px);
@@ -31,45 +27,42 @@ const Root = styled(motion.div)`
 const Content = styled.div`
     overflow-y: auto;
     grid-area: content;
-    padding-left: var(--space-xs-fixed);
-    padding-right: var(--space-xs-fixed);
+    padding-left: var(--size-explain-dialog-box-padding-left);
+    padding-right: var(--size-explain-dialog-box-padding-right);
     padding-bottom: var(--space-xs-fixed);
 `
 
 const StyledScrollShadow = styled(ScrollShadow)`
-    margin-left: calc(var(--space-xs-fixed) * -1);
-    margin-right: calc(var(--space-xs-fixed) * -1);
+    margin-left: calc(var(--size-explain-dialog-box-padding-left) * -1);
+    margin-right: calc(var(--size-explain-dialog-box-padding-right) * -1);
 `
 
 const CloseButton = styled(DialogClose)`
     position: absolute;
     right: var(--space-sm-fixed);
     top: var(--space-sm-fixed);
-    border: none;
-    background-color: transparent;
-    color: inherit;
-    font-size: var(--text-sm);
     cursor: pointer;
-    border-radius: var(--shape-border-radius-xs);
+
+    &:hover {
+        background-color: var(--color-button-fill-hover) !important;
+    }
 
     &:focus {
-        outline: 2px solid var(--color-explain-dialog-close-button-outline);
-        outline-offset: 1px;
+        outline: var(--size-button-focus-outline) solid var(--color-button-focus-outline);
+        outline-offset: var(--size-button-focus-outline-offset);
     }
 `
 
 const StyledExplainHeader = styled(ExplainHeader)`
     grid-area: header;
-    font-size: var(--text-md);
-    font-weight: 500;
-    font-family: var(--font-heading);
     margin-bottom: var(--space-xs);
     overflow: hidden;
     display: flex;
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-right: var(--space-md);
-    margin-left: calc(var(--space-xs-fixed) + var(--space-sm-fixed));
+    padding-left: var(--size-explain-dialog-box-padding-left);
+    padding-right: var(--size-explain-dialog-box-padding-right);
 `
 
 const animationVariants = {
@@ -97,8 +90,16 @@ const animationVariants = {
 }
 
 export function ExplainShell(props: PropsWithChildren) {
+    const {dialogBox, closeButton} = useExplainDialogProps();
+
+    const dialogBoxWithoutPadding = {
+        ...dialogBox,
+        padding: 0,
+        isMixedPadding: false
+    } satisfies typeof dialogBox
+
     return (
-        <Root variants={animationVariants} initial="initial" animate="open" exit="close">
+        <Root style={getBoxStyle(dialogBoxWithoutPadding)} variants={animationVariants} initial="initial" animate="open" exit="close">
             <StyledExplainHeader/>
 
             <Content>
@@ -106,7 +107,7 @@ export function ExplainShell(props: PropsWithChildren) {
                 {props.children}
             </Content>
 
-            <CloseButton>
+            <CloseButton style={getButtonStyle(closeButton)}>
                 <FontAwesomeIcon icon={faXmark}/>
             </CloseButton>
         </Root>

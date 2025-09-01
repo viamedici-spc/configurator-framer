@@ -3,13 +3,11 @@ import useExplainProcess from "../../../hooks/useExplainProcess";
 import DecisionExplanation from "./DecisionExplanation";
 import ConstraintExplanation from "./ConstraintExplanation";
 import InfoMessage from "../common/InfoMessage";
-import {useExplainDialogProps} from "../../../props/explainDialogProps";
+import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
+import {getStaticTextStyle} from "../../../props/staticTextProps";
 
 const GroupTitle = styled.div`
-    font-weight: 500;
-    font-family: var(--font-heading);
     margin-bottom: var(--space-xs);
-    margin-left: var(--space-sm-fixed);
 `
 
 const Explanations = styled.div`
@@ -46,7 +44,7 @@ export default function ExplainContent() {
         <Groups>
             {decisionExplanations.length > 0 && (
                 <div>
-                    <GroupTitle>{decisionExplanationSolutionsTitle}</GroupTitle>
+                    <GroupTitle style={getStaticTextStyle(decisionExplanationSolutionsTitle)}>{decisionExplanationSolutionsTitle.staticText}</GroupTitle>
                     <Explanations>
                         {decisionExplanations.map(e => <DecisionExplanation key={decisionExplanations.indexOf(e)} explanation={e}/>)}
                     </Explanations>
@@ -55,7 +53,7 @@ export default function ExplainContent() {
 
             {constraintExplanations.length > 0 && (
                 <div>
-                    <GroupTitle>{constraintExplanationSolutionsTitle}</GroupTitle>
+                    <GroupTitle style={getStaticTextStyle(constraintExplanationSolutionsTitle)}>{constraintExplanationSolutionsTitle.staticText}</GroupTitle>
                     <Explanations>
                         {constraintExplanations.map(e => <ConstraintExplanation key={constraintExplanations.indexOf(e)} explanation={e}/>)}
                     </Explanations>

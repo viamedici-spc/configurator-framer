@@ -4,6 +4,7 @@ import styled from "styled-components";
 import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
 import {useAttributeName, useChoiceValueNames} from "../../../hooks/localization";
 import useCommonExplainProps from "../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../props/textProps";
 
 const Root = styled.div`
     display: grid;
@@ -46,7 +47,7 @@ export default function Attribute(props: { decisions: ReadonlyNonEmptyArray<Deci
 
     return (
         <Root>
-            <AttributeName>
+            <AttributeName style={getTextStyle(commonExplainProps.attributeName)}>
                 {attributeName ?? attributeId.localId}
             </AttributeName>
             <AttributeValues>

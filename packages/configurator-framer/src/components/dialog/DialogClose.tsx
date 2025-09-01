@@ -5,8 +5,8 @@ const DialogClose = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButto
     const {setOpen} = useDialogContext();
     return (
         <button type="button"
-                {...props}
                 ref={ref}
+                {...props}
                 onClick={(event) => {
                     props.onClick?.(event);
                     setOpen(false);

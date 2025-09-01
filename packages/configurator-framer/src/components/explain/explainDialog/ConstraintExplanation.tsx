@@ -1,9 +1,12 @@
 import {ConstraintExplanation} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import {pipe, RA, RNEA, RR, Str} from "@viamedici-spc/fp-ts-extensions";
-import ExplanationCard from "./ExplanationCard";
+import {getBoxStyle} from "../../../props/boxProps";
+import {getMarginStyle} from "../../../props/marginProps";
+import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
+import {getTextStyle} from "../../../props/textProps";
 
-const Root = styled(ExplanationCard)`
+const Root = styled.div`
     ul {
         margin: 0;
     }
@@ -23,14 +26,9 @@ const SubList = styled.ul`
     padding-inline-start: var(--space-lg);
 `
 
-const Item = styled.li`
-    font-size: 0.9em;
-    font-family: var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif);
-    font-weight: 500;
-`
-
 export default function ConstraintExplanation(props: { explanation: ConstraintExplanation }) {
     const {explanation} = props;
+    const {explanationCard, constraintExplanation} = useExplainDialogProps();
     const causedByCardinalities = explanation.causedByCardinalities;
     const causedByRules = pipe(
         explanation.causedByRules,
@@ -42,22 +40,22 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
     );
 
     return (
-        <Root>
+        <Root style={{...getBoxStyle(explanationCard), ...getMarginStyle(explanationCard)}}>
             <List>
                 {causedByRules.map(r => (
                     <li>
-                        <span>{r.configurationModelId}</span>
-                        <SubList>
-                            {r.rules.map(ruleId => <Item>{ruleId}</Item>)}
+                        <span style={getTextStyle(constraintExplanation.configurationModelId)}>{r.configurationModelId}</span>
+                        <SubList style={getTextStyle(constraintExplanation.ruleId)}>
+                            {r.rules.map(ruleId => <li>{ruleId}</li>)}
                         </SubList>
                     </li>
                 ))}
 
                 {causedByCardinalities.length > 0 && (
-                    <li>
+                    <li style={getTextStyle(constraintExplanation.ruleId)}>
                         <span>Cardinality</span>
                         <SubList>
-                            {causedByCardinalities.map(c => <Item>{c.localId}</Item>)}
+                            {causedByCardinalities.map(c => <li>{c.localId}</li>)}
                         </SubList>
                     </li>
                 )}

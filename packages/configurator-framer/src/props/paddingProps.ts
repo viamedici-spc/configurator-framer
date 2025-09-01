@@ -10,7 +10,7 @@ export type PaddingProps = {
     isMixedPadding: boolean
 }
 
-export const paddingPropertyControls = {
+export const createPaddingPropertyControls = (defaults: Partial<PaddingProps> = {}) => ({
     padding: {
         type: ControlType.FusedNumber,
         title: "Padding",
@@ -24,9 +24,9 @@ export const paddingPropertyControls = {
         ],
         valueLabels: ["Top", "Right", "Bottom", "Left"],
         min: 0,
-        defaultValue: 0,
+        defaultValue: defaults.padding ?? 0,
     }
-} satisfies PropertyControls<PaddingProps>;
+}) satisfies PropertyControls<PaddingProps>;
 
 export const getPaddingStyle = (props: PaddingProps): CSSProperties => ({
     paddingTop: props.isMixedPadding ? props.paddingTop : props.padding,

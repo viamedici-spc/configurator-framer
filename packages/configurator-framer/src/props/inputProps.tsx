@@ -1,8 +1,8 @@
 import {CSSProperties} from "react";
 import {ControlDescription, ControlType, PropertyControls} from "framer";
 import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
-import {boxPropertyControls, BoxProps, getBoxStyle} from "./boxProps";
-import {getTextStyle, textPropertyControls, TextProps} from "./textProps";
+import {createBoxPropertyControls, BoxProps, getBoxStyle} from "./boxProps";
+import {getTextStyle, createTextPropertyControls, TextProps} from "./textProps";
 import {match, P} from "ts-pattern";
 import {explainPropertyControls, ExplainProps} from "./explainProps";
 
@@ -43,8 +43,17 @@ export const inputStateColorProperty: ControlDescription<BoxProps> = {
 
 export const inputPropertyControls = {
     ...attributeIdPropertyControls,
-    ...textPropertyControls,
-    ...boxPropertyControls,
+    ...createTextPropertyControls({
+        color: "black",
+        text: {
+            fontSize: 16,
+            textAlign: "left"
+        }
+    }),
+    ...createBoxPropertyControls({
+        fill: "#EBEBEB",
+        radius: 6
+    }),
     implicitLabelPrefix: {
         title: "Implicit Label Prefix",
         type: ControlType.String,
