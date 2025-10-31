@@ -9,7 +9,7 @@ jobs:
             project-dir: 'packages/configurator-framer'
             node-version: '18'
             build-verbs: 'test,build'
-            build-jspm: true
+            build-jspm: false
             skip-publish: false
         secrets:
             npm_token: ${{ secrets.NPM_TOKEN }}
@@ -20,7 +20,7 @@ jobs:
             project-dir: 'packages/configurator-framer-bundle'
             node-version: '18'
             build-verbs: 'test,build'
-            build-jspm: true
+            build-jspm: false
             skip-publish: false
         secrets:
             npm_token: ${{ secrets.NPM_TOKEN }}
