@@ -179,7 +179,7 @@ addPropertyControls(Configuration, {
     hcaBaseUrl: {
         title: "HCA Base URL",
         type: ControlType.String,
-        defaultValue: "https://spc.cloud.ceventis.de/hca",
+        defaultValue: "https://spc.viamedici.io/hca",
     },
     sessionCreation: {
         title: "Session Creation",
