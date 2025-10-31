@@ -101,6 +101,7 @@ export const explainPopoverPropertyControls = {
         },
         applySolutionButton: {
             fill: "rgb(0, 161, 230)",
+            fillHover: "#15ACED",
             radius: 300,
             paddingTop: 9,
             paddingBottom: 9,
@@ -125,9 +126,10 @@ export const explainPopoverPropertyControls = {
         },
         closeButton: {
             fill: "transparent",
-            radius: 5,
-            paddingTop: 1,
-            paddingBottom: 1,
+            fillHover: "#FFFFFF26",
+            radius: 300,
+            paddingTop: 2,
+            paddingBottom: 2,
             paddingLeft: 6,
             paddingRight: 6,
             isMixedPadding: true,
@@ -160,6 +162,7 @@ export const explainPopoverPropertyControls = {
         controls: {
             ...createButtonPropertyControls({
                 fill: "transparent",
+                fillHover: "transparent",
                 radius: 5,
                 paddingTop: 1,
                 paddingBottom: 1,
@@ -191,6 +194,7 @@ export const explainPopoverPropertyControls = {
         controls: {
             ...createButtonPropertyControls({
                 fill: "transparent",
+                fillHover: "transparent",
                 radius: 5,
                 paddingTop: 1,
                 paddingBottom: 1,

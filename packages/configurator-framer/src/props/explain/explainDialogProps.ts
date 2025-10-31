@@ -29,7 +29,7 @@ export const explainDialogPropertyControls = {
             radius: 12,
             paddingTop: 18,
             paddingBottom: 0,
-            paddingLeft: 20,
+            paddingLeft: 24,
             paddingRight: 24,
             isMixedPadding: true
         })
@@ -111,7 +111,7 @@ export const explainDialogPropertyControls = {
         },
         attributeValue: {
             add: {
-                color: "white",
+                color: "#171717",
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
@@ -123,7 +123,7 @@ export const explainDialogPropertyControls = {
                 iconColor: "#48c52b"
             },
             remove: {
-                color: "white",
+                color: "#171717",
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
@@ -142,6 +142,7 @@ export const explainDialogPropertyControls = {
         },
         applySolutionButton: {
             fill: "#F2F2F2",
+            fillHover: "#F7F7F7",
             radius: 7,
             paddingTop: 9,
             paddingBottom: 9,
@@ -166,9 +167,10 @@ export const explainDialogPropertyControls = {
         },
         closeButton: {
             fill: "transparent",
-            radius: 5,
-            paddingTop: 1,
-            paddingBottom: 1,
+            fillHover: "00000012",
+            radius: 300,
+            paddingTop: 2,
+            paddingBottom: 2,
             paddingLeft: 6,
             paddingRight: 6,
             isMixedPadding: true,
