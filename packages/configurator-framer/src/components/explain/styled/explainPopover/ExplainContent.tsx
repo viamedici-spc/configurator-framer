@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../hooks/useExplainProcess";
+import useExplainProcess from "../../../../hooks/useExplainProcess";
 import AttributeList from "../common/AttributeList";
 import ShowMoreButton from "./ShowMoreButton";
 import ApplySolutionButton from "../common/ApplySolutionButton";
 import InfoMessage from "../common/InfoMessage";
-import {useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
-import {getStaticTextStyle} from "../../../props/staticTextProps";
+import {useExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
+import {getStaticTextStyle} from "../../../../props/staticTextProps";
+import {getExplainAttributes} from "../../common/explainAttributes";
 
 const SolutionTitle = styled.div`
     margin-bottom: var(--space-xs);
@@ -70,13 +71,13 @@ export default function ExplainContent() {
         return <StyledInfoMessage variant="noSolutionFound"/>
     }
 
-    const desiredDecisions = explanation.solution.decisions.filter(d => d.state != null);
+    const attributes = getExplainAttributes(explanation);
     return (
         <>
             <SolutionTitle style={getStaticTextStyle(subline)}>{subline.staticText}</SolutionTitle>
 
             <Separator/>
-            <StyledAttributeList blockingDecisions={explanation.causedByDecisions} desiredDecisions={desiredDecisions}/>
+            <StyledAttributeList attributes={attributes}/>
             <Separator/>
 
             <Actions>

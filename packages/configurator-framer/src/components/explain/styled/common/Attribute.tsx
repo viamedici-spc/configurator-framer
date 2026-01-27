@@ -1,10 +1,10 @@
-import {Ord, pipe, RA, ReadonlyNonEmptyArray, Str} from "@viamedici-spc/fp-ts-extensions";
-import {AttributeValue, Decision} from "./AttributeValue";
+import {AttributeValue} from "./AttributeValue";
 import styled from "styled-components";
-import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
-import {useAttributeName, useChoiceValueNames} from "../../../hooks/localization";
-import useCommonExplainProps from "../../../props/useCommonExplainProps";
-import {getTextStyle} from "../../../props/textProps";
+import {useAttributeName, useChoiceValueNames} from "../../../../hooks/localization";
+import useCommonExplainProps from "../../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../../props/textProps";
+import {ExplainAttributeDecision} from "../../common/explainAttributes";
+import sortDecisions from "../../common/sortDecisions";
 
 const Root = styled.div`
     display: grid;
@@ -28,22 +28,14 @@ const AttributeValues = styled.div`
     gap: var(--space-xxs);
 `
 
-export default function Attribute(props: { decisions: ReadonlyNonEmptyArray<Decision> }) {
+export default function Attribute(props: { decisions: ReadonlyArray<ExplainAttributeDecision> }) {
     const {decisions} = props;
     const attributeId = decisions[0].attributeId;
     const choiceValueNames = useChoiceValueNames(attributeId);
     const attributeName = useAttributeName(attributeId)
     const commonExplainProps = useCommonExplainProps();
 
-    const ordDecisionByChoiceValue = pipe(
-        Str.Ord,
-        Ord.contramap((d: Decision) => getDecisionStateDisplayName(d, choiceValueNames, commonExplainProps))
-    );
-
-    const sortedDecisions = pipe(
-        decisions,
-        RA.sort(ordDecisionByChoiceValue)
-    );
+    const sortedDecisions = sortDecisions(decisions, choiceValueNames, commonExplainProps);
 
     return (
         <Root>

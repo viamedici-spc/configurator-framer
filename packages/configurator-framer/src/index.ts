@@ -15,7 +15,7 @@ import useDebounceValue from "./hooks/useDebounceValue";
 import useRenderPlaceholder from "./hooks/useRenderPlaceholder";
 import withFullSize from "./hoc/withFullSize";
 import ScrollIntoView from "./components/ScrollIntoView";
-import ChoiceValueListRenderer from "./components/ChoiceValueListRenderer";
+import ChoiceValueList from "./components/ChoiceValueList";
 import AttributeName from "./components/AttributeName";
 import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
@@ -36,6 +36,12 @@ import {ChoiceValueNames, useAttributeName, useChoiceValueNames, useChoiceValueN
 import useExplain, {UseExplainResult} from "./hooks/useExplain";
 import useExplainProcess, {UseExplainProcessResult} from "./hooks/useExplainProcess";
 import PropagateHeight from "./components/PropagateHeight";
+import PopoverClose from "./components/popover/PopoverClose";
+import ApplySolution from "./components/explain/custom/common/ApplySolution";
+import AttributeList from "./components/explain/custom/common/AttributeList";
+import AttributeValueList from "./components/explain/custom/common/AttributeValueList";
+import ExplainContent from "./components/explain/custom/explainPopover/ExplainContent";
+import ExplainQuestion from "./components/explain/custom/common/ExplainQuestion";
 
 export {
     Configuration,
@@ -51,7 +57,8 @@ export {
     SelectionIndicator,
     Colorize,
     InitializationRetry,
-    ChoiceValueListRenderer,
+    ChoiceValueList,
+    ChoiceValueList as ChoiceValueListRenderer,
     AttributeName,
     ChoiceValueName,
     Singleton,
@@ -83,5 +90,11 @@ export {
     type UseExplainResult,
     useExplainProcess,
     type UseExplainProcessResult,
-    PropagateHeight
+    PropagateHeight,
+    PopoverClose,
+    ApplySolution as CustomExplainApplySolution,
+    AttributeList as CustomExplainAttributeList,
+    AttributeValueList as CustomExplainAttributeValueList,
+    ExplainContent as CustomExplainPopover,
+    ExplainQuestion as CustomExplainQuestion
 };

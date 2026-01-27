@@ -1,11 +1,11 @@
-import useExplainProcess from "../../../hooks/useExplainProcess";
+import useExplainProcess from "../../../../hooks/useExplainProcess";
 import {match} from "ts-pattern";
 import {ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import {HTMLProps, ReactNode} from "react";
-import {useAttributeName, useChoiceValueNames} from "../../../hooks/localization";
-import useCommonExplainProps from "../../../props/useCommonExplainProps";
-import {getTextStyle} from "../../../props/textProps";
+import {useAttributeName, useChoiceValueNames} from "../../../../hooks/localization";
+import useCommonExplainProps from "../../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../../props/textProps";
 
 const Value = styled.span`
     overflow: hidden;

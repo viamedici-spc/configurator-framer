@@ -8,7 +8,7 @@ import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import InitializationError, {InitializationErrorProps} from "./InitializationError";
 import withErrorBoundary from "../common/withErrorBoundary";
 import DesignSystem from "../designSystem/DesignSystem";
-import ExplainDialog from "./explain/explainDialog/ExplainDialog";
+import ExplainDialog from "./explain/ExplainDialog";
 import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explain/explainDialogProps";
 import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explain/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
@@ -34,6 +34,7 @@ type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationPr
     channel: string,
     explainDialogProps: ExplainDialogProps,
     explainPopoverProps: ExplainPopoverProps,
+    customExplainPopover?: ReactNode,
     explainConstraints: boolean,
     attributeRelations: {
         // TODO: Implement later
@@ -54,7 +55,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     const {
         hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl,
         sessionDeleteUrl, deploymentName, channel, children, explainDialogProps,
-        explainPopoverProps, explainConstraints
+        explainPopoverProps, customExplainPopover, explainConstraints
     } = props
 
     const {activeLocale} = useLocaleInfo();
@@ -142,7 +143,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
                 <Suspense>
                     <localizationContext.Provider value={localization}>
                         <ExplainController explainConstraints={explainConstraints}>
-                            <explainPopoverPropsContext.Provider value={explainPopoverProps}>
+                            <explainPopoverPropsContext.Provider value={{...explainPopoverProps, customPopover: customExplainPopover}}>
                                 <choiceValueSortingContext.Provider value={choiceValueSorting}>
                                     {children}
                                 </choiceValueSortingContext.Provider>
@@ -237,6 +238,10 @@ addPropertyControls(Configuration, {
         controls: explainPopoverPropertyControls,
         buttonTitle: "Props…"
     },
+    customExplainPopover: {
+        title: "Custom Explain Popover",
+        type: ControlType.ComponentInstance
+    },
     explainConstraints: {
         title: "Explain Constraints",
         type: ControlType.Boolean,
@@ -260,4 +265,3 @@ addPropertyControls(Configuration, {
     ...choiceValueSortingPropertyControls,
     ...localizationPropertyControls
 })
-

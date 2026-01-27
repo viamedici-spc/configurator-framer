@@ -1,10 +1,10 @@
-import useExplainProcess from "../../../hooks/useExplainProcess";
+import useExplainProcess from "../../../../hooks/useExplainProcess";
 import styled from "styled-components";
-import {useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
+import {useExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
 import {useMemo} from "react";
 import Mustache from "mustache";
-import {getButtonStyle} from "../../../props/buttonProps";
-import {getMarginStyle} from "../../../props/marginProps";
+import {getButtonStyle} from "../../../../props/buttonProps";
+import {getMarginStyle} from "../../../../props/marginProps";
 
 const Root = styled.button`
     appearance: none;

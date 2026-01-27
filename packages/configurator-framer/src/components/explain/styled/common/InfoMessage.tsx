@@ -1,9 +1,9 @@
-import useExplainProcess from "../../../hooks/useExplainProcess";
+import useExplainProcess from "../../../../hooks/useExplainProcess";
 import {match, P} from "ts-pattern";
 import {HTMLProps, ReactNode} from "react";
 import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
-import useCommonExplainProps from "../../../props/useCommonExplainProps";
-import {getTextStyle} from "../../../props/textProps";
+import useCommonExplainProps from "../../../../props/useCommonExplainProps";
+import {getTextStyle} from "../../../../props/textProps";
 
 type Variant = 'failedToExplain' | 'noExplanationFound' | 'noSolutionFound';
 

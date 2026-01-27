@@ -1,5 +1,5 @@
 import {PropsWithChildren, useContext, useState} from "react";
-import {explainContext} from "../../../common/explain";
+import {explainContext} from "../../../../common/explain";
 
 export default function FreezeExplainContext(props: PropsWithChildren) {
     const context = useContext(explainContext);

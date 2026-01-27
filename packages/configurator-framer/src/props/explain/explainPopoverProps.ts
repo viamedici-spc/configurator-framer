@@ -1,5 +1,5 @@
 import {ControlType, PropertyControls} from "framer";
-import {createContext, useContext} from "react";
+import {createContext, CSSProperties, ReactNode, useContext} from "react";
 import {createCommonExplainPropertyControls, CommonExplainProps} from "./commonExplainProps";
 import {BoxProps, createBoxPropertyControls} from "../boxProps";
 import {ButtonProps, createButtonPropertyControls} from "../buttonProps";
@@ -9,9 +9,11 @@ import {createStaticTextPropertyControls, StaticTextProps} from "../staticTextPr
 export type ExplainPopoverProps = CommonExplainProps & {
     popoverBox: BoxProps;
     listSeparator: string;
+    arrow: string;
     subline: StaticTextProps;
     showConstraintsButton: ButtonProps & MarginProps;
     showMoreButton: ButtonProps & MarginProps;
+    customPopover?: ReactNode // Expects an ExplainContent component (custom)
 }
 
 export const explainPopoverPropertyControls = {
@@ -24,7 +26,8 @@ export const explainPopoverPropertyControls = {
             padding: 18,
             isMixedPadding: false,
             filter: "drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.4))"
-        })
+        }),
+        hidden: (props) => props.useCustomExplain,
     },
     subline: {
         title: "Subline",
@@ -39,7 +42,8 @@ export const explainPopoverPropertyControls = {
                     fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
                 }
             })
-        }
+        },
+        hidden: (props) => props.useCustomExplain,
     },
     ...createCommonExplainPropertyControls({
         header: {
@@ -186,7 +190,8 @@ export const explainPopoverPropertyControls = {
             ...createMarginPropertyControls({
                 marginTop: 13
             })
-        }
+        },
+        hidden: (props) => props.useCustomExplain,
     },
     showMoreButton: {
         title: "Show More Button",
@@ -219,13 +224,29 @@ export const explainPopoverPropertyControls = {
                 marginTop: 13
             })
         },
+        hidden: (props) => props.useCustomExplain,
     },
     listSeparator: {
         title: "List Separator",
         type: ControlType.Color,
-        defaultValue: "rgba(255, 255, 255, 0.3)"
+        defaultValue: "rgba(255, 255, 255, 0.3)",
+        hidden: (props) => props.useCustomExplain,
+    },
+    arrow: {
+        title: "Arrow",
+        type: ControlType.Color,
+        defaultValue: "#002134",
+    },
+    useCustomExplain: {
+        title: "Use Custom Popover",
+        type: ControlType.Boolean,
+        defaultValue: false
     },
 } satisfies PropertyControls<ExplainPopoverProps>;
+
+export const getArrowStyle = (props: ExplainPopoverProps): CSSProperties => ({
+    fill: props.arrow ?? props.popoverBox?.fill
+});
 
 export const explainPopoverPropsContext = createContext<ExplainPopoverProps>(null);
 export const useExplainPopoverProps = (): ExplainPopoverProps => useContext(explainPopoverPropsContext);

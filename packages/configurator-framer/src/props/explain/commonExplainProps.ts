@@ -26,9 +26,10 @@ export type CommonExplainProps = {
         booleanDecisionStateTrueLabel: string,
         booleanDecisionStateFalseLabel: string,
     },
-    applySolutionButton: ButtonProps & MarginProps;
-    closeButton: ButtonProps;
+    applySolutionButton: ButtonProps & MarginProps,
+    closeButton: ButtonProps,
     infoMessage: TextProps,
+    useCustomExplain: boolean
 }
 
 export const createCommonExplainPropertyControls = (defaults: DeepPartial<CommonExplainProps> = {}) => ({
@@ -37,14 +38,16 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         type: ControlType.Object,
         controls: {
             ...createExplainHeaderPropertyControls(defaults.header ?? {})
-        }
+        },
+        hidden: (props) => props.useCustomExplain
     },
     attributeName: {
         title: "Attribute Name",
         type: ControlType.Object,
         controls: {
             ...createTextPropertyControls(defaults.attributeName ?? {})
-        }
+        },
+        hidden: (props) => props.useCustomExplain
     },
     attributeValue: {
         title: "Attribute Value",
@@ -125,20 +128,23 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         controls: {
             ...createButtonPropertyControls(defaults.applySolutionButton ?? {}),
             ...createMarginPropertyControls(defaults.applySolutionButton ?? {})
-        }
+        },
+        hidden: (props) => props.useCustomExplain
     },
     closeButton: {
         title: "Close Button",
         type: ControlType.Object,
         controls: {
             ...createButtonPropertyControls(defaults.closeButton ?? {})
-        }
+        },
+        hidden: (props) => props.useCustomExplain
     },
     infoMessage: {
         title: "Info Message",
         type: ControlType.Object,
         controls: {
             ...createTextPropertyControls(defaults.infoMessage ?? {})
-        }
+        },
+        hidden: (props) => props.useCustomExplain
     }
 }) satisfies PropertyControls<CommonExplainProps>;

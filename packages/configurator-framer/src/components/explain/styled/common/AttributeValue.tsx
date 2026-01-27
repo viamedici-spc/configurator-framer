@@ -1,14 +1,14 @@
-import {CausedByDecision, ExplicitDecision} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
-import {ChoiceValueNames} from "../../../hooks/localization";
-import useCommonExplainProps from "../../../props/useCommonExplainProps";
-import {getPaddingStyle} from "../../../props/paddingProps";
+import getDecisionStateDisplayName from "../../common/getDecisionStateDisplayName";
+import {ChoiceValueNames} from "../../../../hooks/localization";
+import useCommonExplainProps from "../../../../props/useCommonExplainProps";
+import {getPaddingStyle} from "../../../../props/paddingProps";
 import {match} from "ts-pattern";
-import {getTextStyle} from "../../../props/textProps";
-import {getBorderStyle} from "../../../props/borderProps";
+import {getTextStyle} from "../../../../props/textProps";
+import {getBorderStyle} from "../../../../props/borderProps";
+import {ExplainAttributeDecision} from "../../common/explainAttributes";
 
 const Root = styled.div`
     display: flex;
@@ -33,11 +33,7 @@ const Name = styled.div`
     text-overflow: ellipsis;
 `
 
-export type Decision = (CausedByDecision | ExplicitDecision) & {
-    intention: "add" | "remove"
-}
-
-export function AttributeValue(props: { decision: Decision, choiceValuesNames: ChoiceValueNames }) {
+export function AttributeValue(props: { decision: ExplainAttributeDecision, choiceValuesNames: ChoiceValueNames }) {
     const {decision, choiceValuesNames} = props;
     const intention = decision.intention;
     const commonExplainProps = useCommonExplainProps();

@@ -1,10 +1,10 @@
 import {ConstraintExplanation} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import {pipe, RA, RNEA, RR, Str} from "@viamedici-spc/fp-ts-extensions";
-import {getBoxStyle} from "../../../props/boxProps";
-import {getMarginStyle} from "../../../props/marginProps";
-import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
-import {getTextStyle} from "../../../props/textProps";
+import {getBoxStyle} from "../../../../props/boxProps";
+import {getMarginStyle} from "../../../../props/marginProps";
+import {useExplainDialogProps} from "../../../../props/explain/explainDialogProps";
+import {getTextStyle} from "../../../../props/textProps";
 
 const Root = styled.div`
     ul {

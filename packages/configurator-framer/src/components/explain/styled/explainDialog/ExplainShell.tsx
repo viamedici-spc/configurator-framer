@@ -2,13 +2,13 @@ import {PropsWithChildren} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import DialogClose from "../../dialog/DialogClose";
+import DialogClose from "../../../dialog/DialogClose";
 import ExplainHeader from "../common/ExplainHeader";
 import ScrollShadow from "./ScrollShadow";
 import {motion} from "framer";
-import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
-import {getBoxStyle} from "../../../props/boxProps";
-import {getButtonStyle} from "../../../props/buttonProps";
+import {useExplainDialogProps} from "../../../../props/explain/explainDialogProps";
+import {getBoxStyle} from "../../../../props/boxProps";
+import {getButtonStyle} from "../../../../props/buttonProps";
 
 const Root = styled(motion.div)`
     position: relative;

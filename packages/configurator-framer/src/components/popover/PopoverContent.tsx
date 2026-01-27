@@ -7,8 +7,10 @@ const PopoverContent = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>((pr
     const popoverContext = usePopoverContext();
     const rootRef = useMergeRefs([popoverContext.refs.setFloating, ref]);
 
+    const portalRoot = getFramerRoot();
+
     return (
-        <FloatingPortal>
+        <FloatingPortal root={portalRoot}>
             <FloatingFocusManager context={popoverContext.context} modal={popoverContext.modal}>
                 <div
                     ref={rootRef}
@@ -22,3 +24,11 @@ const PopoverContent = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>((pr
 });
 
 export default PopoverContent;
+
+function getFramerRoot(): HTMLElement | null {
+    if (typeof document === "undefined") {
+        return null;
+    }
+
+    return document.querySelector<HTMLElement>("[data-framer-root]");
+}

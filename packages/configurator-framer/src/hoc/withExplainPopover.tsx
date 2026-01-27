@@ -1,5 +1,5 @@
 import {ComponentType, forwardRef, PropsWithoutRef, ReactNode, RefAttributes} from "react";
-import ExplainPopover from "../components/explain/explainPopover/ExplainPopover";
+import ExplainPopover from "../components/explain/ExplainPopover";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {ExplainProps} from "../props/explainProps";
 

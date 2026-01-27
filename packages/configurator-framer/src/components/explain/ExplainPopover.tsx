@@ -1,39 +1,24 @@
-import PopoverTrigger from "../../popover/PopoverTrigger";
-import Popover, {usePopoverContext} from "../../popover/Popover";
-import {Children, PropsWithChildren, ReactNode, useContext, useRef} from "react";
-import ExplainContent from "./ExplainContent";
-import useExplainProcess from "../../../hooks/useExplainProcess";
-import {useControlId} from "../../../common/controlId";
+import PopoverTrigger from "../popover/PopoverTrigger";
+import Popover, {usePopoverContext} from "../popover/Popover";
+import {PropsWithChildren, useRef} from "react";
+import ExplainContent from "./styled/explainPopover/ExplainContent";
+import useExplainProcess from "../../hooks/useExplainProcess";
+import {useControlId} from "../../common/controlId";
 import {FloatingArrow} from "@floating-ui/react";
-import PopoverContent from "../../popover/PopoverContent";
+import PopoverContent from "../popover/PopoverContent";
 import styled from "styled-components";
 import {AnimatePresence, motion} from "framer";
 import {match} from "ts-pattern";
-import FreezeExplainContext from "../common/FreezeExplainContext";
-import {ExplainShell} from "./ExplainShell";
-import {ExplainPopoverProps, useExplainPopoverProps} from "../../../props/explain/explainPopoverProps";
+import FreezeExplainContext from "./styled/common/FreezeExplainContext";
+import {ExplainShell} from "./styled/explainPopover/ExplainShell";
+import {getArrowStyle, useExplainPopoverProps} from "../../props/explain/explainPopoverProps";
 
-type Props = {
-    content?: ReactNode;
-}
-
-const Root = styled(PopoverContent)<ExplainPopoverProps>`
-    --color-explain-popover-box-fill: ${p => p.popoverBox.fill};
-    --size-explain-popover-box-padding-top: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingTop : p.popoverBox.padding}px;
-    --size-explain-popover-box-padding-right: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingRight : p.popoverBox.padding}px;
-    --size-explain-popover-box-padding-bottom: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingBottom : p.popoverBox.padding}px;
-    --size-explain-popover-box-padding-left: ${p => p.popoverBox.isMixedPadding ? p.popoverBox.paddingLeft : p.popoverBox.padding}px;
-    --color-explain-popover-list-separator: ${p => p.listSeparator};
-
+const StyledPopoverContent = styled(PopoverContent)`
     z-index: 10;
 
     &:focus {
         outline: none;
     }
-`
-
-const StyledFloatingArrow = styled(FloatingArrow)`
-    fill: var(--color-explain-popover-box-fill);
 `
 
 const animationVariants = {
@@ -60,8 +45,10 @@ const animationVariants = {
     }
 }
 
-export default function ExplainPopover(props: PropsWithChildren<Props>) {
+export default function ExplainPopover(props: PropsWithChildren) {
     const explainProcess = useExplainProcess();
+    const explainPopoverProps = useExplainPopoverProps();
+    const {useCustomExplain, customPopover} = explainPopoverProps;
     const controlId = useControlId();
     const isOpen = explainProcess?.displayMode === "popover" && explainProcess?.controlId === controlId;
     const arrowRef = useRef<SVGSVGElement>(null);
@@ -73,7 +60,8 @@ export default function ExplainPopover(props: PropsWithChildren<Props>) {
                 {props.children}
             </PopoverTrigger>
             <Animated isOpen={isOpen}>
-                {Children.toArray(props.content)[0] ?? (
+                {useCustomExplain && customPopover}
+                {!useCustomExplain && (
                     <ExplainShell>
                         <ExplainContent/>
                     </ExplainShell>
@@ -85,7 +73,6 @@ export default function ExplainPopover(props: PropsWithChildren<Props>) {
 }
 
 function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
-    const explainPopoverProps = useExplainPopoverProps();
     const {middlewareData, arrow, placement} = usePopoverContext();
     const arrowX = middlewareData.arrow?.x ?? 0;
     const arrowY = middlewareData.arrow?.y ?? 0;
@@ -104,7 +91,7 @@ function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
     return (
         <AnimatePresence initial={false}>
             {props.isOpen && (
-                <Root {...explainPopoverProps}>
+                <StyledPopoverContent>
                     <motion.div variants={animationVariants} initial="initial" animate="open" exit="close"
                                 style={{transformOrigin}}>
                         {/*Freeze the explain context otherwise the out-animation won't work correctly.*/}
@@ -113,7 +100,7 @@ function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
                             {props.children}
                         </FreezeExplainContext>
                     </motion.div>
-                </Root>
+                </StyledPopoverContent>
             )}
         </AnimatePresence>
     )
@@ -121,13 +108,14 @@ function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
 
 function Arrow() {
     const {context, arrow} = usePopoverContext();
+    const explainPopoverProps = useExplainPopoverProps();
 
     return (
-        <StyledFloatingArrow
-            ref={arrow.element}
-            context={context}
-            width={arrow.width}
-            height={arrow.height}
+        <FloatingArrow style={getArrowStyle(explainPopoverProps)}
+                       ref={arrow.element}
+                       context={context}
+                       width={arrow.width}
+                       height={arrow.height}
         />
     )
 }

@@ -1,7 +1,7 @@
 import {addPropertyControls, ControlType, PropertyControls} from "framer"
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react"
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import React, {Children, cloneElement, CSSProperties, PropsWithChildren, ReactNode} from "react";
+import React, {cloneElement, CSSProperties, PropsWithChildren, ReactNode} from "react";
 import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
 import withErrorBoundary from "../common/withErrorBoundary";
 import withControlId, {useControlId} from "../common/controlId";
@@ -13,6 +13,7 @@ import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
 import {ChoiceValueNames, useChoiceValueNames} from "../hooks/localization";
 import {match} from "ts-pattern";
 import {RM} from "@viamedici-spc/fp-ts-extensions";
+import {getItemTemplate} from "../common/listRenderer";
 
 type SelectionState = "undefined" | "included" | "excluded";
 type Condition = "none" | "explicit" | "implicit" | "blocked";
@@ -44,26 +45,11 @@ const GlobalStyle = createGlobalStyle`
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) => {
+const ChoiceValueList = withErrorBoundary(withControlId((props: Props) => {
     const controlId = useControlId();
     const renderPlaceholder = useRenderPlaceholder();
 
-    const getItemTemplate = () => {
-        const findItemTemplate = c => {
-            const component = Children.toArray(c)[0] as any;
-            const children = component.props?.children;
-            if (children) {
-                return findItemTemplate(children);
-            }
-            return component;
-        }
-
-        // The passed props.itemTemplate is wrapped by framer; sometimes multiple times.
-        // Traverse the component tree until we find the component without any children. This is our real itemTemplate.
-        return findItemTemplate(props.itemTemplate);
-    };
-
-    const itemTemplate = getItemTemplate();
+    const itemTemplate = getItemTemplate(props.itemTemplate);
     if (!itemTemplate) {
         return <span>Choice Value Template not defined</span>
     }
@@ -124,7 +110,7 @@ const ChoiceValueListRenderer = withErrorBoundary(withControlId((props: Props) =
 function Inner(props: PropsWithChildren<Props>) {
     return (
         <>
-            <Singleton singletonId="ChoiceValueListRenderer">
+            <Singleton singletonId="ChoiceValueList">
                 <GlobalStyle/>
             </Singleton>
             <Root style={props.style}>
@@ -135,7 +121,7 @@ function Inner(props: PropsWithChildren<Props>) {
 
 }
 
-export default ChoiceValueListRenderer;
+export default ChoiceValueList;
 
 const propertyControls: PropertyControls<Props> = {
     ...attributeIdPropertyControls,
@@ -166,4 +152,4 @@ const propertyControls: PropertyControls<Props> = {
     }
 }
 
-addPropertyControls(ChoiceValueListRenderer, propertyControls);
+addPropertyControls(ChoiceValueList, propertyControls);

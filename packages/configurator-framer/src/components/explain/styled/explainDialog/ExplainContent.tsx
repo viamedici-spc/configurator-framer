@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../hooks/useExplainProcess";
+import useExplainProcess from "../../../../hooks/useExplainProcess";
 import DecisionExplanation from "./DecisionExplanation";
 import ConstraintExplanation from "./ConstraintExplanation";
 import InfoMessage from "../common/InfoMessage";
-import {useExplainDialogProps} from "../../../props/explain/explainDialogProps";
-import {getStaticTextStyle} from "../../../props/staticTextProps";
+import {useExplainDialogProps} from "../../../../props/explain/explainDialogProps";
+import {getStaticTextStyle} from "../../../../props/staticTextProps";
 
 const GroupTitle = styled.div`
     margin-bottom: var(--space-xs);

@@ -5,6 +5,7 @@ import {json} from "fp-ts";
 import {InitializationErrorMessage} from "../components/InitializationErrorMessage";
 import {z, ZodType} from "zod";
 import {fromError} from 'zod-validation-error';
+import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 
 export const GlobalAttributeId_ = z.object({
     localId: z.string(),
@@ -12,7 +13,7 @@ export const GlobalAttributeId_ = z.object({
     sharedConfigurationModelId: z.string().optional().nullish(),
 });
 
-export function mapAttributeId(attributeId: z.infer<typeof GlobalAttributeId_>): AttributeIdProps {
+export function mapAttributeId(attributeId: z.infer<typeof GlobalAttributeId_> | GlobalAttributeId): AttributeIdProps {
     return {
         sharedConfigurationModel: attributeId.sharedConfigurationModelId ?? "",
         componentPath: attributeId.componentPath?.join(" -> ") ?? "",
