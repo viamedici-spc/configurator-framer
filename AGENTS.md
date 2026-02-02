@@ -41,3 +41,6 @@ Run commands from the package directories.
 ## Configuration Tips
 - The bundle package (`packages/configurator-framer-bundle`) exists to pin dependency versions for Framer/JSPM imports.
 - `prepack`/`postpack` scripts copy the root `README.md` into published packages; keep root docs up to date.
+
+## Documentation
+- Library documentation lives under `packages/configurator-framer/docs/` (feature notes, patterns, references, conventions (changelog)).
