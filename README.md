@@ -2,7 +2,7 @@
   <strong>Viamedici SPC</strong>
 </div>
 
-# Configurator Components Library for Framer
+# configurator-framer
 
 [![npm version](https://img.shields.io/npm/v/@viamedici-spc/configurator-framer-bundle)](https://www.npmjs.com/package/@viamedici-spc/configurator-framer-bundle)
 [![license](https://img.shields.io/npm/l/@viamedici-spc/configurator-framer-bundle)](https://github.com/viamedici-spc/configurator-framer/blob/main/LICENSE)
@@ -24,21 +24,20 @@ The exported components will then be available in the assets panel as local comp
 
 ```typescript
 import type {ComponentType} from "react";
-
-import {ConfiguratorFramer} from "https://ga.jspm.io/npm:@viamedici-spc/configurator-framer-bundle@1.1.0/dist/index.js";
+import {ConfiguratorFramer} from "https://cdn.jsdelivr.net/npm/@viamedici-spc/configurator-framer-bundle@3.1.0/dist/index.js"
 
 export const Configuration: ComponentType = ConfiguratorFramer.Configuration;
 export const ChoiceSelect: ComponentType = ConfiguratorFramer.ChoiceSelect;
 export const SelectionToggle: ComponentType = ConfiguratorFramer.SelectionToggle;
 ```
 
-### Why Use JSPM?
+### Why Use the Bundle?
 
-Framer allows direct importing of npm packages, such as `@viamedici-spc/configurator-framer`, as long as the package and all its dependencies are compliant with the JavaScript Module System.
+Framer allows direct importing of npm packages, such as `@viamedici-spc/configurator-framer`, as long as the package and all its dependencies are compliant with the JavaScript Module System. Framer resolves dependencies for you behind the scenes.
 
-However, there is a limitation: you don't have control over the version of the referenced package. Once imported, updating to a newer version becomes impossible. Hopefully Framer support this in the future.
+However, there is a limitation: you don't have control over the version of the referenced package. Once imported, updating to a newer version becomes impossible. Hopefully Framer supports version selection in the future.
 
-To address this, the library is also provided as a bundled package with all dependencies integrated. This allows you to directly import the hosted `index.js` module, ensuring version control and easier updates.
+To address this, the library is also provided as a bundled package with all dependencies integrated. This allows you to directly import the hosted `index.js` module (for example via jsDelivr), ensuring version control and easier updates. If Framer adds granular version selection later, direct package imports can become the preferred path again.
 
 ## Live Demo
 
