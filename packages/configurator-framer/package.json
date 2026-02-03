@@ -4,7 +4,7 @@
   "description": "Component library to build configurator apps with Framer based on Viamedici SPC.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/viamedici-spc/configurator-framer.git"
+    "url": "git+https://github.com/viamedici-spc/configurator-framer.git"
   },
   "sideEffects": false,
   "files": [
@@ -26,8 +26,8 @@
     "test:watch": "vitest watch --reporter default",
     "dev": "vite build --watch --mode development & vite preview",
     "typecheck": "tsc --noEmit",
-    "prepack" : "cp ../../README.md README.md",
-    "postpack" : "rm README.md"
+    "prepack": "cp ../../README.md README.md",
+    "postpack": "rm README.md"
   },
   "keywords": [
     "viamedici",
@@ -49,7 +49,7 @@
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
     "@vitest/coverage-istanbul": "^0.34.1",
-    "@types/mustache" : "^4.2.5",
+    "@types/mustache": "^4.2.5",
     "framer": "^2.4.1",
     "framer-motion": "^10.13.1",
     "jsdom": "^22.1.0",
@@ -82,8 +82,8 @@
     "styled-components": "^6.1.1",
     "ts-pattern": "^5.0.6",
     "use-debounce": "^8.0.4",
-    "mustache" : "^4.2.0",
-    "url-join" : "^5.0.0",
+    "mustache": "^4.2.0",
+    "url-join": "^5.0.0",
     "zod": "^3.24.2",
     "zod-validation-error": "^3.4.0"
   },

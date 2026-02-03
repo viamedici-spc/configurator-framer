@@ -4,7 +4,7 @@
   "description": "Component library to build configurator apps with Framer based on Viamedici SPC. All dependencies are bundled together.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/viamedici-spc/configurator-framer.git"
+    "url": "git+https://github.com/viamedici-spc/configurator-framer.git"
   },
   "sideEffects": false,
   "files": [
