@@ -4,19 +4,21 @@ on: [ push, workflow_dispatch ]
 
 jobs:
     configurator-framer:
-        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v2
+        permissions:
+            contents: read
+            id-token: write
+        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v3
         with:
             project-dir: 'packages/configurator-framer'
-            node-version: '18'
+            node-version: '24'
             skip-publish: false
-        secrets:
-            npm_token: ${{ secrets.NPM_TOKEN }}
 
     configurator-framer-bundle:
-        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v2
+        permissions:
+            contents: read
+            id-token: write
+        uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v3
         with:
             project-dir: 'packages/configurator-framer-bundle'
-            node-version: '18'
+            node-version: '24'
             skip-publish: false
-        secrets:
-            npm_token: ${{ secrets.NPM_TOKEN }}
