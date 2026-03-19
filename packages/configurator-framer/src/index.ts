@@ -20,6 +20,8 @@ import AttributeName from "./components/AttributeName";
 import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
 import Slot from "./components/Slot";
+import TemplateSlot from "./components/TemplateSlot";
+import SetTemplateSlots from "./components/SetTemplateSlots";
 import StoreConfiguration from "./components/StoreConfiguration";
 import RestoreConfiguration from "./components/RestoreConfiguration";
 import SelectedNumericValue from "./components/SelectedNumericValue";
@@ -63,6 +65,8 @@ export {
     ChoiceValueName,
     Singleton,
     Slot,
+    TemplateSlot,
+    SetTemplateSlots,
     StoreConfiguration,
     RestoreConfiguration,
     SelectedNumericValue,
