@@ -16,7 +16,7 @@ import {RM} from "@viamedici-spc/fp-ts-extensions";
 import {getItemTemplate} from "../common/listRenderer";
 
 type SelectionState = "undefined" | "included" | "excluded";
-type Condition = "none" | "explicit" | "implicit" | "blocked";
+type Condition = "none" | "explicit" | "implicit" | "blocked" | "available";
 
 type Filter = {
     selection: SelectionState,
@@ -83,11 +83,13 @@ const ChoiceValueList = withErrorBoundary(withControlId((props: Props) => {
     const filter = props.filter ?? new Array<Filter>();
     const filteredChoiceValues = [...choiceAttribute.attribute.values.values()].filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
         .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
+        .with({selection: "included", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
         .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
         .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)
         .with({selection: "included", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Included)
 
         .with({selection: "excluded", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
+        .with({selection: "excluded", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
         .with({selection: "excluded", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit)
         .with({selection: "excluded", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit)
         .with({selection: "excluded", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded)
@@ -145,7 +147,7 @@ const propertyControls: PropertyControls<Props> = {
                     title: "Condition",
                     type: ControlType.Enum,
                     defaultValue: "none",
-                    options: ["none", "explicit", "implicit", "blocked"],
+                    options: ["none", "explicit", "implicit", "blocked", "available"],
                 }
             }
         }
