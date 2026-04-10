@@ -26,7 +26,8 @@ type Filter = {
 type Props = AttributeIdProps & {
     itemTemplate: ReactNode,
     style: CSSProperties,
-    filter: Filter[]
+    filter: Filter[],
+    designTimeItemCount?: number
 }
 
 const Root = styled.div`
@@ -66,9 +67,12 @@ const ChoiceValueList = withErrorBoundary(withControlId((props: Props) => {
     ));
 
     if (renderPlaceholder) {
+        const designTimeItemCount = Math.max(1, Math.floor(props.designTimeItemCount ?? 3));
+        const placeholderChoiceValues = Array.from({length: designTimeItemCount}, (_, index) => `Choice Value ${index + 1}`);
+
         return (
             <Inner {...props}>
-                {renderChoiceValues(["Choice Value 1", "Choice Value 2", "Choice Value 3"], RM.empty)}
+                {renderChoiceValues(placeholderChoiceValues, RM.empty)}
             </Inner>
         )
     }
@@ -130,6 +134,14 @@ const propertyControls: PropertyControls<Props> = {
     itemTemplate: {
         title: "Choice Value Template",
         type: ControlType.ComponentInstance
+    },
+    designTimeItemCount: {
+        title: "Design Time Items",
+        type: ControlType.Number,
+        defaultValue: 3,
+        min: 1,
+        step: 1,
+        displayStepper: true
     },
     filter: {
         title: "Filter",
