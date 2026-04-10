@@ -31,6 +31,7 @@ import withErrorBoundary from "./common/withErrorBoundary";
 import withControlId, {useControlId} from "./common/controlId";
 import parseGlobalAttributeId from "./common/parseGlobalAttributeId";
 import cloneChildrenWithProps from "./common/cloneChildrenWithProps";
+import {getItemTemplate} from "./common/listRenderer";
 import {AttributeIdProps, attributeIdPropertyControls} from "./props/attributeIdProps";
 import {ChoiceValueIdProps, choiceValueIdPropertyControls} from "./props/choiceValueIdProps";
 import {explainableComponent} from "./common/componentComposites";
@@ -80,6 +81,7 @@ export {
     attributeIdPropertyControls,
     parseGlobalAttributeId,
     cloneChildrenWithProps,
+    getItemTemplate,
     ReplaceText,
     withControlId,
     useControlId,
