@@ -16,6 +16,7 @@ import useRenderPlaceholder from "./hooks/useRenderPlaceholder";
 import withFullSize from "./hoc/withFullSize";
 import ScrollIntoView from "./components/ScrollIntoView";
 import ChoiceValueList from "./components/ChoiceValueList";
+import ConfigurationPropsProvider from "./components/ConfigurationPropsProvider";
 import AttributeName from "./components/AttributeName";
 import ChoiceValueName from "./components/ChoiceValueName";
 import Singleton from "./components/Singleton";
@@ -45,6 +46,7 @@ import AttributeList from "./components/explain/custom/common/AttributeList";
 import AttributeValueList from "./components/explain/custom/common/AttributeValueList";
 import ExplainContent from "./components/explain/custom/explainPopover/ExplainContent";
 import ExplainQuestion from "./components/explain/custom/common/ExplainQuestion";
+import {ConfigurationPropOverrides} from "./components/ConfigurationPropsProvider";
 
 export {
     Configuration,
@@ -62,6 +64,7 @@ export {
     InitializationRetry,
     ChoiceValueList,
     ChoiceValueList as ChoiceValueListRenderer,
+    ConfigurationPropsProvider,
     AttributeName,
     ChoiceValueName,
     Singleton,
@@ -89,6 +92,7 @@ export {
     type ChoiceValueIdProps,
     choiceValueIdPropertyControls,
     type ChoiceValueNames,
+    type ConfigurationPropOverrides,
     useAttributeName,
     useChoiceValueNames,
     useChoiceValueName,

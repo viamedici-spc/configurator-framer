@@ -1,7 +1,7 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
 import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
-import {PropsWithChildren, ReactNode, Suspense, useEffect, useMemo} from "react"
+import {PropsWithChildren, ReactNode, Suspense, useContext, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
@@ -23,8 +23,9 @@ import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSortin
 import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
 import {wizardAttributeRelationsPropertyControls, WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
+import {configurationPropsContext} from "./ConfigurationPropsProvider";
 
-type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & {
+export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & {
     hcaBaseUrl: string
     sessionCreation: "client-side" | "server-side"
     accessToken?: string,
@@ -37,12 +38,23 @@ type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationPr
     customExplainPopover?: ReactNode,
     explainConstraints: boolean,
     attributeRelations: {
-        // TODO: Implement later
-        // type: "raw" | "wizard",
-        // definition: object
         jsonDefinition: string
     }
-}
+};
+
+export type ConfigurationOverrideableProps = Partial<Pick<ConfigurationProps,
+    "attributeRelations" |
+    "choiceValueSorting" |
+    "localization" |
+    "wizardAttributeRelations" |
+    "hcaBaseUrl" |
+    "sessionCreation" |
+    "accessToken" |
+    "sessionCreateUrl" |
+    "sessionDeleteUrl" |
+    "deploymentName" |
+    "channel"
+>>;
 
 /**
  * These annotations control how your component sizes
@@ -51,25 +63,22 @@ type Props = InitializationErrorProps & ChoiceValueSortingProps & LocalizationPr
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
-    const {
-        hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl,
-        sessionDeleteUrl, deploymentName, channel, children, explainDialogProps,
-        explainPopoverProps, customExplainPopover, explainConstraints
-    } = props
+const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationProps>) => {
+    const propOverrides = useContext(configurationPropsContext);
+    const p = Object.assign({}, props, propOverrides) as PropsWithChildren<ConfigurationProps>;
 
     const {activeLocale} = useLocaleInfo();
     const localeCode = activeLocale.code;
 
     useEffect(() => {
-        console.info("Current locale code:", localeCode)
+        console.info("[Configuration] Current locale code:", localeCode)
     }, [localeCode]);
 
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
         return (
             <>
-                {children}
+                {p.children}
 
                 <Singleton singletonId="Configuration">
                     <DesignSystem/>
@@ -78,28 +87,28 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
         );
     }
 
-    const parsedRawAttributeRelations = useParseRawAttributeRelations(props.attributeRelations?.jsonDefinition);
+    const parsedRawAttributeRelations = useParseRawAttributeRelations(p.attributeRelations?.jsonDefinition);
     const attributeRelations = useMemo(() => pipe(
         parsedRawAttributeRelations,
         O.fromEither,
         O.toNullable
     ), [parsedRawAttributeRelations]);
 
-    const parsedRawChoiceValueSorting = useParseRawChoiceValueSorting(props.choiceValueSorting?.jsonDefinition);
+    const parsedRawChoiceValueSorting = useParseRawChoiceValueSorting(p.choiceValueSorting?.jsonDefinition);
     const choiceValueSorting = useMemo<ChoiceValueSorting>(() => pipe(
         parsedRawChoiceValueSorting,
         E.orElse(() => pipe(
-            props.choiceValueSorting as ChoiceValueSorting,
+            p.choiceValueSorting as ChoiceValueSorting,
             E.fromNullable<ReactNode>(null)
         )),
         E.getOrElse(() => ({
             attributes: [],
             defaultRules: []
         } satisfies ChoiceValueSorting))
-    ), [parsedRawChoiceValueSorting, props.choiceValueSorting]);
+    ), [parsedRawChoiceValueSorting, p.choiceValueSorting]);
 
-    const parsedRawLocalization = useParseRawLocalization(props.localization?.jsonDefinition);
-    const localization = useMemo<Localization>(() => pipe(
+    const parsedRawLocalization = useParseRawLocalization(p.localization?.jsonDefinition);
+    const resolvedLocalization = useMemo<Localization>(() => pipe(
         parsedRawLocalization,
         E.getOrElse(() => ({
             attributes: [],
@@ -108,7 +117,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     ), [parsedRawLocalization]);
 
     const wizardAttributeRelations = pipe(
-        props.wizardAttributeRelations?.wizardSteps,
+        p.wizardAttributeRelations?.wizardSteps,
         O.fromNullable,
         O.filter(RA.isNonEmpty),
         O.map(RA.map(s => ({attributes: pipe(s.attributes, RA.map(parseGlobalAttributeId))} satisfies WizardStep))),
@@ -116,20 +125,20 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
     )
 
     const sessionContext = useMemo(() => ({
-        apiBaseUrl: urlJoin(hcaBaseUrl, "api", "engine"),
-        sessionInitialisationOptions: match(sessionCreation)
-            .with("client-side", () => ({accessToken}) satisfies ClientSideSessionInitialisationOptions)
-            .with("server-side", () => ({sessionCreateUrl}) satisfies ServerSideSessionInitialisationOptions)
+        apiBaseUrl: urlJoin(p.hcaBaseUrl, "api", "engine"),
+        sessionInitialisationOptions: match(p.sessionCreation)
+            .with("client-side", () => ({accessToken: p.accessToken}) satisfies ClientSideSessionInitialisationOptions)
+            .with("server-side", () => ({sessionCreateUrl: p.sessionCreateUrl}) satisfies ServerSideSessionInitialisationOptions)
             .exhaustive(),
         configurationModelSource: {
             type: ConfigurationModelSourceType.Channel,
-            channel,
-            deploymentName,
+            channel: p.channel,
+            deploymentName: p.deploymentName,
         },
         attributeRelations,
         wizardAttributeRelations,
         allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}}
-    } satisfies SessionContext), [hcaBaseUrl, sessionCreation, accessToken, sessionCreateUrl, sessionDeleteUrl, channel, deploymentName, attributeRelations])
+    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations])
 
     return (
         <>
@@ -138,17 +147,17 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<Props>) => {
                 {pipe(parsedRawChoiceValueSorting, E.swap, O.fromEither, O.toNullable)}
                 {pipe(parsedRawAttributeRelations, E.swap, O.fromEither, O.toNullable)}
 
-                <InitializationError {...props}/>
+                <InitializationError {...p}/>
 
                 <Suspense>
-                    <localizationContext.Provider value={localization}>
-                        <ExplainController explainConstraints={explainConstraints}>
-                            <explainPopoverPropsContext.Provider value={{...explainPopoverProps, customPopover: customExplainPopover}}>
+                    <localizationContext.Provider value={resolvedLocalization}>
+                        <ExplainController explainConstraints={p.explainConstraints}>
+                            <explainPopoverPropsContext.Provider value={{...p.explainPopoverProps, customPopover: p.customExplainPopover}}>
                                 <choiceValueSortingContext.Provider value={choiceValueSorting}>
-                                    {children}
+                                    {p.children}
                                 </choiceValueSortingContext.Provider>
                             </explainPopoverPropsContext.Provider>
-                            <ExplainDialog {...explainDialogProps}/>
+                            <ExplainDialog {...p.explainDialogProps}/>
                         </ExplainController>
                     </localizationContext.Provider>
                 </Suspense>
