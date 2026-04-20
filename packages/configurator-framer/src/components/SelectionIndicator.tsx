@@ -11,7 +11,7 @@ import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 
 type SelectionState = "undefined" | "included" | "excluded" | "true" | "false" | "numeric";
-type Condition = "none" | "explicit" | "implicit" | "blocked";
+type Condition = "none" | "explicit" | "implicit" | "blocked" | "available";
 type FilterMode = "some" | "every"
 
 type Variant = {
@@ -90,33 +90,39 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
         .find(({selection, condition}) => match({selection, condition, attribute})
             // Choice
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "blocked"}, evaluateChoiceAttribute(v => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included)))
+            .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "available"}, evaluateChoiceAttribute(v => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included)))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "implicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "explicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "none"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included))
 
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "blocked"}, evaluateChoiceAttribute(v => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded)))
+            .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "available"}, evaluateChoiceAttribute(v => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded)))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "implicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "explicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "none"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded))
 
             // Boolean
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(true))
+            .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(true))
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "implicit"}, ({attribute}) => attribute.decision?.state === true && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "explicit"}, ({attribute}) => attribute.decision?.state === true && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "none"}, ({attribute}) => attribute.decision?.state === true)
 
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(false))
+            .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(false))
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "implicit"}, ({attribute}) => attribute.decision?.state === false && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "explicit"}, ({attribute}) => attribute.decision?.state === false && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "none"}, ({attribute}) => attribute.decision?.state === false)
 
             // Component
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(ComponentDecisionState.Included))
+            .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(ComponentDecisionState.Included))
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "implicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "explicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "none"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included)
 
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded))
+            .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded))
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "implicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "explicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "none"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded)
@@ -169,7 +175,7 @@ const propertyControls: PropertyControls<Props> = {
                     title: "Condition",
                     type: ControlType.Enum,
                     defaultValue: "none",
-                    options: ["none", "explicit", "implicit", "blocked"],
+                    options: ["none", "explicit", "implicit", "blocked", "available"],
                 },
                 content: {
                     title: "Content",
