@@ -50,9 +50,10 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
 
     const {attribute, makeDecision} = numericAttribute;
 
-    const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit;
-    const style = getInputStyle(props, attribute.isSatisfied, isImplicitSelected);
-
+    const isImmutable = attribute.isPossibleDecisionStatesImmutable;
+    const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit && !isImmutable;
+    const isFixedSelected = attribute.decision?.kind === DecisionKind.Implicit && isImmutable;
+    const style = getInputStyle(props, attribute.isSatisfied, isImplicitSelected, isFixedSelected);
     const value = attribute.decision?.state;
     const [valueInput, setValueInput] = useState(value);
     const {min, max} = attribute.range;
@@ -92,7 +93,8 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
               allowEmptyFormatting={false}
               displayType="input"
               placeholder={props.placeholder}
-              prefix={implicitLabelPrefix(attribute, props.implicitLabelPrefix)}
+              prefix={decisionPrefix(attribute, isImmutable, props)}
+              readOnly={isImmutable}
               onBlur={() => {
                   debouncedValue.flush();
               }}
@@ -109,8 +111,10 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
 
 export default NumericInput;
 
-const implicitLabelPrefix = (a: NumericAttribute, prefix: string) =>
-    a.decision?.kind === DecisionKind.Implicit ? prefix : ""
+const decisionPrefix = (a: NumericAttribute, isImmutable: boolean, props: Props): string => {
+    if (a.decision?.kind !== DecisionKind.Implicit) return "";
+    return isImmutable ? props.fixedLabelPrefix : props.implicitLabelPrefix;
+}
 
 const propertyControls: PropertyControls<Props> = {
     ...inputPropertyControls,

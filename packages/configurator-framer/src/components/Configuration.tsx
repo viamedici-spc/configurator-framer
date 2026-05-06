@@ -39,6 +39,7 @@ export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingPr
     explainPopoverProps: ExplainPopoverProps,
     customExplainPopover?: ReactNode,
     explainConstraints: boolean,
+    trimming: boolean,
     attributeRelations: {
         jsonDefinition: string
     }
@@ -139,8 +140,9 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
         },
         attributeRelations,
         wizardAttributeRelations,
-        allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}}
-    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations])
+        allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}},
+        disableConfigurationModelTrimming: !p.trimming
+    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations, p.trimming])
 
     return (
         <StyleSheetManager stylisPlugins={[cssVariablePrefixPlugin]}>
@@ -258,6 +260,11 @@ addPropertyControls(Configuration, {
         type: ControlType.Boolean,
         defaultValue: false
         // description: "If true, in addition to decisions, also constraints (rules, cardinalities) will be explained. This is primarily for development purposes."
+    },
+    trimming: {
+        title: "Trimming",
+        type: ControlType.Boolean,
+        defaultValue: true
     },
     attributeRelations: {
         title: "Attribute Relations",

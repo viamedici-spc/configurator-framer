@@ -11,7 +11,7 @@ import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 
 type SelectionState = "undefined" | "included" | "excluded" | "true" | "false" | "numeric";
-type Condition = "none" | "explicit" | "implicit" | "blocked" | "available";
+type Condition = "none" | "explicit" | "implicit" | "blocked" | "available" | "immutable";
 type FilterMode = "some" | "every"
 
 type Variant = {
@@ -91,12 +91,14 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
             // Choice
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "blocked"}, evaluateChoiceAttribute(v => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included)))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "available"}, evaluateChoiceAttribute(v => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included)))
+            .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "immutable"}, evaluateChoiceAttribute(v => v.isPossibleDecisionStatesImmutable && v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included)))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "implicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "explicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "included", condition: "none"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Included))
 
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "blocked"}, evaluateChoiceAttribute(v => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded)))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "available"}, evaluateChoiceAttribute(v => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded)))
+            .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "immutable"}, evaluateChoiceAttribute(v => v.isPossibleDecisionStatesImmutable && v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded)))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "implicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "explicit"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit))
             .with({attribute: {type: AttributeType.Choice}, selection: "excluded", condition: "none"}, evaluateChoiceAttribute(v => v.decision?.state === ChoiceValueDecisionState.Excluded))
@@ -104,12 +106,14 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
             // Boolean
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(true))
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(true))
+            .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "immutable"}, ({attribute}) => attribute.isPossibleDecisionStatesImmutable && attribute.possibleDecisionStates.includes(true))
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "implicit"}, ({attribute}) => attribute.decision?.state === true && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "explicit"}, ({attribute}) => attribute.decision?.state === true && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "true", condition: "none"}, ({attribute}) => attribute.decision?.state === true)
 
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(false))
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(false))
+            .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "immutable"}, ({attribute}) => attribute.isPossibleDecisionStatesImmutable && attribute.possibleDecisionStates.includes(false))
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "implicit"}, ({attribute}) => attribute.decision?.state === false && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "explicit"}, ({attribute}) => attribute.decision?.state === false && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Boolean}, selection: "false", condition: "none"}, ({attribute}) => attribute.decision?.state === false)
@@ -117,12 +121,14 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
             // Component
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(ComponentDecisionState.Included))
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(ComponentDecisionState.Included))
+            .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "immutable"}, ({attribute}) => attribute.isPossibleDecisionStatesImmutable && attribute.possibleDecisionStates.includes(ComponentDecisionState.Included))
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "implicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "explicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Component}, selection: "included", condition: "none"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Included)
 
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "blocked"}, ({attribute}) => !attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded))
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "available"}, ({attribute}) => attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded))
+            .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "immutable"}, ({attribute}) => attribute.isPossibleDecisionStatesImmutable && attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded))
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "implicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded && attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "explicit"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded && attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Component}, selection: "excluded", condition: "none"}, ({attribute}) => attribute.decision?.state === ComponentDecisionState.Excluded)
@@ -131,6 +137,19 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
             .with({attribute: {type: AttributeType.Numeric}, selection: "numeric", condition: "implicit"}, ({attribute}) => attribute.decision?.kind === DecisionKind.Implicit)
             .with({attribute: {type: AttributeType.Numeric}, selection: "numeric", condition: "explicit"}, ({attribute}) => attribute.decision?.kind === DecisionKind.Explicit)
             .with({attribute: {type: AttributeType.Numeric}, selection: "numeric", condition: "none"}, ({attribute}) => attribute.decision != null)
+            .with({attribute: {type: AttributeType.Numeric}, selection: "numeric", condition: "immutable"}, ({attribute}) => attribute.isPossibleDecisionStatesImmutable)
+
+            // Undefined + immutable — only Boolean and Numeric. These two can end up
+            // immutable with an empty possible-decision-state set and no decision
+            // ("undefined immutable"), from which the UI can derive e.g. "true is
+            // unavailable". Choice/Component cannot reach this state (the engine
+            // guarantees at least one possible state), so they are intentionally
+            // omitted.
+            .with(
+                {attribute: {type: AttributeType.Boolean}, selection: "undefined", condition: "immutable"},
+                {attribute: {type: AttributeType.Numeric}, selection: "undefined", condition: "immutable"},
+                ({attribute}) => attribute.decision == null && attribute.isPossibleDecisionStatesImmutable
+            )
 
             // Undefined for all attributes
             .with({attribute: {type: AttributeType.Choice}, selection: "undefined"}, evaluateChoiceAttribute(v => v.decision == null))
@@ -175,7 +194,7 @@ const propertyControls: PropertyControls<Props> = {
                     title: "Condition",
                     type: ControlType.Enum,
                     defaultValue: "none",
-                    options: ["none", "explicit", "implicit", "blocked", "available"],
+                    options: ["none", "explicit", "implicit", "blocked", "available", "immutable"],
                 },
                 content: {
                     title: "Content",

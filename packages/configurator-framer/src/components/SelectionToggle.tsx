@@ -105,6 +105,19 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
         const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
         const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
         const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
+
+        // An immutable attribute / choice value can never change. Acting on it is
+        // a no-op regardless of the target:
+        //   - target possible  → Fixed: the state is already permanently set, so an
+        //                         explicit decision would change nothing.
+        //   - target blocked    → Unavailable: there is no Explain solution.
+        // Both are technically allowed but pointless, so we short-circuit below.
+        const isTargetImmutable = match(attribute)
+            .with({type: AttributeType.Choice}, () => choiceValue?.isPossibleDecisionStatesImmutable ?? false)
+            .with({type: AttributeType.Boolean}, (a) => a.isPossibleDecisionStatesImmutable)
+            .with({type: AttributeType.Component}, (a) => a.isPossibleDecisionStatesImmutable)
+            .otherwise(() => false);
+
         const explainMode = props.explain;
         const maybeExplain = explainMode !== "disabled" && (async () => {
             const subject = match({isComponentAttribute, isBooleanAttribute, isChoiceAttribute})
@@ -125,7 +138,9 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
             }
         });
 
-        if (isAnyStatePossible || targetDecision == null) {
+        if (isTargetImmutable) {
+            // No-op — Fixed or Unavailable target (see isTargetImmutable above).
+        } else if (isAnyStatePossible || targetDecision == null) {
             try {
                 await makeDecision({
                     type: attribute.type,

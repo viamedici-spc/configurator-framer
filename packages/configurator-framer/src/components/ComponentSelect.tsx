@@ -88,24 +88,56 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
         .otherwise(() => nothingValue);
 
     const canReset = attribute.decision?.kind === DecisionKind.Explicit;
-    const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit;
-    const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected);
+    const isImmutable = attribute.isPossibleDecisionStatesImmutable;
+    const isImplicitSelected = attribute.decision?.kind === DecisionKind.Implicit && !isImmutable;
+    const isFixedSelected = attribute.decision?.kind === DecisionKind.Implicit && isImmutable;
     const isIncludedAllowed = attribute.possibleDecisionStates.includes(ComponentDecisionState.Included);
     const isExcludedAllowed = attribute.possibleDecisionStates.includes(ComponentDecisionState.Excluded);
+    const isIncludedUnavailable = !isIncludedAllowed && isImmutable;
+    const isExcludedUnavailable = !isExcludedAllowed && isImmutable;
+    const isIncludedBlocked = !isIncludedAllowed && !isImmutable;
+    const isExcludedBlocked = !isExcludedAllowed && !isImmutable;
+    // Both states blocked from inclusion (mutable + immutable bundled). Triggers
+    // `allOptionsBlockedColors`. Engine guarantee: this is unreachable for a
+    // Component attribute — at least one of Included/Excluded always remains
+    // possible (this holds regardless of Trimming or Fixed Decisions). We still
+    // compute the value to reuse the shared `getSelectStyle` abstraction
+    // consistently across all Selects.
+    const allOptionsBlocked = !isIncludedAllowed && !isExcludedAllowed;
+    // Stricter subset: both states immutable-blocked. Triggers
+    // `noOptionsAvailableColors`. Also unreachable for Component. No
+    // whole-element disable is wired for the same reason.
+    const noOptionsAvailable = allOptionsBlocked && isImmutable;
+    const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected, isFixedSelected, allOptionsBlocked, noOptionsAvailable);
 
     const includedOption = (
         <option value={includedValue}>
-            {implicitLabelPrefix(attribute, ComponentDecisionState.Included, props.implicitLabelPrefix)}
+            {decisionPrefix(attribute, ComponentDecisionState.Included, isImmutable, props)}
             {props.includedLabel}
         </option>
     )
 
     const excludedOption = (
         <option value={excludedValue}>
-            {implicitLabelPrefix(attribute, ComponentDecisionState.Excluded, props.implicitLabelPrefix)}
+            {decisionPrefix(attribute, ComponentDecisionState.Excluded, isImmutable, props)}
             {props.excludedLabel}
         </option>
     )
+
+    const includedUnavailableOption = (
+        <option value={includedValue} disabled>
+            {props.includedLabel}
+        </option>
+    )
+
+    const excludedUnavailableOption = (
+        <option value={excludedValue} disabled>
+            {props.excludedLabel}
+        </option>
+    )
+
+    const showBlockedGroup = isIncludedBlocked || isExcludedBlocked;
+    const showUnavailableGroup = !props.excludeUnavailableOptions && (isIncludedUnavailable || isExcludedUnavailable);
 
     return (
         <Root ref={ref}
@@ -127,10 +159,17 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
             {isIncludedAllowed && includedOption}
             {isExcludedAllowed && excludedOption}
 
-            {(!isIncludedAllowed || !isExcludedAllowed) && (
+            {showBlockedGroup && (
                 <optgroup label={props.blockedLabel}>
-                    {!isIncludedAllowed && includedOption}
-                    {!isExcludedAllowed && excludedOption}
+                    {isIncludedBlocked && includedOption}
+                    {isExcludedBlocked && excludedOption}
+                </optgroup>
+            )}
+
+            {showUnavailableGroup && (
+                <optgroup label={props.unavailableLabel}>
+                    {isIncludedUnavailable && includedUnavailableOption}
+                    {isExcludedUnavailable && excludedUnavailableOption}
                 </optgroup>
             )}
         </Root>
@@ -139,8 +178,10 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
 
 export default ComponentSelect;
 
-const implicitLabelPrefix = (a: ComponentAttribute, value: ComponentDecisionState, prefix: string) =>
-    a.decision?.kind === DecisionKind.Implicit && a.decision?.state === value ? prefix : ""
+const decisionPrefix = (a: ComponentAttribute, value: ComponentDecisionState, isImmutable: boolean, props: Props): string => {
+    if (a.decision?.kind !== DecisionKind.Implicit || a.decision?.state !== value) return "";
+    return isImmutable ? props.fixedLabelPrefix : props.implicitLabelPrefix;
+}
 
 const propertyControls: PropertyControls<Props> = {
     ...selectPropertyControls,

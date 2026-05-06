@@ -16,7 +16,7 @@ import {RM} from "@viamedici-spc/fp-ts-extensions";
 import {getItemTemplate} from "../common/listRenderer";
 
 type SelectionState = "undefined" | "included" | "excluded";
-type Condition = "none" | "explicit" | "implicit" | "blocked" | "available";
+type Condition = "none" | "explicit" | "implicit" | "blocked" | "available" | "interactive";
 
 type Filter = {
     selection: SelectionState,
@@ -92,23 +92,25 @@ const ChoiceValueList = withErrorBoundary(withControlId((props: Props) => {
 
     const choiceValueNames = useChoiceValueNames(globalAttributeId);
     const filter = props.filter ?? new Array<Filter>();
-    const filteredChoiceValues = [...choiceAttribute.attribute.values.values()].filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
-        .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
-        .with({selection: "included", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
-        .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
-        .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)
-        .with({selection: "included", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Included)
+    const filteredChoiceValues = [...choiceAttribute.attribute.values.values()]
+        .filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
+            .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
+            .with({selection: "included", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
+            .with({selection: "included", condition: "interactive"}, () => !v.isPossibleDecisionStatesImmutable)
+            .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
+            .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)
+            .with({selection: "included", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Included)
 
-        .with({selection: "excluded", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
-        .with({selection: "excluded", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
-        .with({selection: "excluded", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit)
-        .with({selection: "excluded", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit)
-        .with({selection: "excluded", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded)
+            .with({selection: "excluded", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
+            .with({selection: "excluded", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
+            .with({selection: "excluded", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit)
+            .with({selection: "excluded", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit)
+            .with({selection: "excluded", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded)
 
-        .with({selection: "undefined"}, () => v.decision == null)
+            .with({selection: "undefined"}, () => v.decision == null)
 
-        .otherwise(() => false))
-    )
+            .otherwise(() => false))
+        )
 
     const choiceValues = useSortedChoiceValues(globalAttributeId, filteredChoiceValues);
     const choiceValueIds = choiceValues.map(v => v.id);
@@ -158,6 +160,11 @@ const propertyControls: PropertyControls<Props> = {
     filter: {
         title: "Filter",
         type: ControlType.Array,
+        // See docs/features/decision-immutability-and-trimming.md for more info
+        defaultValue: [
+            {selection: "included", condition: "available"},
+            {selection: "included", condition: "interactive"}
+        ],
         control: {
             type: ControlType.Object,
             controls: {
@@ -171,7 +178,7 @@ const propertyControls: PropertyControls<Props> = {
                     title: "Condition",
                     type: ControlType.Enum,
                     defaultValue: "none",
-                    options: ["none", "explicit", "implicit", "blocked", "available"],
+                    options: ["none", "explicit", "implicit", "blocked", "available", "interactive"],
                 }
             }
         }

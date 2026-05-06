@@ -9,8 +9,10 @@ import {explainPropertyControls, ExplainProps} from "./explainProps";
 export type InputProps = AttributeIdProps & BoxProps & TextProps & ExplainProps & {
     style: CSSProperties,
     implicitLabelPrefix: string,
+    fixedLabelPrefix: string,
     unsatisfiedColors: InputStateColors,
-    implicitSelectedColors: InputStateColors
+    implicitSelectedColors: InputStateColors,
+    fixedColors: InputStateColors
 }
 
 export type InputStateColors = {
@@ -59,6 +61,11 @@ export const inputPropertyControls = {
         type: ControlType.String,
         defaultValue: "Implicit: "
     },
+    fixedLabelPrefix: {
+        title: "Fixed Label Prefix",
+        type: ControlType.String,
+        defaultValue: "Fixed: "
+    },
     unsatisfiedColors: {
         ...inputStateColorProperty,
         title: "Unsatisfied Colors"
@@ -67,10 +74,14 @@ export const inputPropertyControls = {
         ...inputStateColorProperty,
         title: "Implicit Selected Colors"
     },
+    fixedColors: {
+        ...inputStateColorProperty,
+        title: "Fixed Colors"
+    },
     ...explainPropertyControls
 } satisfies PropertyControls<InputProps>
 
-export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplicitSelected: boolean): CSSProperties => {
+export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplicitSelected: boolean, isFixedSelected: boolean = false): CSSProperties => {
     const boxStyle = getBoxStyle(props);
     const textStyle = getTextStyle(props);
 
@@ -80,35 +91,44 @@ export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplici
         backgroundColor: match({
             isSatisfied,
             isImplicitSelected,
+            isFixedSelected,
             unsatisfiedFill: props.unsatisfiedColors?.fill,
-            implicitSelectedFill: props.implicitSelectedColors?.fill
+            implicitSelectedFill: props.implicitSelectedColors?.fill,
+            fixedFill: props.fixedColors?.fill
         })
             .with({isSatisfied: false, unsatisfiedFill: P.string.minLength(1)}, p => p.unsatisfiedFill)
             .with({isImplicitSelected: true, implicitSelectedFill: P.string.minLength(1)}, p => p.implicitSelectedFill)
+            .with({isFixedSelected: true, fixedFill: P.string.minLength(1)}, p => p.fixedFill)
             .otherwise(() => boxStyle.backgroundColor),
         borderColor: match({
             isSatisfied,
             isImplicitSelected,
+            isFixedSelected,
             unsatisfiedBorderColor: props.unsatisfiedColors?.borderColor,
-            implicitSelectedBorderColor: props.implicitSelectedColors?.borderColor
+            implicitSelectedBorderColor: props.implicitSelectedColors?.borderColor,
+            fixedBorderColor: props.fixedColors?.borderColor
         })
             .with({isSatisfied: false, unsatisfiedBorderColor: P.string.minLength(1)}, p => p.unsatisfiedBorderColor)
             .with({
                 isImplicitSelected: true,
                 implicitSelectedBorderColor: P.string.minLength(1)
             }, p => p.implicitSelectedBorderColor)
+            .with({isFixedSelected: true, fixedBorderColor: P.string.minLength(1)}, p => p.fixedBorderColor)
             .otherwise(() => boxStyle.borderColor),
         color: match({
             isSatisfied,
             isImplicitSelected,
+            isFixedSelected,
             unsatisfiedColor: props.unsatisfiedColors?.color,
-            implicitSelectedColor: props.implicitSelectedColors?.color
+            implicitSelectedColor: props.implicitSelectedColors?.color,
+            fixedColor: props.fixedColors?.color
         })
             .with({isSatisfied: false, unsatisfiedColor: P.string.minLength(1)}, p => p.unsatisfiedColor)
             .with({
                 isImplicitSelected: true,
                 implicitSelectedColor: P.string.minLength(1)
             }, p => p.implicitSelectedColor)
+            .with({isFixedSelected: true, fixedColor: P.string.minLength(1)}, p => p.fixedColor)
             .otherwise(() => textStyle.color),
         ...props.style
     });
