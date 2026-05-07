@@ -28,7 +28,16 @@ export type CommonExplainProps = {
     },
     applySolutionButton: ButtonProps & MarginProps,
     closeButton: ButtonProps,
-    infoMessage: TextProps,
+    infoMessage: TextProps & {
+        whyIsStateNotPossibleQuestion: string,
+        whyConfigurationIsNotSatisfiedQuestion: string,
+        whyAttributeIsNotSatisfiedQuestion: string,
+        generalConflictQuestion: string,
+        failedToExplainText: string,
+        failedToExplainHintText: string,
+        noExplanationFoundText: string,
+        noSolutionFoundText: string,
+    },
     useCustomExplain: boolean
 }
 
@@ -143,7 +152,47 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         title: "Info Message",
         type: ControlType.Object,
         controls: {
-            ...createTextPropertyControls(defaults.infoMessage ?? {})
+            ...createTextPropertyControls(defaults.infoMessage ?? {}),
+            whyIsStateNotPossibleQuestion: {
+                title: "Why Is State Not Possible Question",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.whyIsStateNotPossibleQuestion ?? "why your selection is not possible"
+            },
+            whyConfigurationIsNotSatisfiedQuestion: {
+                title: "Why Configuration Is Not Satisfied Question",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.whyConfigurationIsNotSatisfiedQuestion ?? "why your configuration is not satisfied"
+            },
+            whyAttributeIsNotSatisfiedQuestion: {
+                title: "Why Attribute Is Not Satisfied Question",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.whyAttributeIsNotSatisfiedQuestion ?? "why your attribute is not satisfied"
+            },
+            generalConflictQuestion: {
+                title: "General Conflict Question",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.generalConflictQuestion ?? "why your selections are not possible"
+            },
+            failedToExplainText: {
+                title: "Failed To Explain Text",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.failedToExplainText ?? "Failed to explain {{question}}."
+            },
+            failedToExplainHintText: {
+                title: "Failed To Explain Hint Text",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.failedToExplainHintText ?? "Please check your internet connection and try again."
+            },
+            noExplanationFoundText: {
+                title: "No Explanation Found Text",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.noExplanationFoundText ?? "There was no explanation found for {{question}}."
+            },
+            noSolutionFoundText: {
+                title: "No Solution Found Text",
+                type: ControlType.String,
+                defaultValue: defaults.infoMessage?.noSolutionFoundText ?? "There was no solution found for {{question}}."
+            },
         },
         hidden: (props) => props.useCustomExplain
     }

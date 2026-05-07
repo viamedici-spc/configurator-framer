@@ -4,6 +4,7 @@ import {HTMLProps, ReactNode} from "react";
 import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import useCommonExplainProps from "../../../../props/useCommonExplainProps";
 import {getTextStyle} from "../../../../props/textProps";
+import Mustache from "mustache";
 
 type Variant = 'failedToExplain' | 'noExplanationFound' | 'noSolutionFound';
 
@@ -13,23 +14,23 @@ export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant
     const {infoMessage} = useCommonExplainProps();
 
     const question = match(explainQuestion)
-        .returnType<ReactNode>()
-        .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => "why your selection is not possible")
-        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration}, () => "why your configuration is not satisfied")
-        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute}, () => "why your attribute is not satisfied")
-        .with(P.nullish, () => "why your selections are not possible")
+        .returnType<string>()
+        .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => infoMessage.whyIsStateNotPossibleQuestion)
+        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration}, () => infoMessage.whyConfigurationIsNotSatisfiedQuestion)
+        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute}, () => infoMessage.whyAttributeIsNotSatisfiedQuestion)
+        .with(P.nullish, () => infoMessage.generalConflictQuestion)
         .exhaustive()
 
     const content = match(variant)
         .returnType<ReactNode>()
         .with("failedToExplain", () => (
             <>
-                Failed to explain {question}.<br/>
-                Please check your internet connection and try again.
+                {Mustache.render(infoMessage.failedToExplainText, {question})}<br/>
+                {infoMessage.failedToExplainHintText}
             </>
         ))
-        .with("noExplanationFound", () => <>There was no explanation found for {question}.</>)
-        .with("noSolutionFound", () => <>There was no solution found for {question}.</>)
+        .with("noExplanationFound", () => <>{Mustache.render(infoMessage.noExplanationFoundText, {question})}</>)
+        .with("noSolutionFound", () => <>{Mustache.render(infoMessage.noSolutionFoundText, {question})}</>)
         .exhaustive();
 
     return (
