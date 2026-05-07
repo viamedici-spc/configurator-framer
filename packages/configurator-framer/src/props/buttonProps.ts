@@ -47,8 +47,8 @@ export const createButtonPropertyControls = (defaults: DeepPartial<ButtonProps> 
 export const getButtonStyle = (props: ButtonProps): CSSProperties & Record<string, any> => ({
     ...getBoxStyle(props),
     ...getStaticTextStyle(props),
-    "--color-button-fill-hover": props.fillHover,
-    "--color-button-focus-outline": props.focusOutline.color,
-    "--size-button-focus-outline": `${props.focusOutline.size}px`,
-    "--size-button-focus-outline-offset": `${props.focusOutline.offset}px`
+    "--spc-color-button-fill-hover": props.fillHover,
+    "--spc-color-button-focus-outline": props.focusOutline.color,
+    "--spc-size-button-focus-outline": `${props.focusOutline.size}px`,
+    "--spc-size-button-focus-outline-offset": `${props.focusOutline.offset}px`
 });

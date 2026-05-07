@@ -1,4 +1,6 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
+import {StyleSheetManager} from "styled-components"
+import {cssVariablePrefixPlugin} from "../designSystem/cssVariablePrefixPlugin"
 import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
 import {PropsWithChildren, ReactNode, Suspense, useContext, useEffect, useMemo} from "react"
@@ -77,13 +79,13 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
         return (
-            <>
+            <StyleSheetManager stylisPlugins={[cssVariablePrefixPlugin]}>
                 {p.children}
 
                 <Singleton singletonId="Configuration">
                     <DesignSystem/>
                 </Singleton>
-            </>
+            </StyleSheetManager>
         );
     }
 
@@ -141,7 +143,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
     } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations])
 
     return (
-        <>
+        <StyleSheetManager stylisPlugins={[cssVariablePrefixPlugin]}>
             <ViaConfiguration sessionContext={sessionContext}>
                 {pipe(parsedRawLocalization, E.swap, O.fromEither, O.toNullable)}
                 {pipe(parsedRawChoiceValueSorting, E.swap, O.fromEither, O.toNullable)}
@@ -166,7 +168,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
             <Singleton singletonId="Configuration">
                 <DesignSystem/>
             </Singleton>
-        </>
+        </StyleSheetManager>
     )
 })
 
