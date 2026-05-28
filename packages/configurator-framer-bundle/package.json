@@ -47,7 +47,7 @@
   "license": "MIT",
   "dependencies": {
     "@viamedici-spc/configurator-framer": "file:../configurator-framer",
-    "@viamedici-spc/configurator-react": "3.0.1"
+    "@viamedici-spc/configurator-react": "4.0.0"
   },
   "devDependencies": {
     "npm-sort": "^0.0.4",
