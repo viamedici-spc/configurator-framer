@@ -47,6 +47,9 @@ import AttributeValueList from "./components/explain/custom/common/AttributeValu
 import ExplainContent from "./components/explain/custom/explainPopover/ExplainContent";
 import ExplainQuestion from "./components/explain/custom/common/ExplainQuestion";
 import {ConfigurationPropOverrides} from "./components/ConfigurationPropsProvider";
+import HostParametersProvider from "./components/HostParametersProvider";
+import {useHostParameters, useHostParameter} from "./hooks/useHostParameters";
+import {type HostParameters} from "./common/hostParametersStore";
 
 export {
     Configuration,
@@ -101,6 +104,10 @@ export {
     useExplainProcess,
     type UseExplainProcessResult,
     PropagateHeight,
+    HostParametersProvider,
+    useHostParameters,
+    useHostParameter,
+    type HostParameters,
     PopoverClose,
     ApplySolution as CustomExplainApplySolution,
     AttributeList as CustomExplainAttributeList,

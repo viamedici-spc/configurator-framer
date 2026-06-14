@@ -26,6 +26,7 @@ import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelation
 import {wizardAttributeRelationsPropertyControls, WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {configurationPropsContext} from "./ConfigurationPropsProvider";
+import HostParametersProvider from "./HostParametersProvider";
 
 export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & {
     hcaBaseUrl: string
@@ -158,7 +159,9 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
                         <ExplainController explainConstraints={p.explainConstraints}>
                             <explainPopoverPropsContext.Provider value={{...p.explainPopoverProps, customPopover: p.customExplainPopover}}>
                                 <choiceValueSortingContext.Provider value={choiceValueSorting}>
-                                    {p.children}
+                                    <HostParametersProvider>
+                                        {p.children}
+                                    </HostParametersProvider>
                                 </choiceValueSortingContext.Provider>
                             </explainPopoverPropsContext.Provider>
                             <ExplainDialog {...p.explainDialogProps}/>

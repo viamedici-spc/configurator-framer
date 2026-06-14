@@ -4,3 +4,4 @@ node_modules
 /report/
 .DS_Store
 /packages/configurator-framer/report/tests-results.xml
+/packages/configurator-framer/report/cobertura-coverage.xml
