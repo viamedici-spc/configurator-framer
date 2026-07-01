@@ -1,7 +1,7 @@
 import {Children, ReactNode} from "react";
 import {useConfigurationInitialization} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {ConfiguratorErrorType} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ConfiguratorErrorType, FixedDecision} from "@viamedici-spc/configurator-ts";
 import {InitializationErrorMessage} from "./InitializationErrorMessage";
 
 type Props = {
@@ -53,6 +53,21 @@ export default function InitializationError(props: Props) {
 
         case ConfiguratorErrorType.SessionParametersInvalid:
             return standardErrorMessage(`Configuration Session parameters are invalid: ${error.detail}`);
+
+        case ConfiguratorErrorType.FixedDecisionsInvalid: {
+            const formatRejectedDecision = (d: FixedDecision) => {
+                const {localId, componentPath, sharedConfigurationModelId} = d.attributeId;
+                const qualifiers = [
+                    componentPath?.length ? `Component Path: ${componentPath.join(" -> ")}` : null,
+                    sharedConfigurationModelId ? `Shared Configuration Model: ${sharedConfigurationModelId}` : null,
+                ].filter(Boolean).join(", ");
+                const attributeText = `Attribute "${localId}"${qualifiers ? ` (${qualifiers})` : ""}`;
+                const choiceValueText = d.type === AttributeType.Choice ? `, Choice Value "${d.choiceValueId}"` : "";
+                return `- ${attributeText}${choiceValueText}`;
+            };
+            const rejectedText = error.rejectedDecisions.map(formatRejectedDecision).join("\n");
+            return standardErrorMessage(`The Fixed Decisions are invalid: ${error.validationMessage}\n\nRejected Fixed Decisions:\n${rejectedText}`);
+        }
 
         default:
             return Children.toArray(props.errorContent).length > 0

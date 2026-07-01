@@ -24,11 +24,12 @@ import useParseRawLocalization from "../hooks/useParseRawLocalization";
 import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSorting";
 import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
 import {wizardAttributeRelationsPropertyControls, WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
+import {fixedDecisionsPropertyControls, FixedDecisionsProps, mapFixedDecision} from "../props/fixedDecisionsProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {configurationPropsContext} from "./ConfigurationPropsProvider";
 import HostParametersProvider from "./HostParametersProvider";
 
-export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & {
+export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & FixedDecisionsProps & {
     hcaBaseUrl: string
     sessionCreation: "client-side" | "server-side"
     accessToken?: string,
@@ -48,6 +49,7 @@ export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingPr
 
 export type ConfigurationOverrideableProps = Partial<Pick<ConfigurationProps,
     "attributeRelations" |
+    "fixedDecisions" |
     "choiceValueSorting" |
     "localization" |
     "wizardAttributeRelations" |
@@ -128,6 +130,14 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
         O.toNullable
     )
 
+    const fixedDecisions = useMemo(() => pipe(
+        p.fixedDecisions,
+        O.fromNullable,
+        O.map(RA.filterMap(d => O.fromNullable(mapFixedDecision(d)))),
+        O.filter(RA.isNonEmpty),
+        O.toNullable
+    ), [p.fixedDecisions])
+
     const sessionContext = useMemo(() => ({
         apiBaseUrl: urlJoin(p.hcaBaseUrl, "api", "engine"),
         sessionInitialisationOptions: match(p.sessionCreation)
@@ -141,9 +151,10 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
         },
         attributeRelations,
         wizardAttributeRelations,
+        fixedDecisions,
         allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}},
         disableConfigurationModelTrimming: !p.trimming
-    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations, p.trimming])
+    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations, fixedDecisions, p.trimming])
 
     return (
         <StyleSheetManager stylisPlugins={[cssVariablePrefixPlugin]}>
@@ -282,6 +293,7 @@ addPropertyControls(Configuration, {
             }
         }
     },
+    ...fixedDecisionsPropertyControls,
     ...wizardAttributeRelationsPropertyControls,
     ...choiceValueSortingPropertyControls,
     ...localizationPropertyControls
