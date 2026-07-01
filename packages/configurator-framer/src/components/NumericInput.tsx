@@ -60,11 +60,11 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
 
     const setSourceValue = async (value: number) => {
         if (value < min) {
-            alert(`The value must be smaller than or equal to ${min}.`)
+            alert(`The value must be greater than or equal to ${min}.`)
             return;
         }
         if (value > max) {
-            alert(`The value must be greater than or equal to ${max}.`)
+            alert(`The value must be smaller than or equal to ${max}.`)
             return;
         }
 
