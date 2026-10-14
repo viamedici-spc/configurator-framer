@@ -3,7 +3,7 @@ import {StyleSheetManager} from "styled-components"
 import {cssVariablePrefixPlugin} from "../designSystem/cssVariablePrefixPlugin"
 import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
-import {PropsWithChildren, ReactNode, Suspense, useContext, useEffect, useMemo} from "react"
+import {PropsWithChildren, ReactNode, useContext, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
@@ -28,6 +28,7 @@ import {fixedDecisionsPropertyControls, FixedDecisionsProps, mapFixedDecision} f
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {configurationPropsContext} from "./ConfigurationPropsProvider";
 import HostParametersProvider from "./HostParametersProvider";
+import InitializationSuspense from "./InitializationSuspense";
 
 export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & FixedDecisionsProps & {
     hcaBaseUrl: string
@@ -165,7 +166,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
 
                 <InitializationError {...p}/>
 
-                <Suspense>
+                <InitializationSuspense>
                     <localizationContext.Provider value={resolvedLocalization}>
                         <ExplainController explainConstraints={p.explainConstraints}>
                             <explainPopoverPropsContext.Provider value={{...p.explainPopoverProps, customPopover: p.customExplainPopover}}>
@@ -178,7 +179,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
                             <ExplainDialog {...p.explainDialogProps}/>
                         </ExplainController>
                     </localizationContext.Provider>
-                </Suspense>
+                </InitializationSuspense>
 
             </ViaConfiguration>
             <Singleton singletonId="Configuration">
