@@ -135,4 +135,25 @@ describe("InitializationSuspense", () => {
         await act(async () => initialization.set(false));
         expect(container.textContent).toBe("Loaded");
     });
+
+    it("retries when a regular boundary above catches the handed-on suspension", async () => {
+        // After a suspension in a synchronous update, Framer turns its own boundaries into regular ones.
+        initialization.set(false);
+        const {LazyText, load} = createLazyText("Loaded");
+
+        await act(async () => root.render(
+            <Suspense fallback={<span>Regular fallback</span>}>
+                <InitializationSuspense>
+                    <LazyText/>
+                </InitializationSuspense>
+            </Suspense>
+        ));
+        expect(container.textContent).toBe("Regular fallback");
+
+        await act(async () => {
+            load();
+            await new Promise(resolve => setTimeout(resolve, 250));
+        });
+        expect(container.textContent).toBe("Loaded");
+    });
 });
