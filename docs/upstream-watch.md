@@ -11,6 +11,22 @@ yet.
 
 ## fp-ts
 
+### Import fp-ts by its public subpaths in the output
+
+- **We would rather** emit `fp-ts/…` imports as written in the sources.
+- **We do instead** rewrite them to full ES module paths (`fp-ts/es6/….js`) in
+  `packages/configurator-framer/tsdown.config.ts`.
+- **What blocks it:** fp-ts has no `exports` map, so strict ESM resolution cannot resolve its subpaths.
+- **Check** (an `exports` field means the gate has lifted):
+
+  ```bash
+  npm view fp-ts@latest exports
+  ```
+
+- **What it would buy:** the plugin in `packages/configurator-framer/tsdown.config.ts` goes away.
+- **Upstream:** fp-ts 2.x is in maintenance.
+- **Last checked:** fp-ts 2.16.11, 2026-11-26: no `exports` field.
+
 ### Load the packages in Node.js-based test runners without configuration
 
 - **We would rather** test with Vitest without extra settings.
