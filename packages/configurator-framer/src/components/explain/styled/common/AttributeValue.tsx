@@ -2,13 +2,13 @@ import styled from "styled-components";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import getDecisionStateDisplayName from "../../common/getDecisionStateDisplayName";
-import {ChoiceValueNames} from "../../../../hooks/localization";
+import type {ChoiceValueNames} from "../../../../hooks/localization";
 import useCommonExplainProps from "../../../../props/useCommonExplainProps";
 import {getPaddingStyle} from "../../../../props/paddingProps";
 import {match} from "ts-pattern";
 import {getTextStyle} from "../../../../props/textProps";
 import {getBorderStyle} from "../../../../props/borderProps";
-import {ExplainAttributeDecision} from "../../common/explainAttributes";
+import type {ExplainAttributeDecision} from "../../common/explainAttributes";
 
 const Root = styled.div`
     display: flex;

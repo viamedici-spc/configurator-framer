@@ -1,5 +1,7 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import React, {cloneElement, CSSProperties, ReactElement, ReactNode} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type { CSSProperties, ReactElement, ReactNode} from "react";
+import React, {cloneElement} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "../../../Singleton";
 import withErrorBoundary from "../../../../common/withErrorBoundary";
@@ -10,7 +12,7 @@ import {globalAttributeIdToString} from "../../../../common/GlobalAttributeIdExt
 import {useAttributesContext} from "./attributesContext";
 import getDecisionStateDisplayName from "../../common/getDecisionStateDisplayName";
 import useCommonExplainProps from "../../../../props/useCommonExplainProps";
-import {DecisionIntention} from "../../common/explainAttributes";
+import type {DecisionIntention} from "../../common/explainAttributes";
 import sortDecisions from "../../common/sortDecisions";
 
 type Props = {

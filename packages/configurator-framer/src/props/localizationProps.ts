@@ -1,6 +1,7 @@
-import {ControlType, PropertyControls} from "framer";
-import {AttributeIdProps} from "./attributeIdProps";
-import {ChoiceValueIdProps} from "./choiceValueIdProps";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {AttributeIdProps} from "./attributeIdProps";
+import type {ChoiceValueIdProps} from "./choiceValueIdProps";
 
 export type LocalizationProps = {
     localization: {

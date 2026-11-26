@@ -1,4 +1,4 @@
-import {LocalizableText, Localization} from "../props/localizationProps";
+import type {LocalizableText, Localization} from "../props/localizationProps";
 import {pipe, RA} from "@viamedici-spc/fp-ts-extensions";
 import {GlobalAttributeId_, mapAttributeId, useGenericParseRawData} from "../common/RawDataParsing";
 import {z} from "zod";

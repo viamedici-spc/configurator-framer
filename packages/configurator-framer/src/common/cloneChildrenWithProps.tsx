@@ -1,4 +1,5 @@
-import {Children, cloneElement, HTMLAttributes, isValidElement, ReactNode, Ref} from "react";
+import type { HTMLAttributes, ReactNode, Ref} from "react";
+import {Children, cloneElement, isValidElement} from "react";
 import mergeProps from "merge-props";
 
 type PropsWithChildrenAndRef = HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> };

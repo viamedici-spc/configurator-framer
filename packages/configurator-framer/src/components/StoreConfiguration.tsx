@@ -1,8 +1,9 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {PropsWithChildren} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
-import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
+import type {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 
 type Props = {

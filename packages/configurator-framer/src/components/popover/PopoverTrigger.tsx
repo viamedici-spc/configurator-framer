@@ -1,4 +1,5 @@
-import {Children, cloneElement, forwardRef, isValidElement, PropsWithChildren} from "react";
+import type { PropsWithChildren} from "react";
+import {Children, cloneElement, forwardRef, isValidElement} from "react";
 import {useMergeRefs} from "@floating-ui/react";
 import {usePopoverContext} from "./Popover";
 

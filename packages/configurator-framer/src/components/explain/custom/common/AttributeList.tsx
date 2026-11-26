@@ -1,17 +1,21 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import React, {cloneElement, CSSProperties, ReactElement, ReactNode} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type { CSSProperties, ReactElement, ReactNode} from "react";
+import React, {cloneElement} from "react";
 import withErrorBoundary from "../../../../common/withErrorBoundary";
 import withControlId, {useControlId} from "../../../../common/controlId";
 import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "../../../Singleton";
 import {mapAttributeId} from "../../../../common/RawDataParsing";
-import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 import {pipe, RA} from "@viamedici-spc/fp-ts-extensions";
 import {useAttributeName, useChoiceValueNames} from "../../../../hooks/localization";
-import attributesContext, {AttributesContext} from "./attributesContext";
+import type {AttributesContext} from "./attributesContext";
+import attributesContext from "./attributesContext";
 import {getItemTemplate} from "../../../../common/listRenderer";
-import {ExplainAttribute, ExplainIntentionFilter, getExplainAttributes} from "../../common/explainAttributes";
+import type {ExplainAttribute, ExplainIntentionFilter} from "../../common/explainAttributes";
+import { getExplainAttributes} from "../../common/explainAttributes";
 import {useDecisionExplanationContext} from "./decisionExplanationContext";
 
 type Props = {

@@ -1,4 +1,5 @@
-import {ComponentType, CSSProperties, forwardRef, PropsWithoutRef, RefAttributes} from "react";
+import type {ComponentType, CSSProperties, PropsWithoutRef, RefAttributes} from "react";
+import { forwardRef} from "react";
 
 export default function withFullSize<T, TProps extends { style?: CSSProperties }>(Component: ComponentType<TProps>): ComponentType<PropsWithoutRef<TProps> & RefAttributes<T>> {
     return forwardRef<T, TProps>((props, ref) => {

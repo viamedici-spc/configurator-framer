@@ -1,5 +1,6 @@
-import {ControlType, PropertyControls} from "framer";
-import {ReactNode} from "react";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {ReactNode} from "react";
 
 export type ReplaceTextProps = {
     children: ReactNode,

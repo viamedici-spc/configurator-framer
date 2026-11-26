@@ -1,7 +1,9 @@
-import {Children, ReactNode} from "react";
+import type { ReactNode} from "react";
+import {Children} from "react";
 import {useConfigurationInitialization} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {AttributeType, ConfiguratorErrorType, FixedDecision} from "@viamedici-spc/configurator-ts";
+import type { FixedDecision} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ConfiguratorErrorType} from "@viamedici-spc/configurator-ts";
 import {InitializationErrorMessage} from "./InitializationErrorMessage";
 
 type Props = {

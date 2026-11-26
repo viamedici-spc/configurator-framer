@@ -1,4 +1,5 @@
-import React, {PropsWithChildren, useEffect, useRef, useState} from "react"
+import type {PropsWithChildren} from "react";
+import React, { useEffect, useRef, useState} from "react"
 import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 

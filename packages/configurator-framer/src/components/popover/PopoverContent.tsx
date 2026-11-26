@@ -1,4 +1,5 @@
-import {forwardRef, HTMLProps} from "react";
+import type { HTMLProps} from "react";
+import {forwardRef} from "react";
 import {FloatingFocusManager, FloatingPortal, useMergeRefs} from "@floating-ui/react";
 import {usePopoverContext} from "./Popover";
 

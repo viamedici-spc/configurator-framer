@@ -1,14 +1,18 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {PropsWithChildren} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
-import {AutomaticConflictResolution, ConfiguratorError, ConfiguratorErrorType, DecisionsExplainAnswer, ManualConflictResolution, DropExistingDecisionsMode, StoredConfiguration} from "@viamedici-spc/configurator-ts";
+import type {AutomaticConflictResolution, ConfiguratorError, DecisionsExplainAnswer, ManualConflictResolution, DropExistingDecisionsMode, StoredConfiguration} from "@viamedici-spc/configurator-ts";
+import { ConfiguratorErrorType} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
-import {E, Either, left, O, Option, pipe, right, TaskEither, TE, TO} from "@viamedici-spc/fp-ts-extensions";
-import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
+import type { Either, Option, TaskEither} from "@viamedici-spc/fp-ts-extensions";
+import {E, left, O, pipe, right, TE, TO} from "@viamedici-spc/fp-ts-extensions";
+import type {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {explainableComponent} from "../common/componentComposites";
-import {explainPropertyControls, ExplainProps} from "../props/explainProps";
+import type { ExplainProps} from "../props/explainProps";
+import {explainPropertyControls} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import useExplain from "../hooks/useExplain";
 

@@ -1,5 +1,6 @@
-import {ControlType, PropertyControls} from "framer";
-import {DisplayMode} from "../common/explain";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {DisplayMode} from "../common/explain";
 
 export type ExplainProps = {
     explain: DisplayMode | "disabled"

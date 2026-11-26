@@ -1,4 +1,4 @@
-import {CommonExplainProps} from "./explain/commonExplainProps";
+import type {CommonExplainProps} from "./explain/commonExplainProps";
 import {useContext} from "react";
 import {explainPopoverPropsContext} from "./explain/explainPopoverProps";
 import {explainDialogPropsContext} from "./explain/explainDialogProps";

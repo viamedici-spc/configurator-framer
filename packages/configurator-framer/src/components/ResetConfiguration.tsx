@@ -1,7 +1,8 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import {useConfigurationReset} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {ReactNode} from "react";
+import type {ReactNode} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {showResetConfigurationFailure} from "../common/failureAlerts";

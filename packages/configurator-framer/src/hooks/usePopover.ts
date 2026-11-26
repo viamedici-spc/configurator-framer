@@ -1,5 +1,7 @@
-import {autoUpdate, flip, offset, Placement, shift, arrow as arrowMiddleware, useClick, useDismiss, useFloating, useInteractions, Middleware} from "@floating-ui/react";
-import {RefObject, useMemo, useState} from "react";
+import type { Placement} from "@floating-ui/react";
+import {autoUpdate, flip, offset, shift, arrow as arrowMiddleware, useClick, useDismiss, useFloating, useInteractions, Middleware} from "@floating-ui/react";
+import type {RefObject} from "react";
+import { useMemo, useState} from "react";
 
 export interface PopoverOptions {
     initialOpen?: boolean;

@@ -1,10 +1,15 @@
-import {CSSProperties} from "react";
-import {ControlDescription, ControlType, PropertyControls} from "framer";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
-import {createBoxPropertyControls, BoxProps, getBoxStyle} from "./boxProps";
-import {getTextStyle, createTextPropertyControls, TextProps} from "./textProps";
+import type {CSSProperties} from "react";
+import type {ControlDescription, PropertyControls} from "framer";
+import { ControlType} from "framer";
+import type { AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
+import type { BoxProps} from "./boxProps";
+import {createBoxPropertyControls, getBoxStyle} from "./boxProps";
+import type { TextProps} from "./textProps";
+import {getTextStyle, createTextPropertyControls} from "./textProps";
 import {match, P} from "ts-pattern";
-import {explainPropertyControls, ExplainProps} from "./explainProps";
+import type { ExplainProps} from "./explainProps";
+import {explainPropertyControls} from "./explainProps";
 
 export type InputProps = AttributeIdProps & BoxProps & TextProps & ExplainProps & {
     style: CSSProperties,

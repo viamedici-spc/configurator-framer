@@ -1,5 +1,6 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {PropsWithChildren} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {PropsWithChildren} from "react";
 
 /**
  * @framerSupportedLayoutWidth any

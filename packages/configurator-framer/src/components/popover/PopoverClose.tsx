@@ -1,5 +1,7 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import {ButtonHTMLAttributes, forwardRef} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {ButtonHTMLAttributes} from "react";
+import { forwardRef} from "react";
 import {usePopoverContext} from "./Popover";
 import useRenderPlaceholder from "../../hooks/useRenderPlaceholder";
 

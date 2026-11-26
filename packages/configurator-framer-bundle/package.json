@@ -44,11 +44,11 @@
   "author": "Viamedici Software GmbH",
   "license": "MIT",
   "devDependencies": {
+    "@viamedici-spc/configurator-framer": "workspace:*",
+    "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
     "typescript": "^5.1.6",
     "vite": "^4.4.8",
     "vite-plugin-checker": "^0.6.1",
-    "vite-plugin-dts": "^3.5.0",
-    "@viamedici-spc/configurator-framer": "workspace:*",
-    "@viamedici-spc/configurator-react": "4.2.0"
+    "vite-plugin-dts": "^3.5.0"
   }
 }

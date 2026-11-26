@@ -1,5 +1,7 @@
-import {ControlType, PropertyControls} from "framer";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type { AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
 
 export type WizardAttributeRelationsProps = {
     wizardAttributeRelations: {

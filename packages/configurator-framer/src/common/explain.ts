@@ -1,6 +1,6 @@
 import {createContext} from "react";
-import {DecisionExplanation, DecisionsExplainAnswer, ExplainQuestionParam, ExplainQuestion, ConstraintExplanation} from "@viamedici-spc/configurator-ts";
-import {UseExplainResult} from "@viamedici-spc/configurator-react";
+import type {DecisionExplanation, DecisionsExplainAnswer, ExplainQuestionParam, ExplainQuestion, ConstraintExplanation} from "@viamedici-spc/configurator-ts";
+import type {UseExplainResult} from "@viamedici-spc/configurator-react";
 
 export type DisplayMode = "dialog" | "popover";
 

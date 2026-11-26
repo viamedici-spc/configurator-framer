@@ -1,5 +1,7 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import React, {cloneElement, ReactElement, ReactNode} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type { ReactElement, ReactNode} from "react";
+import React, {cloneElement} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "../../../Singleton";
 import withErrorBoundary from "../../../../common/withErrorBoundary";

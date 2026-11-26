@@ -1,9 +1,11 @@
 import {createContext, useContext, useMemo} from "react";
-import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import { globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
-import {LocalizableText, Localization} from "../props/localizationProps";
+import type {LocalizableText, Localization} from "../props/localizationProps";
 import {useLocaleInfo} from "framer";
-import {flow, O, Option, pipe, RA, RM, RR} from "@viamedici-spc/fp-ts-extensions";
+import type { Option} from "@viamedici-spc/fp-ts-extensions";
+import {flow, O, pipe, RA, RM, RR} from "@viamedici-spc/fp-ts-extensions";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 
 export const localizationContext = createContext<Localization>(null);

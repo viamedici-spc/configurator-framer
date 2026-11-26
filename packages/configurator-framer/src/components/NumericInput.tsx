@@ -1,17 +1,21 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import styled from "styled-components"
-import {ConfiguratorError, ConfiguratorErrorType, DecisionKind, NumericAttribute} from "@viamedici-spc/configurator-ts"
+import type {ConfiguratorError, NumericAttribute} from "@viamedici-spc/configurator-ts";
+import { ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
 import {useNumericAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {getInputStyle, inputPropertyControls, InputProps} from "../props/inputProps";
+import type { InputProps} from "../props/inputProps";
+import {getInputStyle, inputPropertyControls} from "../props/inputProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import NumericFormat, {NumberFormatValues} from "react-number-format";
+import type {NumberFormatValues} from "react-number-format";
+import NumericFormat from "react-number-format";
 import useDebounceValue from "../hooks/useDebounceValue";
 import {useState} from "react";
 import useExplain from "../hooks/useExplain";
 import {explainableComponent} from "../common/componentComposites";
 import {useControlId} from "../common/controlId";
-import NumberFormat from "react-number-format";
+import type NumberFormat from "react-number-format";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
 
 const Root = styled(NumericFormat)`

@@ -1,28 +1,35 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {
-    AttributeType,
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {
     AutomaticConflictResolution,
-    ChoiceValue,
-    ChoiceValueDecisionState,
-    ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType,
-    DecisionKind, DecisionsExplainAnswer,
+    ChoiceValue, ConfiguratorError, DecisionsExplainAnswer,
     ExplicitDecision,
     ManualConflictResolution,
     DropExistingDecisionsMode,
     KeepExistingDecisionsMode,
     MakeManyDecisionsMode
+} from "@viamedici-spc/configurator-ts";
+import {
+    AttributeType,
+    ChoiceValueDecisionState,
+    ComponentDecisionState, ConfiguratorErrorType,
+    DecisionKind
 } from "@viamedici-spc/configurator-ts"
 import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {PropsWithChildren, ReactNode, useEffect} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type {PropsWithChildren, ReactNode} from "react";
+import { useEffect} from "react";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {match} from "ts-pattern";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
-import {explainPropertyControls, ExplainProps} from "../props/explainProps";
+import type { ExplainProps} from "../props/explainProps";
+import {explainPropertyControls} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import {explainableComponent} from "../common/componentComposites";
 

@@ -1,5 +1,5 @@
 import {pipe, RA} from "@viamedici-spc/fp-ts-extensions";
-import * as Props from "../props/choiceValueSortingProps";
+import type * as Props from "../props/choiceValueSortingProps";
 import {GlobalAttributeId_, mapAttributeId, useGenericParseRawData} from "../common/RawDataParsing";
 import {z} from "zod";
 

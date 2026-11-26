@@ -1,30 +1,39 @@
 import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
 import {StyleSheetManager} from "styled-components"
 import {cssVariablePrefixPlugin} from "../designSystem/cssVariablePrefixPlugin"
-import {AllowedRulesInExplainType, ClientSideSessionInitialisationOptions, ConfigurationModelSourceType, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts"
+import type { ClientSideSessionInitialisationOptions, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts";
+import {AllowedRulesInExplainType, ConfigurationModelSourceType} from "@viamedici-spc/configurator-ts"
 import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
-import {PropsWithChildren, ReactNode, useContext, useEffect, useMemo} from "react"
+import type {PropsWithChildren, ReactNode} from "react";
+import { useContext, useEffect, useMemo} from "react"
 import urlJoin from "url-join"
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import InitializationError, {InitializationErrorProps} from "./InitializationError";
+import type {InitializationErrorProps} from "./InitializationError";
+import InitializationError from "./InitializationError";
 import withErrorBoundary from "../common/withErrorBoundary";
 import DesignSystem from "../designSystem/DesignSystem";
 import ExplainDialog from "./explain/ExplainDialog";
-import {explainDialogPropertyControls, ExplainDialogProps} from "../props/explain/explainDialogProps";
-import {explainPopoverPropertyControls, ExplainPopoverProps, explainPopoverPropsContext} from "../props/explain/explainPopoverProps";
+import type { ExplainDialogProps} from "../props/explain/explainDialogProps";
+import {explainDialogPropertyControls} from "../props/explain/explainDialogProps";
+import type { ExplainPopoverProps} from "../props/explain/explainPopoverProps";
+import {explainPopoverPropertyControls, explainPopoverPropsContext} from "../props/explain/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
 import {O, pipe, E, RA} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";
-import {ChoiceValueSorting, choiceValueSortingPropertyControls, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
+import type {ChoiceValueSorting, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
+import { choiceValueSortingPropertyControls} from "../props/choiceValueSortingProps";
 import {choiceValueSortingContext} from "../hooks/useSortedChoiceValues";
-import {Localization, localizationPropertyControls, LocalizationProps} from "../props/localizationProps";
+import type {Localization, LocalizationProps} from "../props/localizationProps";
+import { localizationPropertyControls} from "../props/localizationProps";
 import {localizationContext} from "../hooks/localization";
 import useParseRawLocalization from "../hooks/useParseRawLocalization";
 import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSorting";
 import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
-import {wizardAttributeRelationsPropertyControls, WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
-import {fixedDecisionsPropertyControls, FixedDecisionsProps, mapFixedDecision} from "../props/fixedDecisionsProps";
+import type { WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
+import {wizardAttributeRelationsPropertyControls} from "../props/wizardAttributeRelationsProps";
+import type { FixedDecisionsProps} from "../props/fixedDecisionsProps";
+import {fixedDecisionsPropertyControls, mapFixedDecision} from "../props/fixedDecisionsProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {configurationPropsContext} from "./ConfigurationPropsProvider";
 import HostParametersProvider from "./HostParametersProvider";

@@ -1,4 +1,5 @@
-import {PropsWithChildren, Suspense} from "react";
+import type {PropsWithChildren} from "react";
+import { Suspense} from "react";
 import {useConfigurationInitialization} from "@viamedici-spc/configurator-react";
 
 export default function InitializationSuspense({children}: PropsWithChildren) {

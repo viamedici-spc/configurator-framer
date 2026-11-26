@@ -1,11 +1,18 @@
-import {ControlType, PropertyControls} from "framer";
-import {createExplainHeaderPropertyControls, ExplainHeaderProps} from "./explainHeaderProps";
-import {createTextPropertyControls, TextProps} from "../textProps";
-import {createPaddingPropertyControls, PaddingProps} from "../paddingProps";
-import {BorderProps, createBorderPropertyControls} from "../borderProps";
-import {ButtonProps, createButtonPropertyControls} from "../buttonProps";
-import DeepPartial from "../DeepPartial";
-import {createMarginPropertyControls, MarginProps} from "../marginProps";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type { ExplainHeaderProps} from "./explainHeaderProps";
+import {createExplainHeaderPropertyControls} from "./explainHeaderProps";
+import type { TextProps} from "../textProps";
+import {createTextPropertyControls} from "../textProps";
+import type { PaddingProps} from "../paddingProps";
+import {createPaddingPropertyControls} from "../paddingProps";
+import type {BorderProps} from "../borderProps";
+import { createBorderPropertyControls} from "../borderProps";
+import type {ButtonProps} from "../buttonProps";
+import { createButtonPropertyControls} from "../buttonProps";
+import type DeepPartial from "../DeepPartial";
+import type { MarginProps} from "../marginProps";
+import {createMarginPropertyControls} from "../marginProps";
 
 export type CommonExplainProps = {
     header: ExplainHeaderProps,

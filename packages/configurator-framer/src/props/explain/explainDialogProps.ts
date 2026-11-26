@@ -1,10 +1,16 @@
-import {ControlType, PropertyControls} from "framer";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
 import {createContext, useContext} from "react";
-import {CommonExplainProps, createCommonExplainPropertyControls} from "./commonExplainProps";
-import {BoxProps, createBoxPropertyControls} from "../boxProps";
-import {createStaticTextPropertyControls, StaticTextProps} from "../staticTextProps";
-import {createMarginPropertyControls, MarginProps} from "../marginProps";
-import {createTextPropertyControls, TextProps} from "../textProps";
+import type {CommonExplainProps} from "./commonExplainProps";
+import { createCommonExplainPropertyControls} from "./commonExplainProps";
+import type {BoxProps} from "../boxProps";
+import { createBoxPropertyControls} from "../boxProps";
+import type { StaticTextProps} from "../staticTextProps";
+import {createStaticTextPropertyControls} from "../staticTextProps";
+import type { MarginProps} from "../marginProps";
+import {createMarginPropertyControls} from "../marginProps";
+import type { TextProps} from "../textProps";
+import {createTextPropertyControls} from "../textProps";
 
 export type ExplainDialogProps = CommonExplainProps & {
     dialogBox: BoxProps

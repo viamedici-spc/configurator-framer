@@ -1,9 +1,11 @@
-import {ChoiceValueSorting, SortingRule} from "../props/choiceValueSortingProps";
-import {Bool, Num, O, Option, Ord, OrdT, pipe, RA, Str, MO} from "@viamedici-spc/fp-ts-extensions";
-import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueSorting, SortingRule} from "../props/choiceValueSortingProps";
+import type { Option, OrdT} from "@viamedici-spc/fp-ts-extensions";
+import {Bool, Num, O, Ord, pipe, RA, Str, MO} from "@viamedici-spc/fp-ts-extensions";
+import type {ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import { globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {match, P} from "ts-pattern";
 import parseGlobalAttributeId from "./parseGlobalAttributeId";
-import {Ordering} from "fp-ts/Ordering";
+import type {Ordering} from "fp-ts/Ordering";
 
 const monoid = Ord.getMonoid<ChoiceValueId>();
 

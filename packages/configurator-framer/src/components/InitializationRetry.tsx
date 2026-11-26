@@ -1,7 +1,8 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import {useConfigurationInitialization} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 

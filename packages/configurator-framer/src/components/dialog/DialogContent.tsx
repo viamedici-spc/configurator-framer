@@ -1,6 +1,7 @@
 import {FloatingFocusManager, FloatingOverlay, FloatingPortal, useMergeRefs} from "@floating-ui/react";
 import {useDialogContext} from "./Dialog";
-import {ComponentProps, ComponentType, forwardRef, HTMLProps} from "react";
+import type {ComponentProps, ComponentType, HTMLProps} from "react";
+import { forwardRef} from "react";
 import styled, {css} from "styled-components";
 
 export const defaultOverlayStyle = css`

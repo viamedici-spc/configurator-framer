@@ -1,6 +1,7 @@
 import PopoverTrigger from "../popover/PopoverTrigger";
 import Popover, {usePopoverContext} from "../popover/Popover";
-import {PropsWithChildren, useRef} from "react";
+import type {PropsWithChildren} from "react";
+import { useRef} from "react";
 import ExplainContent from "./styled/explainPopover/ExplainContent";
 import useExplainProcess from "../../hooks/useExplainProcess";
 import {useControlId} from "../../common/controlId";

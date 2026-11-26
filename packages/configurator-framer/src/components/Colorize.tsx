@@ -1,5 +1,7 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {CSSProperties, PropsWithChildren, useLayoutEffect, useMemo, useRef, useState} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {CSSProperties, PropsWithChildren} from "react";
+import { useLayoutEffect, useMemo, useRef, useState} from "react";
 import {hexToCSSFilter} from "hex-to-css-filter";
 import rgbHex from "rgb-hex";
 import withErrorBoundary from "../common/withErrorBoundary";

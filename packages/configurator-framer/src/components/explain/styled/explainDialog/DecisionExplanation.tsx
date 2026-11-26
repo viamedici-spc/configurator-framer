@@ -1,5 +1,5 @@
 import ApplySolutionButton from "../common/ApplySolutionButton";
-import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
+import type {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import AttributeList from "../common/AttributeList";
 import {useExplainDialogProps} from "../../../../props/explain/explainDialogProps";

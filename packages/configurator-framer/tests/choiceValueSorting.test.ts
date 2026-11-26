@@ -1,8 +1,9 @@
 import {describe, it, expect} from "vitest";
-import {SortingRule} from "../src/props/choiceValueSortingProps";
-import {ChoiceValueId} from "@viamedici-spc/configurator-ts";
+import type {SortingRule} from "../src/props/choiceValueSortingProps";
+import type {ChoiceValueId} from "@viamedici-spc/configurator-ts";
 import {applyDirection, getSomeAlwaysOnTopOrd, getOrdFromSortingRule, getOrdForSortingRules, getOrdForExplicitChoiceValueSorting, isMatchModeOrd, stringModeOrd} from "../src/common/choiceValueSorting";
-import {none, Num, OrdT, pipe, RA, some} from "@viamedici-spc/fp-ts-extensions";
+import type { OrdT} from "@viamedici-spc/fp-ts-extensions";
+import {none, Num, pipe, RA, some} from "@viamedici-spc/fp-ts-extensions";
 
 const ruleSortingTestCases = [
     {

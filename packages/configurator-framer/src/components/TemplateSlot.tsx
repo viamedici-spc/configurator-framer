@@ -1,7 +1,9 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import {useContext} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {TemplateSlotIndex, TemplateSlotsContext} from "../common/templateSlotsContext";
+import type {TemplateSlotIndex} from "../common/templateSlotsContext";
+import { TemplateSlotsContext} from "../common/templateSlotsContext";
 
 type Props = {
     index: TemplateSlotIndex,

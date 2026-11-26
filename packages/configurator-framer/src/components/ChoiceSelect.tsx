@@ -1,9 +1,12 @@
-import {addPropertyControls, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls} from "framer"
 import styled from "styled-components"
-import {ChoiceValueDecisionState, ChoiceValueId, ConfiguratorError, ConfiguratorErrorType, DecisionKind,} from "@viamedici-spc/configurator-ts"
+import type { ChoiceValueId, ConfiguratorError} from "@viamedici-spc/configurator-ts";
+import {ChoiceValueDecisionState, ConfiguratorErrorType, DecisionKind,} from "@viamedici-spc/configurator-ts"
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {getSelectStyle, selectPropertyControls, SelectProps} from "../props/selectProps";
+import type { SelectProps} from "../props/selectProps";
+import {getSelectStyle, selectPropertyControls} from "../props/selectProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import useExplain from "../hooks/useExplain";
 import {explainableComponent} from "../common/componentComposites";

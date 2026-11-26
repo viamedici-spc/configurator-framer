@@ -1,4 +1,5 @@
-import {ComponentType, createContext, forwardRef, PropsWithoutRef, RefAttributes, useContext, useId} from "react";
+import type {ComponentType, PropsWithoutRef, RefAttributes} from "react";
+import { createContext, forwardRef, useContext, useId} from "react";
 
 const controlIdContext = createContext<string>(null);
 export const useControlId = () => useContext(controlIdContext);

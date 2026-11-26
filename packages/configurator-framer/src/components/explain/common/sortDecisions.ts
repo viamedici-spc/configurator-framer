@@ -1,7 +1,7 @@
 import {Ord, pipe, RA, Str} from "@viamedici-spc/fp-ts-extensions";
-import {ChoiceValueNames} from "../../../hooks/localization";
-import {ExplainAttributeDecision} from "./explainAttributes";
-import {CommonExplainProps} from "../../../props/explain/commonExplainProps";
+import type {ChoiceValueNames} from "../../../hooks/localization";
+import type {ExplainAttributeDecision} from "./explainAttributes";
+import type {CommonExplainProps} from "../../../props/explain/commonExplainProps";
 import getDecisionStateDisplayName from "./getDecisionStateDisplayName";
 
 export default function sortDecisions(

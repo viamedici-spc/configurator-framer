@@ -1,4 +1,4 @@
-import {ConstraintExplanation} from "@viamedici-spc/configurator-ts";
+import type {ConstraintExplanation} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
 import {pipe, RA, RNEA, RR, Str} from "@viamedici-spc/fp-ts-extensions";
 import {getBoxStyle} from "../../../../props/boxProps";

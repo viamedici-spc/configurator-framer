@@ -1,7 +1,8 @@
-import {AttributeType, CausedByDecision, ComponentDecisionState, ExplainQuestionSubject, ExplicitDecision} from "@viamedici-spc/configurator-ts";
+import type { CausedByDecision, ExplicitDecision} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ComponentDecisionState, ExplainQuestionSubject} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
-import {ChoiceValueNames} from "../../../hooks/localization";
-import {CommonExplainProps} from "../../../props/explain/commonExplainProps";
+import type {ChoiceValueNames} from "../../../hooks/localization";
+import type {CommonExplainProps} from "../../../props/explain/commonExplainProps";
 
 export default function getDecisionStateDisplayName(decision: ExplicitDecision | CausedByDecision, choiceValueNames: ChoiceValueNames, commonExplainProps: CommonExplainProps): string {
     return match(decision)

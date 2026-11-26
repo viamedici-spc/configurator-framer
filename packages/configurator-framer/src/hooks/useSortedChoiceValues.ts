@@ -1,6 +1,6 @@
 import {createContext, useContext, useMemo} from "react";
-import {ChoiceValueSorting} from "../props/choiceValueSortingProps";
-import {ChoiceValue, ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueSorting} from "../props/choiceValueSortingProps";
+import type {ChoiceValue, ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import {createOrdCacheProvider} from "../common/ordCaching";
 import {getOrdForAttribute} from "../common/choiceValueSorting";

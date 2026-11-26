@@ -1,5 +1,6 @@
 import {createContext, useContext} from "react";
-import {EMPTY_PARAMS, HostParameters} from "../common/hostParametersStore";
+import type { HostParameters} from "../common/hostParametersStore";
+import {EMPTY_PARAMS} from "../common/hostParametersStore";
 
 /**
  * Holds the custom parameters passed in from the host page. Defaults to an empty set so the

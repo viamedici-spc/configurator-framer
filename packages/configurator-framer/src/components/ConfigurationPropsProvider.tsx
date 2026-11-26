@@ -1,6 +1,7 @@
-import {createContext, PropsWithChildren} from "react";
+import type { PropsWithChildren} from "react";
+import {createContext} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {ConfigurationOverrideableProps} from "./Configuration";
+import type {ConfigurationOverrideableProps} from "./Configuration";
 
 type Props = PropsWithChildren<ConfigurationOverrideableProps>;
 export type ConfigurationPropOverrides = ConfigurationOverrideableProps;

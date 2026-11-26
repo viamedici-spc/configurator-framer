@@ -1,6 +1,7 @@
 import {useEffect, useRef} from "react";
 import styled from "styled-components";
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 
 const Root = styled.div`
     width: 10px;

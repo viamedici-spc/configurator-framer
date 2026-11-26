@@ -1,7 +1,11 @@
-import {PropsWithChildren, useCallback, useMemo, useRef, useState} from "react";
-import {DisplayMode, ExplainContext, explainContext, ExplainProcess} from "../../common/explain";
-import {useExplain, UseExplainResult} from "@viamedici-spc/configurator-react";
-import {ConstraintsExplainAnswer, DecisionExplanation, DecisionsExplainAnswer, ExplainQuestion, explainQuestionBuilder, ExplainQuestionParam} from "@viamedici-spc/configurator-ts";
+import type {PropsWithChildren} from "react";
+import { useCallback, useMemo, useRef, useState} from "react";
+import type {DisplayMode, ExplainContext, ExplainProcess} from "../../common/explain";
+import { explainContext} from "../../common/explain";
+import type { UseExplainResult} from "@viamedici-spc/configurator-react";
+import {useExplain} from "@viamedici-spc/configurator-react";
+import type {ConstraintsExplainAnswer, DecisionExplanation, DecisionsExplainAnswer, ExplainQuestion, ExplainQuestionParam} from "@viamedici-spc/configurator-ts";
+import { explainQuestionBuilder} from "@viamedici-spc/configurator-ts";
 import {guid} from "dyna-guid";
 import {Bool, Ord, pipe, RA, Num} from "@viamedici-spc/fp-ts-extensions";
 

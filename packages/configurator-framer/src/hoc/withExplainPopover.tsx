@@ -1,7 +1,8 @@
-import {ComponentType, forwardRef, PropsWithoutRef, ReactNode, RefAttributes} from "react";
+import type {ComponentType, PropsWithoutRef, RefAttributes} from "react";
+import { forwardRef, ReactNode} from "react";
 import ExplainPopover from "../components/explain/ExplainPopover";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {ExplainProps} from "../props/explainProps";
+import type {ExplainProps} from "../props/explainProps";
 
 export default function withExplainPopover<T, TProps extends ExplainProps>(Component: ComponentType<TProps>): ComponentType<PropsWithoutRef<TProps> & RefAttributes<T>> {
     return forwardRef<T, TProps>((props, ref) => {

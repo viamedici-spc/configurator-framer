@@ -1,17 +1,22 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, DecisionKind, ExplainQuestionSubject, ExplainQuestionType, ExplicitDecision, WhyIsStateNotPossible} from "@viamedici-spc/configurator-ts"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type { ChoiceValue, ConfiguratorError, ExplicitDecision, WhyIsStateNotPossible} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorErrorType, DecisionKind, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts"
 import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {PropsWithChildren} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type {PropsWithChildren} from "react";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
+import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import {match} from "ts-pattern";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {useControlId} from "../common/controlId";
 import {explainableComponent} from "../common/componentComposites";
-import {explainPropertyControls, ExplainProps} from "../props/explainProps";
+import type { ExplainProps} from "../props/explainProps";
+import {explainPropertyControls} from "../props/explainProps";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
 
 /*

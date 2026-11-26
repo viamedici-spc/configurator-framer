@@ -1,6 +1,8 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {PropsWithChildren, Suspense} from "react";
-import {createRoot, Root} from "react-dom/client";
+import type {PropsWithChildren} from "react";
+import { Suspense} from "react";
+import type { Root} from "react-dom/client";
+import {createRoot} from "react-dom/client";
 import {act} from "react-dom/test-utils";
 import InitializationSuspense from "../src/components/InitializationSuspense";
 

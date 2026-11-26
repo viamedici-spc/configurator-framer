@@ -1,15 +1,19 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {cloneElement, ReactElement, ReactNode} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {useChoiceValueName} from "../hooks/localization";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {Replacer} from "../common/react-element-replace/Replacer";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import normalizePropName from "../common/normalizePropName";
-import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
+import type { ReplaceTextProps} from "../props/replaceTextProps";
+import {replaceTextPropertyControls} from "../props/replaceTextProps";
 import ReplaceText from "./ReplaceText";
 
 type Props = AttributeIdProps & ChoiceValueIdProps & ReplaceTextProps & {

@@ -1,4 +1,5 @@
-import {createContext, PropsWithChildren, useContext, useMemo, useState, useSyncExternalStore} from "react";
+import type { PropsWithChildren} from "react";
+import {createContext, useContext, useMemo, useState, useSyncExternalStore} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import {createHostParametersStore, emptyStore} from "../common/hostParametersStore";

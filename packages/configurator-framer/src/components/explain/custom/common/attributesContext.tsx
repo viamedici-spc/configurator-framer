@@ -1,7 +1,7 @@
 import {createContext, useContext} from "react";
-import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
-import {ChoiceValueNames} from "../../../../hooks/localization";
-import {ExplainAttributeDecision} from "../../common/explainAttributes";
+import type {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueNames} from "../../../../hooks/localization";
+import type {ExplainAttributeDecision} from "../../common/explainAttributes";
 
 export type AttributesContext = {
     attributeId: GlobalAttributeId,

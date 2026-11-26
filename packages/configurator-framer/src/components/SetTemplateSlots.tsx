@@ -1,7 +1,10 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {ReactNode, useMemo} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
+import type {ReactNode} from "react";
+import { useMemo} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {TemplateSlotIndex, templateSlotIndices, TemplateSlotsContext} from "../common/templateSlotsContext";
+import type {TemplateSlotIndex} from "../common/templateSlotsContext";
+import { templateSlotIndices, TemplateSlotsContext} from "../common/templateSlotsContext";
 
 type SetTemplateSlotsProps = { template?: ReactNode, } & { [K in `content${TemplateSlotIndex}`]?: ReactNode };
 

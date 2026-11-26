@@ -1,8 +1,9 @@
-import {cloneElement, ReactElement} from "react";
+import type { ReactElement} from "react";
+import {cloneElement} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import {Replacer} from "../common/react-element-replace/Replacer";
 import normalizePropName from "../common/normalizePropName";
-import {ReplaceTextProps} from "../props/replaceTextProps";
+import type {ReplaceTextProps} from "../props/replaceTextProps";
 
 type Props = ReplaceTextProps & {
     text: string

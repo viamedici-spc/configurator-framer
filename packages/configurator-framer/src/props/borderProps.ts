@@ -1,6 +1,7 @@
-import {ControlType, PropertyControls} from "framer";
-import {CSSProperties} from "react";
-import DeepPartial from "./DeepPartial";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {CSSProperties} from "react";
+import type DeepPartial from "./DeepPartial";
 
 export type BorderProps = {
     radius: number

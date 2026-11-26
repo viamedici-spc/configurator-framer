@@ -1,10 +1,13 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {useNumericAttribute} from "@viamedici-spc/configurator-react";
-import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
+import type { ReplaceTextProps} from "../props/replaceTextProps";
+import {replaceTextPropertyControls} from "../props/replaceTextProps";
 import ReplaceText from "./ReplaceText";
 
 type Props = AttributeIdProps & ReplaceTextProps & {

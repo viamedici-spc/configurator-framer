@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
+import type {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 
 const decisionExplanationContext = createContext<DecisionExplanation>(null);
 

@@ -1,4 +1,4 @@
-import {AttributeRelations} from "@viamedici-spc/configurator-ts";
+import type {AttributeRelations} from "@viamedici-spc/configurator-ts";
 import {GlobalAttributeId_, useGenericParseRawData} from "../common/RawDataParsing";
 import {z} from "zod";
 

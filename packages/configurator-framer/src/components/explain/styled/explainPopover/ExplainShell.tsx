@@ -1,11 +1,12 @@
-import {PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import PopoverClose from "../../../popover/PopoverClose";
 import ExplainHeader from "../common/ExplainHeader";
 import {getBoxStyle} from "../../../../props/boxProps";
-import {ExplainPopoverProps, useExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
+import type {ExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
+import { useExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
 import {getButtonStyle} from "../../../../props/buttonProps";
 
 const Root = styled.div<ExplainPopoverProps>`

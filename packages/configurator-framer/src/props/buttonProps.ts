@@ -1,8 +1,11 @@
-import {ControlType, PropertyControls} from "framer";
-import {CSSProperties} from "react";
-import {BoxProps, createBoxPropertyControls, getBoxStyle} from "./boxProps";
-import {createStaticTextPropertyControls, getStaticTextStyle, StaticTextProps} from "./staticTextProps";
-import DeepPartial from "./DeepPartial";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {CSSProperties} from "react";
+import type {BoxProps} from "./boxProps";
+import { createBoxPropertyControls, getBoxStyle} from "./boxProps";
+import type { StaticTextProps} from "./staticTextProps";
+import {createStaticTextPropertyControls, getStaticTextStyle} from "./staticTextProps";
+import type DeepPartial from "./DeepPartial";
 
 export type ButtonProps = BoxProps & StaticTextProps & {
     fillHover: string,

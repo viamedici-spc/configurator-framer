@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {useAttributeName, useChoiceValueNames} from "../../../../hooks/localization";
 import useCommonExplainProps from "../../../../props/useCommonExplainProps";
 import {getTextStyle} from "../../../../props/textProps";
-import {ExplainAttributeDecision} from "../../common/explainAttributes";
+import type {ExplainAttributeDecision} from "../../common/explainAttributes";
 import sortDecisions from "../../common/sortDecisions";
 
 const Root = styled.div`

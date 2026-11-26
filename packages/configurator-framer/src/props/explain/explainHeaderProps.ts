@@ -1,6 +1,8 @@
-import {ControlType, PropertyControls} from "framer";
-import {createTextPropertyControls, TextProps} from "../textProps";
-import DeepPartial from "../DeepPartial";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type { TextProps} from "../textProps";
+import {createTextPropertyControls} from "../textProps";
+import type DeepPartial from "../DeepPartial";
 
 export type ExplainHeaderProps = {
     subject: TextProps & {

@@ -1,10 +1,17 @@
-import {ControlType, PropertyControls} from "framer";
-import {createContext, CSSProperties, ReactNode, useContext} from "react";
-import {createCommonExplainPropertyControls, CommonExplainProps} from "./commonExplainProps";
-import {BoxProps, createBoxPropertyControls} from "../boxProps";
-import {ButtonProps, createButtonPropertyControls} from "../buttonProps";
-import {createMarginPropertyControls, MarginProps} from "../marginProps";
-import {createStaticTextPropertyControls, StaticTextProps} from "../staticTextProps";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type { CSSProperties, ReactNode} from "react";
+import {createContext, useContext} from "react";
+import type { CommonExplainProps} from "./commonExplainProps";
+import {createCommonExplainPropertyControls} from "./commonExplainProps";
+import type {BoxProps} from "../boxProps";
+import { createBoxPropertyControls} from "../boxProps";
+import type {ButtonProps} from "../buttonProps";
+import { createButtonPropertyControls} from "../buttonProps";
+import type { MarginProps} from "../marginProps";
+import {createMarginPropertyControls} from "../marginProps";
+import type { StaticTextProps} from "../staticTextProps";
+import {createStaticTextPropertyControls} from "../staticTextProps";
 
 export type ExplainPopoverProps = CommonExplainProps & {
     popoverBox: BoxProps;

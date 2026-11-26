@@ -1,4 +1,5 @@
-import {explainContext, ExplainContext, ExplainProcess} from "../common/explain";
+import type { ExplainContext, ExplainProcess} from "../common/explain";
+import {explainContext} from "../common/explain";
 import {useContext} from "react";
 
 export type UseExplainProcessResult = ExplainProcess & {

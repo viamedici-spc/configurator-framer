@@ -1,6 +1,7 @@
 import {useMergeRefs} from "@floating-ui/react";
 import {useDialogContext} from "./Dialog";
-import {Children, cloneElement, forwardRef, isValidElement, PropsWithChildren} from "react";
+import type { PropsWithChildren} from "react";
+import {Children, cloneElement, forwardRef, isValidElement} from "react";
 
 const DialogTrigger = forwardRef<Element, PropsWithChildren>(function DialogTrigger(props, propRef) {
     const children = Children.toArray(props.children)[0];

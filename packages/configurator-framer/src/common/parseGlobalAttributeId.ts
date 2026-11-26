@@ -1,5 +1,5 @@
-import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
-import {AttributeIdProps} from "../props/attributeIdProps";
+import type {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {AttributeIdProps} from "../props/attributeIdProps";
 
 export default function parseGlobalAttributeId(a: AttributeIdProps): GlobalAttributeId {
     return {

@@ -1,6 +1,8 @@
-import {ControlType, PropertyControls} from "framer";
-import {ChoiceValueId} from "@viamedici-spc/configurator-ts";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {ChoiceValueId} from "@viamedici-spc/configurator-ts";
+import type { AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
 
 export type ChoiceValueSortingProps = {
     choiceValueSorting: ChoiceValueSorting & {

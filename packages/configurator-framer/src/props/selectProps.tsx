@@ -1,7 +1,9 @@
-import {CSSProperties} from "react";
-import {ControlType, PropertyControls} from "framer";
+import type {CSSProperties} from "react";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
 import {match, P} from "ts-pattern";
-import {getInputStyle, inputPropertyControls, inputStateColorProperty, InputProps, InputStateColors} from "./inputProps";
+import type { InputProps, InputStateColors} from "./inputProps";
+import {getInputStyle, inputPropertyControls, inputStateColorProperty} from "./inputProps";
 
 export type SelectProps = InputProps & {
     resetLabel: string,

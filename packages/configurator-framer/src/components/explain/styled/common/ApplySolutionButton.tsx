@@ -1,6 +1,6 @@
-import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
+import type {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
-import {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
+import type {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
 import {getButtonStyle} from "../../../../props/buttonProps";
 import styled from "styled-components";
 import {getMarginStyle} from "../../../../props/marginProps";

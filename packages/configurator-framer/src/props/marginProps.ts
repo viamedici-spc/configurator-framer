@@ -1,5 +1,6 @@
-import {ControlType, PropertyControls} from "framer";
-import {CSSProperties} from "react";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {CSSProperties} from "react";
 
 export type MarginProps = {
     margin: number

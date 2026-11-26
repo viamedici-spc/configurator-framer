@@ -1,5 +1,7 @@
-import {createContext, PropsWithChildren, useContext} from "react";
-import usePopover, {PopoverOptions} from "../../hooks/usePopover";
+import type { PropsWithChildren} from "react";
+import {createContext, useContext} from "react";
+import type {PopoverOptions} from "../../hooks/usePopover";
+import usePopover from "../../hooks/usePopover";
 
 type ContextType = ReturnType<typeof usePopover>;
 

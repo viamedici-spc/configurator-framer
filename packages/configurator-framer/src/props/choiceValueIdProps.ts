@@ -1,4 +1,5 @@
-import {ControlType, PropertyControls} from "framer";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
 
 export type ChoiceValueIdProps = {
     choiceValueId: string

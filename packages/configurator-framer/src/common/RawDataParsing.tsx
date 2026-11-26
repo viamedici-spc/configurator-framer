@@ -1,11 +1,14 @@
-import {E, Either, flow, O, P, pipe, Str} from "@viamedici-spc/fp-ts-extensions";
-import {ReactNode, useMemo} from "react";
-import {AttributeIdProps} from "../props/attributeIdProps";
+import type { Either} from "@viamedici-spc/fp-ts-extensions";
+import {E, flow, O, P, pipe, Str} from "@viamedici-spc/fp-ts-extensions";
+import type {ReactNode} from "react";
+import { useMemo} from "react";
+import type {AttributeIdProps} from "../props/attributeIdProps";
 import {json} from "fp-ts";
 import {InitializationErrorMessage} from "../components/InitializationErrorMessage";
-import {z, ZodType} from "zod";
+import type { ZodType} from "zod";
+import {z} from "zod";
 import {fromError} from 'zod-validation-error';
-import {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 
 export const GlobalAttributeId_ = z.object({
     localId: z.string(),

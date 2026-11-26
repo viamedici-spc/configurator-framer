@@ -1,16 +1,21 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react"
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import React, {cloneElement, CSSProperties, PropsWithChildren, ReactNode} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type { CSSProperties, PropsWithChildren, ReactNode} from "react";
+import React, {cloneElement} from "react";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import withErrorBoundary from "../common/withErrorBoundary";
 import withControlId, {useControlId} from "../common/controlId";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "./Singleton";
-import {ChoiceValueDecisionState, ChoiceValueId, DecisionKind} from "@viamedici-spc/configurator-ts";
+import type { ChoiceValueId} from "@viamedici-spc/configurator-ts";
+import {ChoiceValueDecisionState, DecisionKind} from "@viamedici-spc/configurator-ts";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
-import {ChoiceValueNames, useChoiceValueNames} from "../hooks/localization";
+import type {ChoiceValueNames} from "../hooks/localization";
+import { useChoiceValueNames} from "../hooks/localization";
 import {match} from "ts-pattern";
 import {RM} from "@viamedici-spc/fp-ts-extensions";
 import {getItemTemplate} from "../common/listRenderer";

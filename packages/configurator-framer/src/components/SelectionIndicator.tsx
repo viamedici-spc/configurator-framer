@@ -1,12 +1,17 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import {useAttributes} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {forwardRef, ReactNode} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type { ReactNode} from "react";
+import {forwardRef} from "react";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
+import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import {match} from "ts-pattern";
-import {AttributeType, ChoiceAttribute, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, DecisionKind} from "@viamedici-spc/configurator-ts";
+import type { ChoiceAttribute, ChoiceValue} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState, DecisionKind} from "@viamedici-spc/configurator-ts";
 import withErrorBoundary from "../common/withErrorBoundary";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 

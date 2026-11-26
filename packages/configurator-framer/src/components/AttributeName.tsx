@@ -1,12 +1,15 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type { AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {useAttributeName} from "../hooks/localization";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {useAttributes} from "@viamedici-spc/configurator-react";
 import ReplaceText from "./ReplaceText";
-import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
+import type { ReplaceTextProps} from "../props/replaceTextProps";
+import {replaceTextPropertyControls} from "../props/replaceTextProps";
 
 type Props = AttributeIdProps & ReplaceTextProps & {
     customName?: string

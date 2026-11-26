@@ -1,4 +1,4 @@
-import {DecisionExplanation, ExplicitDecision, CausedByDecision, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import type {DecisionExplanation, ExplicitDecision, CausedByDecision, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 import {constTrue, Ord, pipe, RA, RNEA, RR, Str} from "@viamedici-spc/fp-ts-extensions";
 import {globalAttributeIdToString} from "../../../common/GlobalAttributeIdExtensions";
 import {match} from "ts-pattern";

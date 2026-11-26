@@ -1,4 +1,5 @@
-import React, {useEffect, useState, useRef, HTMLProps} from 'react';
+import type { HTMLProps} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import styled from "styled-components";
 import clsx from "clsx";
 import mergeProps from "merge-props";

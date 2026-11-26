@@ -1,7 +1,11 @@
-import {ControlType, PropertyControls} from "framer";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "./choiceValueIdProps";
-import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState, FixedDecision} from "@viamedici-spc/configurator-ts";
+import type { PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type { AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
+import type { ChoiceValueIdProps} from "./choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "./choiceValueIdProps";
+import type { FixedDecision} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState} from "@viamedici-spc/configurator-ts";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {match} from "ts-pattern";
 

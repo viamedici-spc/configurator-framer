@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { ReplacerProps, replaceInTree } from "./replace-in-tree";
+import type { ReplacerProps} from "./replace-in-tree";
+import { replaceInTree } from "./replace-in-tree";
 
 function Replacer<StateType = any>(
     props: React.PropsWithChildren<ReplacerProps<StateType>>

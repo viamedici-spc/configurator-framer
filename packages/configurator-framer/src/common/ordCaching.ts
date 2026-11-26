@@ -1,5 +1,6 @@
-import {EqT, Ord, OrdT} from "@viamedici-spc/fp-ts-extensions";
-import {Ordering} from "fp-ts/Ordering";
+import type {EqT, OrdT} from "@viamedici-spc/fp-ts-extensions";
+import { Ord} from "@viamedici-spc/fp-ts-extensions";
+import type {Ordering} from "fp-ts/Ordering";
 
 export type OrdCacheProvider = {
     getCache: <T>(eq: EqT<T>, ord: OrdT<T>) => OrdCache<T>

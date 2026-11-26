@@ -1,6 +1,7 @@
 import * as React from "react";
-import {PropsWithChildren} from "react";
-import useDialog, {DialogOptions} from "../../hooks/useDialog";
+import type {PropsWithChildren} from "react";
+import type {DialogOptions} from "../../hooks/useDialog";
+import useDialog from "../../hooks/useDialog";
 
 type ContextType = ReturnType<typeof useDialog>;
 

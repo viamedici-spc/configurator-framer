@@ -1,4 +1,5 @@
-import {Children, ReactElement, ReactNode} from "react";
+import type { ReactElement, ReactNode} from "react";
+import {Children} from "react";
 
 export function getItemTemplate(itemTemplate: ReactNode): ReactElement | null {
     const findItemTemplate = (c: ReactNode): ReactElement | null => {

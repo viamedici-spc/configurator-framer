@@ -1,4 +1,5 @@
-import {Children, ComponentPropsWithoutRef, PropsWithChildren, ReactNode} from "react";
+import type { ComponentPropsWithoutRef, PropsWithChildren, ReactNode} from "react";
+import {Children} from "react";
 import ExplainContent from "./styled/explainDialog/ExplainContent";
 import useExplainProcess from "../../hooks/useExplainProcess";
 import styled from "styled-components";
@@ -7,7 +8,8 @@ import Dialog from "../dialog/Dialog";
 import DialogContent, {defaultOverlayStyle} from "../dialog/DialogContent";
 import FreezeExplainContext from "./styled/common/FreezeExplainContext";
 import {ExplainShell} from "./styled/explainDialog/ExplainShell";
-import {ExplainDialogProps, explainDialogPropsContext} from "../../props/explain/explainDialogProps";
+import type {ExplainDialogProps} from "../../props/explain/explainDialogProps";
+import { explainDialogPropsContext} from "../../props/explain/explainDialogProps";
 import {FloatingOverlay} from "@floating-ui/react";
 
 type Props = ExplainDialogProps & {

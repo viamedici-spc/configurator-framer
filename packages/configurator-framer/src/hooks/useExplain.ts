@@ -1,4 +1,5 @@
-import {ExplainContext, explainContext} from "../common/explain";
+import type {ExplainContext} from "../common/explain";
+import { explainContext} from "../common/explain";
 import {useContext} from "react";
 
 export type UseExplainResult = {

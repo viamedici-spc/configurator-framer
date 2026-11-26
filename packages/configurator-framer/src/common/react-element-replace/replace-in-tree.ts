@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import {rebuildElement} from "./rebuild-element";
-import {ChildrenFunc, traverseElementTree} from "./traverse-element-tree";
+import type {ChildrenFunc} from "./traverse-element-tree";
+import { traverseElementTree} from "./traverse-element-tree";
 
 const {isValidElement} = React;
 

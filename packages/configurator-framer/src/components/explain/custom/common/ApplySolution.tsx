@@ -1,5 +1,6 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import {PropsWithChildren, ReactNode} from "react";
+import type { PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {PropsWithChildren, ReactNode} from "react";
 import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import withErrorBoundary from "../../../../common/withErrorBoundary";
 import cloneChildrenWithProps from "../../../../common/cloneChildrenWithProps";
