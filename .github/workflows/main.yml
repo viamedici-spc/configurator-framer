@@ -1,24 +1,25 @@
 name: Build and Publish
 
-on: [push, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
 
 jobs:
   configurator-framer:
     permissions:
       contents: read
       id-token: write
-    uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v3
+    uses: viamedici-spc/github-ci/.github/workflows/build-bun.yml@feature/v4
     with:
-      project-dir: "packages/configurator-framer"
-      node-version: "24"
-      skip-publish: false
+      project-dir: packages/configurator-framer
 
   configurator-framer-bundle:
     permissions:
       contents: read
       id-token: write
-    uses: viamedici-spc/github-ci/.github/workflows/build-npm.yml@v3
+    uses: viamedici-spc/github-ci/.github/workflows/build-bun.yml@feature/v4
     with:
-      project-dir: "packages/configurator-framer-bundle"
-      node-version: "24"
-      skip-publish: false
+      project-dir: packages/configurator-framer-bundle

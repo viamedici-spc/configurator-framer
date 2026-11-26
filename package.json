@@ -5,5 +5,11 @@
     "packages/*"
   ],
   "type": "module",
+  "scripts": {
+    "build": "bun run --filter @viamedici-spc/configurator-framer-bundle build",
+    "dev": "bun run --parallel --filter '*' dev",
+    "preview": "bun run --filter @viamedici-spc/configurator-framer-bundle preview",
+    "verify": "bun run --filter @viamedici-spc/configurator-framer verify && bun run --filter @viamedici-spc/configurator-framer-bundle verify"
+  },
   "packageManager": "bun@1.4.5"
 }
