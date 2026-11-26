@@ -15,8 +15,8 @@
         "@fortawesome/free-regular-svg-icons": "^6.5.1",
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
         "@fortawesome/react-fontawesome": "^0.2.0",
-        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
-        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
+        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126175746",
         "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931",
         "camelcase": "^8.0.0",
         "clsx": "^2.1.0",
@@ -64,8 +64,8 @@
       "devDependencies": {
         "@types/bun": "^1.4.5",
         "@viamedici-spc/configurator-framer": "workspace:*",
-        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
-        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
+        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126175746",
         "oxlint": "^1.94.0",
         "publint": "^0.3.25",
         "tsdown": "^0.23.7",
@@ -299,9 +299,9 @@
 
     "@viamedici-spc/configurator-framer-bundle": ["@viamedici-spc/configurator-framer-bundle@workspace:packages/configurator-framer-bundle"],
 
-    "@viamedici-spc/configurator-react": ["@viamedici-spc/configurator-react@5.0.0-modern-toolchain-20261126115224", "", { "dependencies": { "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204", "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fp-ts-react-stable-hooks": "^2.0.0", "jotai": "^3", "jotai-effect": "^2", "jotai-family": "^1.1.0", "jotai-xstate": "^0.6", "p-defer": "^4.0.1", "xstate": "^5.33.4" }, "peerDependencies": { "react": "^18.2 || ^19" } }, "sha512-jqcbMUYEHEwTkjo9d0ygSql3A64B10q8ALKOWJF9Em/NQ/uL93VAwXHVH0iR71dlbVgHXDrwRcfqoNqCIOidxg=="],
+    "@viamedici-spc/configurator-react": ["@viamedici-spc/configurator-react@5.0.0-modern-toolchain-20261126183755", "", { "dependencies": { "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fp-ts-react-stable-hooks": "^2.0.0", "jotai-effect": "^2", "jotai-family": "^1.1.0", "jotai-xstate": "^0.6", "memize": "^2.1.1", "p-defer": "^4.0.1", "ts-pattern": "^5.9.2", "xstate": "^5.33.4" }, "peerDependencies": { "@viamedici-spc/configurator-ts": "^5.0.0-0", "jotai": "^3", "react": "^18.2 || ^19" } }, "sha512-X3Hd9IUSS2mQdRmHYp7L50uEmK8hbHI4ch7AQdHqtgWH/6AqPFfkGt3ZjLse+Yx2l/ez+7wbIJl8IWqi28D2TQ=="],
 
-    "@viamedici-spc/configurator-ts": ["@viamedici-spc/configurator-ts@5.0.0-modern-toolchain-20261126114204", "", { "dependencies": { "@morphic-ts/batteries": "^3.0.0", "@morphic-ts/model-algebras": "^3.0.0", "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fast-equals": "^6.4.1", "fp-ts": "^2.16.11", "memize": "^2.1.1", "monocle-ts": "^2.3.13", "openapi-fetch": "0.17.0", "p-defer": "^4.0.1", "spark-md5": "^3.0.2", "ts-pattern": "^5.9.2", "tslib": "^2.7.0", "xstate": "^5.33.4" } }, "sha512-lnK6F9q9ybfOhh5QmP7iefiHxcqPNr9c6+6Ji++Q0gqDymKOGCAaXKThMeCS9nydWkqv4J8vigm5eEjMDLmvoQ=="],
+    "@viamedici-spc/configurator-ts": ["@viamedici-spc/configurator-ts@5.0.0-modern-toolchain-20261126175746", "", { "dependencies": { "@morphic-ts/batteries": "^3.0.0", "@morphic-ts/model-algebras": "^3.0.0", "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fast-equals": "^6.4.1", "fp-ts": "^2.16.11", "memize": "^2.1.1", "monocle-ts": "^2.3.13", "openapi-fetch": "^0.17.0", "p-defer": "^4.0.1", "spark-md5": "^3.0.2", "ts-pattern": "^5.9.2", "tslib": "^2.7.0", "xstate": "^5.33.4" } }, "sha512-I3rtDtz5u1md50ZWBWv06wo3+h6S1A4aedzdxBow5u9q2DKfub/6MzKcNB48snnyb9NefftE8pVnkfGl6Bsurw=="],
 
     "@viamedici-spc/fp-ts-extensions": ["@viamedici-spc/fp-ts-extensions@2.0.0-modern-toolchain-20261126094931", "", { "peerDependencies": { "fp-ts": "2.*" } }, "sha512-ywpE+ue+AHBscDs6IHjiTd0m4uVFvtP4suatHbRRYGf3poYiZZOmSMaul/owVe7PrPpxXrwZHaW0/LK83KoN2g=="],
 

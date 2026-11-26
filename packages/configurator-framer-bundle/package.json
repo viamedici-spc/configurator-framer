@@ -45,8 +45,8 @@
   "devDependencies": {
     "@types/bun": "^1.4.5",
     "@viamedici-spc/configurator-framer": "workspace:*",
-    "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
-    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+    "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
+    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126175746",
     "oxlint": "^1.94.0",
     "publint": "^0.3.25",
     "tsdown": "^0.23.7"
@@ -68,8 +68,8 @@
     "@morphic-ts/io-ts-interpreters": "3.0.0",
     "@morphic-ts/show-interpreters": "3.0.0",
     "@morphic-ts/summoners": "3.0.0",
-    "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
-    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+    "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
+    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126175746",
     "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931",
     "camelcase": "8.0.0",
     "clsx": "2.1.1",
