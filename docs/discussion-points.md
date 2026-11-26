@@ -10,9 +10,10 @@ What is undecided. A decision moves to *Resolved* with a link to where it is rec
 
 ### fp-ts in the libraries
 
-fp-ts 2.x is in maintenance, and its ES modules cannot be loaded by Node.js-based test runners without a setting (README).
-Whether the SPC libraries keep fp-ts and `@viamedici-spc/fp-ts-extensions`, move to Effect, or drop an FP library is
-open; the public typings depend on neither.
+fp-ts 2.x is in maintenance, and its ES modules cannot be loaded by Node.js-based test runners without a setting
+(README). Whether the SPC libraries keep fp-ts and `@viamedici-spc/fp-ts-extensions`, move to Effect, or drop an FP
+library is open. This library's own declarations import neither; configurator-ts's do, through its `Eq` instances and
+refinements.
 
 ## Resolved
 
