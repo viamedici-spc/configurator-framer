@@ -15,7 +15,7 @@ The Configurator Components Library is a set of headless UI components that form
 
 These React-based UI components are optimized for seamless integration within Framer, while also being fully compatible
 with standalone React applications (React 18.2, the version Framer runs, through a bundler). Both packages ship ES
-modules only.
+modules only. TypeScript resolves the library with `moduleResolution` `bundler`, `node16` or `nodenext`.
 
 ## Installation
 

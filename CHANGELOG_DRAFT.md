@@ -13,6 +13,8 @@
   `dist/index.js`, so import URLs only change their version.
 - **The bundle ships no type declarations:** TypeScript projects use `@viamedici-spc/configurator-framer` for types.
 - **React baseline:** React is a peer dependency of `^18.2`, the version Framer runs; React 17 is no longer supported.
+- **TypeScript resolution:** TypeScript finds the library with `moduleResolution` `bundler`, `node16` or `nodenext`;
+  `node10` (`node`) no longer finds it, since the package has an `exports` map and no `main` or `types` field.
 - **Tests in Node.js:** test runners that run in Node.js, such as Vitest, need
   `server.deps.inline: [/fp-ts/, /@viamedici-spc\//]` ([README](README.md#testing-with-vitest)).
 
