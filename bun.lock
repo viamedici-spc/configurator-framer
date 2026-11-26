@@ -23,6 +23,7 @@
         "dyna-guid": "^2.1.2",
         "fp-ts": "^2.16.11",
         "hex-to-css-filter": "^5.4.0",
+        "jotai": "^3",
         "merge-props": "^6.0.0",
         "mustache": "^4.2.0",
         "react-error-boundary": "^4.0.11",
