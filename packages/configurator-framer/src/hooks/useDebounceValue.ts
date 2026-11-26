@@ -1,6 +1,5 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useCallback, useEffect, useReducer, useRef} from "react";
 import {useDebouncedCallback} from "use-debounce";
-import {useForceUpdate} from "framer-motion";
 
 export default function useDebounceValue<TValue>(
     sourceValue: TValue,
@@ -9,7 +8,7 @@ export default function useDebounceValue<TValue>(
     setInputValue: (value: TValue) => void,
     wait: number = 1000,
 ) {
-    const [forceUpdate] = useForceUpdate();
+    const [, forceUpdate] = useReducer((renderCount: number) => renderCount + 1, 0);
     const debounced = useDebouncedCallback((v: TValue) => {
         setSourceValue(v);
         forceUpdate();
