@@ -20,6 +20,8 @@ status: living
     `delay`.
   - `packages/configurator-framer/src/components/Singleton.tsx`: misses `singletonId`, reads a ref in the cleanup.
   - `packages/configurator-framer/src/components/Colorize.tsx`: a layout effect without dependencies sets state.
+  - `packages/configurator-framer/src/components/explain/ExplainPopover.tsx`: reads `arrow.height` during render next to
+    `ref={arrow.element}` (`react/refs`); probably a false positive, to silence at that line.
   - `packages/configurator-framer/src/components/SetSelections.tsx`: the effect misses `trigger`.
   - `packages/configurator-framer/src/components/SetTemplateSlots.tsx`,
     `packages/configurator-framer/src/components/explain/styled/explainPopover/ShowMoreButton.tsx`,
