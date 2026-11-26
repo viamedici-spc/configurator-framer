@@ -9,25 +9,6 @@ yet.
 
 ⚠️ **Nobody polls this file.** It is read when somebody upgrades the dependency in question.
 
-## use-debounce
-
-### Use its own declarations
-
-- **We would rather** use the declarations use-debounce ships.
-- **We do instead** declare the used part in `packages/configurator-framer/declarations.d.ts`.
-- **What blocks it:** version 8 publishes its types only under the `node` and `browser` export conditions, which the
-  `bundler` module resolution does not pick.
-- **Check** (a `types` condition at the top level means it resolves):
-
-  ```bash
-  npm view use-debounce@latest exports --json
-  ```
-
-- **What it would buy:** the declaration in `declarations.d.ts` goes away (an upgrade to a later major is on the to-do
-  list).
-- **Upstream:** not reported.
-- **Last checked:** use-debounce 8, 2026-11-26: types under `node`/`browser` only.
-
 ## fp-ts
 
 ### Load the packages in Node.js-based test runners without configuration
