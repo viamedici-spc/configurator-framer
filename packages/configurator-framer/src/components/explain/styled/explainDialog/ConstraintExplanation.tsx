@@ -5,6 +5,7 @@ import {getBoxStyle} from "../../../../props/boxProps";
 import {getMarginStyle} from "../../../../props/marginProps";
 import {useExplainDialogProps} from "../../../../props/explain/explainDialogProps";
 import {getTextStyle} from "../../../../props/textProps";
+import {globalAttributeIdToString} from "../../../../common/GlobalAttributeIdExtensions";
 
 const Root = styled.div`
     ul {
@@ -64,7 +65,7 @@ export default function ConstraintExplanation(props: {explanation: ConstraintExp
                         <span>Cardinality</span>
                         <SubList>
                             {causedByCardinalities.map(c => (
-                                <li key={c.localId}>{c.localId}</li>
+                                <li key={globalAttributeIdToString(c)}>{c.localId}</li>
                             ))}
                         </SubList>
                     </li>
