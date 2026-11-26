@@ -11,7 +11,6 @@ export default function withErrorBoundary<T, TProps extends object>(
 ): ComponentType<PropsWithoutRef<TProps> & RefAttributes<T>> {
     return forwardRef<T, TProps>((props, ref) => (
         <ErrorBoundary fallbackRender={() => <span>Component crashed</span>}>
-            {/* forwardRef strips "ref" from the props type (PropsWithoutRef), which TypeScript cannot relate back to a generic TProps. */}
             <Component {...(props as TProps)} ref={ref} />
         </ErrorBoundary>
     ));

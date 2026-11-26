@@ -16,7 +16,6 @@ export default function withExplainPopover<T, TProps extends ExplainProps>(
 
         return (
             <ExplainPopover>
-                {/* forwardRef strips "ref" from the props type (PropsWithoutRef), which TypeScript cannot relate back to a generic TProps. */}
                 <Component {...(props as TProps)} ref={ref} />
             </ExplainPopover>
         );

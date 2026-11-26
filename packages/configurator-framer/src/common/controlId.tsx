@@ -21,7 +21,6 @@ export default function withControlId<T, TProps extends object>(
 
         return (
             <controlIdContext.Provider value={controlId}>
-                {/* forwardRef strips "ref" from the props type (PropsWithoutRef), which TypeScript cannot relate back to a generic TProps. */}
                 <Component {...(props as TProps)} ref={ref} />
             </controlIdContext.Provider>
         );

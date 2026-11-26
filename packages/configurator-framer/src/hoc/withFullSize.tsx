@@ -15,7 +15,6 @@ export default function withFullSize<T, TProps extends {style?: CSSProperties}>(
             height: "100%",
         };
 
-        // forwardRef strips "ref" from the props type (PropsWithoutRef), which TypeScript cannot relate back to a generic TProps.
         return <Component {...(props as TProps)} ref={ref} style={extendedStyles} />;
     });
 }
