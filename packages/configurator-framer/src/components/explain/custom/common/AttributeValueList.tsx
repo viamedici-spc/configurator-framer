@@ -9,6 +9,7 @@ import withControlId, {useControlId} from "../../../../common/controlId";
 import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import {getItemTemplate} from "../../../../common/listRenderer";
 import {globalAttributeIdToString} from "../../../../common/GlobalAttributeIdExtensions";
+import type {AttributesContext} from "./attributesContext";
 import {useAttributesContext} from "./attributesContext";
 import getDecisionStateDisplayName from "../../common/getDecisionStateDisplayName";
 import useCommonExplainProps from "../../../../props/useCommonExplainProps";
@@ -41,7 +42,6 @@ const AttributeValueList = withErrorBoundary(
         const controlId = useControlId();
         const renderPlaceholder = useRenderPlaceholder();
         const context = useAttributesContext();
-        const commonExplainProps = useCommonExplainProps();
 
         const itemTemplate = getItemTemplate(props.itemTemplate);
         if (!itemTemplate) {
@@ -56,20 +56,11 @@ const AttributeValueList = withErrorBoundary(
             return null;
         }
 
-        const attributeKey = globalAttributeIdToString(context.attributeId);
-        const sortedDecisions = sortDecisions(context.decisions, context.choiceValueNames, commonExplainProps);
-        const items = sortedDecisions.map((decision, index) => {
-            const displayName = getDecisionStateDisplayName(decision, context.choiceValueNames, commonExplainProps);
-            const layoutId = `${controlId}_${attributeKey}_${index}`;
-            return cloneElement(itemTemplate, {
-                key: layoutId,
-                layoutId,
-                displayName,
-                intention: decision.intention,
-            });
-        });
-
-        return <Inner style={props.style}>{items}</Inner>;
+        return (
+            <Inner style={props.style}>
+                <DecisionItems context={context} itemTemplate={itemTemplate} controlId={controlId} />
+            </Inner>
+        );
     }),
 );
 
@@ -84,6 +75,26 @@ function Inner(props: {style?: CSSProperties; children: ReactNode}) {
             <Root style={props.style}>{props.children}</Root>
         </>
     );
+}
+
+// The explain props come from <Configuration />, which a template rendered on its own on the canvas lacks, so they are
+// read only here, past the placeholder.
+function DecisionItems(props: {context: AttributesContext; itemTemplate: ReactElement; controlId: string | null}) {
+    const commonExplainProps = useCommonExplainProps();
+    const {context, itemTemplate, controlId} = props;
+
+    const attributeKey = globalAttributeIdToString(context.attributeId);
+    const sortedDecisions = sortDecisions(context.decisions, context.choiceValueNames, commonExplainProps);
+    return sortedDecisions.map((decision, index) => {
+        const displayName = getDecisionStateDisplayName(decision, context.choiceValueNames, commonExplainProps);
+        const layoutId = `${controlId}_${attributeKey}_${index}`;
+        return cloneElement(itemTemplate, {
+            key: layoutId,
+            layoutId,
+            displayName,
+            intention: decision.intention,
+        });
+    });
 }
 
 function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string | null): ReactNode {

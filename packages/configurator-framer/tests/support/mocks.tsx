@@ -15,7 +15,7 @@ import {explainContext} from "../../src/common/explain";
 export const framerModule = {
     addPropertyControls: () => {},
     ControlType: new Proxy({}, {get: (_, key) => key}),
-    RenderTarget: {current: () => "PREVIEW", preview: "PREVIEW", canvas: "CANVAS"},
+    RenderTarget: {current: () => session.renderTarget, preview: "PREVIEW", canvas: "CANVAS"},
     useLocaleInfo: () => session.localeInfo,
 };
 
@@ -25,6 +25,8 @@ export const session = {
     makeDecision: vi.fn(async () => {}),
     clearDecisions: vi.fn(async () => {}),
     localeInfo: {activeLocale: null as {code: string} | null, locales: [] as ReadonlyArray<{code: string}>},
+    /** Where Framer renders: "PREVIEW" for the preview and published sites, "CANVAS" for the editor. */
+    renderTarget: "PREVIEW" as "PREVIEW" | "CANVAS",
 };
 
 /**
@@ -47,6 +49,7 @@ export function resetSession(): void {
     session.makeDecision.mockClear();
     session.clearDecisions.mockClear();
     session.localeInfo = {activeLocale: null, locales: []};
+    session.renderTarget = "PREVIEW";
 }
 
 export function choiceAttribute(localId: string, choiceValueIds: ReadonlyArray<string>): ChoiceAttribute {
@@ -82,11 +85,16 @@ function ExplainProvider({children}: PropsWithChildren) {
 export type Rendered = {readonly container: HTMLDivElement; readonly unmount: () => void};
 
 export async function renderInConfiguration(element: ReactNode): Promise<Rendered> {
+    return render(<ExplainProvider>{element}</ExplainProvider>);
+}
+
+/** A rendered tree without any provider, as a component renders on its own on the canvas. */
+export async function render(element: ReactNode): Promise<Rendered> {
     (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
     const container = document.createElement("div");
     document.body.appendChild(container);
     const root: Root = createRoot(container);
-    await act(async () => root.render(<ExplainProvider>{element}</ExplainProvider>));
+    await act(async () => root.render(element));
     return {
         container,
         unmount: () => {
