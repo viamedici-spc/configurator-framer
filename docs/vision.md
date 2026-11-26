@@ -18,3 +18,9 @@ status: accepted
 ## Audiences
 
 Designers and developers building configurators in Framer, and the coding agents that help them.
+
+## Place among the SPC libraries
+
+The library builds on configurator-react and configurator-ts, and nothing builds on it. It adds what those two do not
+have: Framer code components with their property controls, and the self-contained bundle that a Framer project loads
+from a CDN.
