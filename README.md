@@ -16,7 +16,7 @@ These React-based UI components are optimized for seamless integration within Fr
 
 ## Installation
 
-To integrate the UI components into a Framer application, start by creating a new code file (e.g. `ConfiguratorLib`). Import the `configurator-ts` bundle package and export the components you need.
+To integrate the UI components into a Framer application, start by creating a new code file (e.g. `ConfiguratorLib`). Import the `@viamedici-spc/configurator-framer-bundle` package and export the components you need.
 
 The exported components will then be available in the assets panel as local components.
 
@@ -29,6 +29,14 @@ import {ConfiguratorFramer} from "https://cdn.jsdelivr.net/npm/@viamedici-spc/co
 export const Configuration: ComponentType = ConfiguratorFramer.Configuration;
 export const ChoiceSelect: ComponentType = ConfiguratorFramer.ChoiceSelect;
 export const SelectionToggle: ComponentType = ConfiguratorFramer.SelectionToggle;
+```
+
+### In a React application
+
+A React application uses the library through a bundler; React and `framer` are peer dependencies:
+
+```bash
+bun add @viamedici-spc/configurator-framer react framer
 ```
 
 ### Why Use the Bundle?
