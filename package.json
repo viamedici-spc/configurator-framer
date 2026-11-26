@@ -1,0 +1,7 @@
+{
+  "name": "configurator-framer-workspace",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.5",
+  "workspaces": ["packages/*"]
+}

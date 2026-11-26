@@ -21,13 +21,11 @@
     }
   },
   "scripts": {
-    "preinstall": "npm --prefix ../configurator-framer install",
-    "build": "npm --prefix ../configurator-framer run build && vite build",
-    "test": "npm --prefix ../configurator-framer run test",
+    "build": "bun run --cwd ../configurator-framer build && vite build",
     "preview": "vite preview  --port 3000",
     "typecheck": "tsc --noEmit",
-    "prepack" : "cp ../../README.md README.md",
-    "postpack" : "rm README.md"
+    "prepack": "cp ../../README.md README.md",
+    "postpack": "rm README.md"
   },
   "keywords": [
     "viamedici",
@@ -45,15 +43,12 @@
   ],
   "author": "Viamedici Software GmbH",
   "license": "MIT",
-  "dependencies": {
-    "@viamedici-spc/configurator-framer": "file:../configurator-framer",
-    "@viamedici-spc/configurator-react": "4.2.0"
-  },
   "devDependencies": {
-    "npm-sort": "^0.0.4",
     "typescript": "^5.1.6",
     "vite": "^4.4.8",
     "vite-plugin-checker": "^0.6.1",
-    "vite-plugin-dts": "^3.5.0"
+    "vite-plugin-dts": "^3.5.0",
+    "@viamedici-spc/configurator-framer": "workspace:*",
+    "@viamedici-spc/configurator-react": "4.2.0"
   }
 }
