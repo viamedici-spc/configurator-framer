@@ -15,9 +15,9 @@
         "@fortawesome/free-regular-svg-icons": "^6.5.1",
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
         "@fortawesome/react-fontawesome": "^0.2.0",
-        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
-        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126195601",
-        "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931",
+        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126220246",
+        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126215538",
+        "@viamedici-spc/fp-ts-extensions": "2.0.0",
         "camelcase": "^8.0.0",
         "clsx": "^2.1.0",
         "dyna-guid": "^2.1.2",
@@ -64,8 +64,8 @@
       "devDependencies": {
         "@types/bun": "^1.4.5",
         "@viamedici-spc/configurator-framer": "workspace:*",
-        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
-        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126195601",
+        "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126220246",
+        "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126215538",
         "oxlint": "^1.94.0",
         "publint": "^0.3.25",
         "tsdown": "^0.23.7",
@@ -299,11 +299,11 @@
 
     "@viamedici-spc/configurator-framer-bundle": ["@viamedici-spc/configurator-framer-bundle@workspace:packages/configurator-framer-bundle"],
 
-    "@viamedici-spc/configurator-react": ["@viamedici-spc/configurator-react@5.0.0-modern-toolchain-20261126183755", "", { "dependencies": { "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fp-ts-react-stable-hooks": "^2.0.0", "jotai-effect": "^2", "jotai-family": "^1.1.0", "jotai-xstate": "^0.6", "memize": "^2.1.1", "p-defer": "^4.0.1", "ts-pattern": "^5.9.2", "xstate": "^5.33.4" }, "peerDependencies": { "@viamedici-spc/configurator-ts": "^5.0.0-0", "jotai": "^3", "react": "^18.2 || ^19" } }, "sha512-X3Hd9IUSS2mQdRmHYp7L50uEmK8hbHI4ch7AQdHqtgWH/6AqPFfkGt3ZjLse+Yx2l/ez+7wbIJl8IWqi28D2TQ=="],
+    "@viamedici-spc/configurator-react": ["@viamedici-spc/configurator-react@5.0.0-modern-toolchain-20261126220246", "", { "dependencies": { "@viamedici-spc/fp-ts-extensions": "2.0.0", "dyna-guid": "^2.3.3", "fp-ts-react-stable-hooks": "^2.0.0", "jotai-effect": "^2", "jotai-family": "^1.1.0", "jotai-xstate": "^0.6", "memize": "^2.1.1", "p-defer": "^4.0.1", "ts-pattern": "^5.9.2", "xstate": "^5.33.4" }, "peerDependencies": { "@viamedici-spc/configurator-ts": "^5.0.0-0", "jotai": "^3", "react": "^18.2 || ^19" } }, "sha512-ALIP1mOR2XNRxbyQx3Y6yTGTo2FZ3SG10ftgaqdwjeGPm3BjErqcKhl1T6EcnrrtEstIEWZ9dbK1Eo/5OnQylw=="],
 
-    "@viamedici-spc/configurator-ts": ["@viamedici-spc/configurator-ts@5.0.0-modern-toolchain-20261126195601", "", { "dependencies": { "@morphic-ts/batteries": "^3.0.0", "@morphic-ts/model-algebras": "^3.0.0", "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931", "dyna-guid": "^2.3.3", "fast-equals": "^6.4.1", "fp-ts": "^2.16.11", "memize": "^2.1.1", "monocle-ts": "^2.3.13", "openapi-fetch": "^0.17.0", "p-defer": "^4.0.1", "spark-md5": "^3.0.2", "ts-pattern": "^5.9.2", "tslib": "^2.7.0", "xstate": "^5.33.4" } }, "sha512-Xr3jF6xz4iD/jfifN224sC3phToTwb951jSd3KVFY3QfHEmiqGHU0pPcyjx/G67AzkuMDURSZblh62sf01KnBA=="],
+    "@viamedici-spc/configurator-ts": ["@viamedici-spc/configurator-ts@5.0.0-modern-toolchain-20261126215538", "", { "dependencies": { "@morphic-ts/batteries": "^3.0.0", "@morphic-ts/model-algebras": "^3.0.0", "@viamedici-spc/fp-ts-extensions": "2.0.0", "dyna-guid": "^2.3.3", "fast-equals": "^6.4.1", "fp-ts": "^2.16.11", "memize": "^2.1.1", "monocle-ts": "^2.3.13", "openapi-fetch": "^0.17.0", "p-defer": "^4.0.1", "spark-md5": "^3.0.2", "ts-pattern": "^5.9.2", "tslib": "^2.7.0", "xstate": "^5.33.4" } }, "sha512-qh+dSuhazcsr0TI0KB1PiDHYZlFuTsFwGxt3Hvc++3ak4BWiCkQ4PsyZ5VbAumNbawMvkTarZ/aQ4T4H/ULeaA=="],
 
-    "@viamedici-spc/fp-ts-extensions": ["@viamedici-spc/fp-ts-extensions@2.0.0-modern-toolchain-20261126094931", "", { "peerDependencies": { "fp-ts": "2.*" } }, "sha512-ywpE+ue+AHBscDs6IHjiTd0m4uVFvtP4suatHbRRYGf3poYiZZOmSMaul/owVe7PrPpxXrwZHaW0/LK83KoN2g=="],
+    "@viamedici-spc/fp-ts-extensions": ["@viamedici-spc/fp-ts-extensions@2.0.0", "", { "peerDependencies": { "fp-ts": "2.*" } }, "sha512-r+M0EWcMvv0eTUGFiTgdnHHTNS/60skV4jDDVv5B+wC6qCLFP7t51XQsXD3QVa6HmAWQEmOvdNihG9xk4/RTyA=="],
 
     "@vitest/mocker": ["@vitest/mocker@5.1.1", "", { "dependencies": { "@jridgewell/trace-mapping": "0.3.31", "@vitest/spy": "5.1.1", "estree-walker": "^3.0.3", "magic-string": "^1.4.5" }, "peerDependencies": { "msw": "^2.4.9 || ^3.0.0", "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" }, "optionalPeers": ["msw", "vite"] }, "sha512-b2OgTB4+3ImWIVafXKazJXwLKwQxUNnix6b3xUvUTMh7RyXlrtzoxfZr8aEz9zkHOMAS4K5lu3TvFWoiVeVTQg=="],
 

@@ -68,14 +68,6 @@ status: living
   file lists, the sections *Tests that define behavior* and *Links*, and its prose wrapped at 120 columns. **Waits on**
   the planned wiki. **Done when** the knowledge is in the wiki and every note follows the template.
 
-## Release
-
-- [ ] **fp-ts-extensions at its release** (2026-11-26) — `packages/configurator-framer/package.json` and
-  `packages/configurator-framer-bundle/package.json` pin the prerelease `2.0.0-modern-toolchain-20261126094931`; before
-  merging into `main`, they pin the released 2.0.0. **Waits on** the fp-ts-extensions 2.0.0 release. **Done when**
-  `packages/configurator-framer/package.json` and `packages/configurator-framer-bundle/package.json` name `2.0.0` and
-  `bun run verify` passes.
-
 ## Dependencies
 
 - [ ] **`framer` 3 for development** (2026-11-26) — version 3 changes the typings of property controls (FusedNumber
