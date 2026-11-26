@@ -46,9 +46,10 @@ runs the wrong runner.
   breaking change is listed under *Changes* in the changelog with what a consumer has to do.
 - **Public types are immutable**: `readonly` properties, `ReadonlyArray`, `ReadonlyMap`. A consumer never receives
   something it is expected not to mutate without the type saying so.
-- **Explicit types on every export.** The build emits `.d.ts` files through `isolatedDeclarations`, so an exported
-  function states its return type and an exported constant its type. The type checker enforces it; the point is that the
-  declaration a consumer reads is the one written, not an inferred one that changes with the implementation.
+- **Explicit types on the public API.** The build emits the `.d.ts` files with the TypeScript 7 compiler, which infers
+  what is not written; so an exported function of the public API states its return type and an exported constant its
+  type, and the declaration a consumer reads is the one written, not an inferred one that changes with the
+  implementation.
 - **No wire types through the entry point.** Generated client types stay behind the mapping layer; a consumer sees only
   the library's own domain types.
 - **ESM only, browser only.** No `node:*` imports, no `process`, no `Buffer`, nothing that needs a Node.js runtime. A
@@ -148,6 +149,7 @@ no internal hosts, no real person ([documentation.md](documentation.md#this-repo
 configuration, such as an endpoint or a token, lives in a git-ignored local file.
 
 Tests live in `packages/configurator-framer/tests/`.
+
 **A visual change is looked at by a person before it is committed.** The gate says the change is sound; it cannot say
 the thing looks right. So the loop for such a change is *build → say it is ready → wait*.
 
