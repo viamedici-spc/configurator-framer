@@ -13,6 +13,8 @@ const config: UserConfig = defineConfig({
     deps: {
         neverBundle: providedByFramer,
         onlyBundle: false,
+        // The bundle may import only what Framer provides; anything else fails the build.
+        onlyImport: providedByFramer,
     },
     // No declarations: Framer projects import the bundle by URL, where the editor gets no types; TypeScript projects
     // use @viamedici-spc/configurator-framer instead.
