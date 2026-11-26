@@ -2,8 +2,9 @@ import type {PropsWithChildren} from "react";
 import React, {useEffect, useRef, useState} from "react";
 import {addPropertyControls, ControlType} from "framer";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
+import withErrorBoundary from "../common/withErrorBoundary";
 
-export default function PropagateHeight(props: PropsWithChildren) {
+const PropagateHeight = withErrorBoundary(function PropagateHeight(props: PropsWithChildren) {
     const renderPlaceholder = useRenderPlaceholder();
 
     if (renderPlaceholder) {
@@ -51,7 +52,9 @@ export default function PropagateHeight(props: PropsWithChildren) {
             {props.children}
         </div>
     );
-}
+});
+
+export default PropagateHeight;
 
 addPropertyControls(PropagateHeight, {
     children: {

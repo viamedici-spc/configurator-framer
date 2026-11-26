@@ -4,6 +4,7 @@ import type {ButtonHTMLAttributes} from "react";
 import {forwardRef} from "react";
 import {usePopoverContext} from "./Popover";
 import useRenderPlaceholder from "../../hooks/useRenderPlaceholder";
+import withErrorBoundary from "../../common/withErrorBoundary";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
     appearance?: "auto" | "none";
@@ -13,44 +14,46 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const PopoverClose = forwardRef<HTMLButtonElement, Props>((props, ref) => {
-    const renderPlaceholder = useRenderPlaceholder();
-    const {appearance, style, children, ...restProps} = props;
-    const resetStyle =
-        appearance === "none"
-            ? {
-                  border: "none",
-                  background: "transparent",
-                  padding: 0,
-                  outline: "none",
-              }
-            : {};
-    const mergedStyle = {...style, ...(appearance ? {appearance} : {}), ...resetStyle};
+const PopoverClose = withErrorBoundary(
+    forwardRef<HTMLButtonElement, Props>((props, ref) => {
+        const renderPlaceholder = useRenderPlaceholder();
+        const {appearance, style, children, ...restProps} = props;
+        const resetStyle =
+            appearance === "none"
+                ? {
+                      border: "none",
+                      background: "transparent",
+                      padding: 0,
+                      outline: "none",
+                  }
+                : {};
+        const mergedStyle = {...style, ...(appearance ? {appearance} : {}), ...resetStyle};
 
-    if (renderPlaceholder) {
+        if (renderPlaceholder) {
+            return (
+                <button type="button" ref={ref} {...restProps} style={mergedStyle}>
+                    {children}
+                </button>
+            );
+        }
+
+        const {setOpen} = usePopoverContext();
         return (
-            <button type="button" ref={ref} {...restProps} style={mergedStyle}>
+            <button
+                type="button"
+                ref={ref}
+                {...restProps}
+                style={mergedStyle}
+                onClick={event => {
+                    props.onClick?.(event);
+                    setOpen(false);
+                }}
+            >
                 {children}
             </button>
         );
-    }
-
-    const {setOpen} = usePopoverContext();
-    return (
-        <button
-            type="button"
-            ref={ref}
-            {...restProps}
-            style={mergedStyle}
-            onClick={event => {
-                props.onClick?.(event);
-                setOpen(false);
-            }}
-        >
-            {children}
-        </button>
-    );
-});
+    }),
+);
 
 export default PopoverClose;
 

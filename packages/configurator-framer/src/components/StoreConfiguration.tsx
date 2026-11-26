@@ -5,6 +5,7 @@ import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
 import type {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
+import withErrorBoundary from "../common/withErrorBoundary";
 
 type Props = {
     target: "file" | "clipboard";
@@ -16,7 +17,7 @@ type Props = {
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-export default function StoreConfiguration(props: PropsWithChildren<Props>) {
+const StoreConfiguration = withErrorBoundary(function StoreConfiguration(props: PropsWithChildren<Props>) {
     const {children, fileExtension, fileName, target} = props;
     const renderPlaceholder = useRenderPlaceholder();
 
@@ -40,7 +41,9 @@ export default function StoreConfiguration(props: PropsWithChildren<Props>) {
     };
 
     return cloneChildrenWithProps(children, {onClick});
-}
+});
+
+export default StoreConfiguration;
 
 const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
     children: {

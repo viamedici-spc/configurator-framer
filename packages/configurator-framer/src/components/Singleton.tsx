@@ -1,5 +1,6 @@
 import type {PropsWithChildren} from "react";
 import {useEffect, useRef, useState} from "react";
+import withErrorBoundary from "../common/withErrorBoundary";
 
 type SingletonCandidate = {
     chose: () => void;
@@ -17,7 +18,7 @@ const singletons = new Map<string, Singleton>();
     The singletons are global. No manager is required.
     When a singleton gets unmounted, another one is tried to be chosen.
  */
-export default function Singleton(props: PropsWithChildren<{singletonId: string}>) {
+const Singleton = withErrorBoundary(function Singleton(props: PropsWithChildren<{singletonId: string}>) {
     const {singletonId, children} = props;
     const [isChosen, setIsChosen] = useState(false);
     const ref = useRef<SingletonCandidate>({chose: () => setIsChosen(true)});
@@ -28,7 +29,9 @@ export default function Singleton(props: PropsWithChildren<{singletonId: string}
     }, []);
 
     return isChosen ? <>{children}</> : null;
-}
+});
+
+export default Singleton;
 
 function addCandidate(singletonId: string, candidate: SingletonCandidate) {
     const singleton = getOrAddSingleton(singletonId);
