@@ -55,6 +55,15 @@ status: living
   that decides the placeholder and an inner one with the hooks. **Waits on** a session with Framer open, as the rules
   above. **Done when** `react/rules-of-hooks` is on and `bun run verify` passes.
 
+## Documents
+
+- [ ] **Bring the feature notes into the feature-note scheme** (2026-11-26) — the notes under `docs/features/` carry
+  knowledge beyond the scheme: the designer matrix for `noOptionsAvailableColors` and `allOptionsBlockedColors`, the
+  component contracts, change lists and rollout notes. That knowledge moves to the planned wiki as guidance for
+  designers. Then each note follows `docs/conventions/templates/feature-template.md`: no rollout or migration notes, no
+  file lists, the sections *Tests that define behavior* and *Links*, and its prose wrapped at 120 columns. **Waits on**
+  the planned wiki. **Done when** the knowledge is in the wiki and every note follows the template.
+
 ## Release
 
 - [ ] **Call the shared workflow at `@v4`** (2026-11-26) — `.github/workflows/main.yml` (both jobs) calls
