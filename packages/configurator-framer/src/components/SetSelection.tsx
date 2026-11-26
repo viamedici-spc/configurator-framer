@@ -83,6 +83,11 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
         return <span>Choice Value not found</span>;
     }
 
+    // Including or excluding needs a choice value; only "undefined" works on the whole choice attribute (clears it).
+    if (isChoiceAttribute && !hasChoiceValueId && props.setSelection !== "undefined") {
+        return <span>Choice Value Id missing</span>;
+    }
+
     const mapSelectionStateToDecision = () =>
         match({
             isChoiceAttribute,

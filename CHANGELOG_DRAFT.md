@@ -13,8 +13,8 @@
   dependency, and the library no longer runs a `postinstall` script.
 - **No crash without an active locale:** localized names fall back to the default name when Framer reports no locale.
 - **Choice components without a choice value id** show the hint "Choice Value Id missing" instead of crashing
-  (`SelectionToggle`, `SetSelection`), and `useSortedChoiceValues` no longer crashes for an unknown attribute or
-  without explicit choice values.
+  (`SelectionToggle`, and `SetSelection` when it includes or excludes; set to "undefined" it clears the attribute), and
+  `useSortedChoiceValues` no longer crashes for an unknown attribute or without explicit choice values.
 - **`ReplaceText` in set-prop mode** skips empty children and text instead of throwing.
 - **Explanation lists** no longer log React key warnings.
 - **The TypeScript declaration of `CustomExplainQuestion`** is the component; in 4.2.1 it was configurator-ts's
