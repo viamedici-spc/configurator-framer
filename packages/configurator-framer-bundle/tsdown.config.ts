@@ -1,10 +1,16 @@
-import {defineConfig, type UserConfig} from "tsdown";
+import {defineConfig, type UserConfigFn} from "tsdown";
 
 // Framer provides React and its own modules at runtime; everything else is inlined, so a Framer project loads this one
 // file (dist/index.js, typically from jsDelivr).
 const providedByFramer = [/^react($|\/)/, /^react-dom($|\/)/, /^framer($|\/)/, /^framer-motion($|\/)/];
 
-const config: UserConfig = defineConfig({
+const librarySources: Record<string, string> = {
+    "@viamedici-spc/configurator-framer": new URL("../configurator-framer/src/index.ts", import.meta.url).pathname,
+};
+
+// While watching, the bundle builds the library from its sources, so a change to either rebuilds the bundle; the build
+// writes no package.json then.
+const config: UserConfigFn = defineConfig(inlineConfig => ({
     entry: ["src/index.ts"],
     format: "esm",
     platform: "browser",
@@ -19,7 +25,8 @@ const config: UserConfig = defineConfig({
     // No declarations: Framer projects import the bundle by URL, where the editor gets no types; TypeScript projects
     // use @viamedici-spc/configurator-framer instead.
     dts: false,
-    exports: true,
-});
+    exports: !inlineConfig.watch,
+    alias: inlineConfig.watch ? librarySources : {},
+}));
 
 export default config;

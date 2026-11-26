@@ -11,8 +11,9 @@ Bun workspace with two packages: `packages/configurator-framer` (the library) an
 - `bun run verify` — the gate for both packages: type check, oxlint, format check, Vitest, the tsdown builds (which
   must leave each `package.json` unchanged), the library's consumer type check
   (`packages/configurator-framer/package-check/consumer.ts`), publint and arethetypeswrong.
-- `bun run dev` rebuilds both packages on change; `bun run preview` serves the bundle on
-  `http://localhost:3000/index.js`, which a Framer project can import during development.
+- `bun run dev` watches the bundle, which then builds the library from its sources: a change to either rebuilds
+  `packages/configurator-framer-bundle/dist/index.js`, and no `package.json` is written. `bun run preview` serves the
+  bundle on `http://localhost:3000/index.js`, which a Framer project can import during development.
 - Dependencies are updated by hand when working on the library: `bun outdated`, then `bun audit`. `bunfig.toml` installs
   only versions that have been public for three days (our own `@viamedici-spc` packages excepted).
 

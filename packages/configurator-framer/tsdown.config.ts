@@ -1,4 +1,4 @@
-import {defineConfig, type Rolldown, type UserConfig} from "tsdown";
+import {defineConfig, type Rolldown, type UserConfigFn} from "tsdown";
 
 /**
  * fp-ts 2.x has no `exports` map, so strict ESM resolution (webpack 5 for a `"type": "module"` package) rejects
@@ -19,16 +19,17 @@ const fullySpecifiedFpTs: Rolldown.Plugin = {
     },
 };
 
-const config: UserConfig = defineConfig({
+// A watch build writes no package.json.
+const config: UserConfigFn = defineConfig(inlineConfig => ({
     entry: ["src/index.ts"],
     format: "esm",
     platform: "browser",
     target: "es2022",
     dts: {generator: "tsgo"},
-    exports: true,
+    exports: !inlineConfig.watch,
     // Every dependency stays external: a package bundled by accident fails the build.
     deps: {onlyBundle: []},
     plugins: [fullySpecifiedFpTs],
-});
+}));
 
 export default config;

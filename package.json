@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "bun run --filter @viamedici-spc/configurator-framer-bundle build",
-    "dev": "bun run --parallel --filter '*' dev",
+    "dev": "bun run --filter @viamedici-spc/configurator-framer-bundle dev",
     "preview": "bun run --filter @viamedici-spc/configurator-framer-bundle preview",
     "verify": "bun run --filter @viamedici-spc/configurator-framer verify && bun run --filter @viamedici-spc/configurator-framer-bundle verify"
   },

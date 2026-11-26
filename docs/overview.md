@@ -48,7 +48,7 @@ or 19 through a bundler. ESM only, not Node.js ([ADR 0003](adr/0003-browser-targ
 | `bun install` | Installs both packages (one Bun workspace). |
 | `bun run verify` | The gate for both packages: type check, lint, format check, tests, builds, package checks (`package.json` unchanged, the library's consumer type check, publint, arethetypeswrong). |
 | `bun run build` | Builds the library and the bundle. |
-| `bun run dev` | Rebuilds both packages on change. |
+| `bun run dev` | Rebuilds the bundle on every change to the bundle or the library, building the library from its sources. |
 | `bun run preview` | Serves the bundle on `http://localhost:3000/index.js` for a Framer project during development. |
 | `bun fmt` | Formats the code. |
 
