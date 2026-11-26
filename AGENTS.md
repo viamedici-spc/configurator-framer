@@ -8,8 +8,9 @@ Bun workspace with two packages: `packages/configurator-framer` (the library) an
 ## Commands
 
 - `bun install` — install both packages (Bun is the package manager; never npm).
-- `bun run verify` — the gate for both packages: type check, oxlint, format check, Vitest, the tsdown builds, publint
-  and arethetypeswrong.
+- `bun run verify` — the gate for both packages: type check, oxlint, format check, Vitest, the tsdown builds (which
+  must leave each `package.json` unchanged), the library's consumer type check
+  (`packages/configurator-framer/package-check/consumer.ts`), publint and arethetypeswrong.
 - `bun run dev` rebuilds both packages on change; `bun run preview` serves the bundle on
   `http://localhost:3000/index.js`, which a Framer project can import during development.
 - Dependencies are updated by hand when working on the library: `bun outdated`, then `bun audit`. `bunfig.toml` installs

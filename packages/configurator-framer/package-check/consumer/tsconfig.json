@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    // The declarations of framer and framer-motion do not type-check themselves; the value references still catch a
+    // wrong declaration of this package.
+    "skipLibCheck": true,
+    "types": []
+  },
+  "include": ["index.ts"]
+}

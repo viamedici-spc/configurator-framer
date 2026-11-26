@@ -36,7 +36,9 @@
     "dev": "tsdown --watch",
     "preview": "bun preview.ts",
     "typecheck": "bun check",
-    "verify": "bun run build && bun check && publint --strict",
+    "lint": "oxlint --deny-warnings",
+    "format:check": "bun fmt --check",
+    "verify": "bun ../configurator-framer/package-check/build.ts && bun run --parallel typecheck lint format:check && publint --strict",
     "prepack": "cp ../../README.md README.md",
     "postpack": "rm README.md"
   },
@@ -46,6 +48,7 @@
     "@viamedici-spc/configurator-framer": "workspace:*",
     "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
     "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+    "oxlint": "^1.94.0",
     "publint": "^0.3.25",
     "tsdown": "^0.23.7",
     "typescript": "7.0.2"

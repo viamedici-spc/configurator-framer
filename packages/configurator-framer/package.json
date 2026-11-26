@@ -37,9 +37,9 @@
     "format:check": "bun fmt --check",
     "lint": "oxlint --deny-warnings",
     "test": "vitest run",
-    "typecheck": "bun check && bun check -p tests",
+    "typecheck": "bun check && bun check -p tests && bun check -p package-check",
     "verify": "bun run --parallel typecheck lint format:check test verify:package",
-    "verify:package": "bun run build && publint --strict && attw --pack . --profile esm-only --format table-flipped",
+    "verify:package": "bun package-check/build.ts && bun package-check/consumer.ts && publint --strict && attw --pack . --profile esm-only --format table-flipped",
     "prepack": "cp ../../README.md README.md",
     "postpack": "rm README.md"
   },
@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@types/bun": "^1.4.5",
     "@types/mustache": "^4.2.5",
     "@types/react": "^18.3",
     "@types/react-dom": "^18.3",

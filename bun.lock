@@ -37,6 +37,7 @@
       },
       "devDependencies": {
         "@arethetypeswrong/cli": "^0.18.5",
+        "@types/bun": "^1.4.5",
         "@types/mustache": "^4.2.5",
         "@types/react": "^18.3",
         "@types/react-dom": "^18.3",
@@ -65,6 +66,7 @@
         "@viamedici-spc/configurator-framer": "workspace:*",
         "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126115224",
         "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126114204",
+        "oxlint": "^1.94.0",
         "publint": "^0.3.25",
         "tsdown": "^0.23.7",
         "typescript": "7.0.2",
