@@ -17,6 +17,7 @@ jobs:
       project-dir: packages/configurator-framer
 
   configurator-framer-bundle:
+    needs: configurator-framer
     permissions:
       contents: read
       id-token: write
