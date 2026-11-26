@@ -36,8 +36,7 @@
     "dev": "tsdown --watch",
     "preview": "bun preview.ts",
     "typecheck": "bun check",
-    "verify": "bun run --parallel typecheck verify:package",
-    "verify:package": "bun run build && publint --strict",
+    "verify": "bun run build && bun check && publint --strict",
     "prepack": "cp ../../README.md README.md",
     "postpack": "rm README.md"
   },
