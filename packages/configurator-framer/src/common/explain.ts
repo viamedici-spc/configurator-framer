@@ -14,28 +14,28 @@ export type ExplainProcess = {
     /**
      * Is Null if the explanation process is not the result of an ExplainQuestion.
      */
-    explainQuestion: ExplainQuestion | null;
-    displayMode: DisplayMode;
+    readonly explainQuestion: ExplainQuestion | null;
+    readonly displayMode: DisplayMode;
     /**
      * Is Null if no controlId was provided.
      */
-    controlId: string | null;
+    readonly controlId: string | null;
 } & (
     | {
-          hasError: false;
-          decisionExplanations: ReadonlyArray<DecisionExplanation>;
-          constraintExplanations: ReadonlyArray<ConstraintExplanation>;
+          readonly hasError: false;
+          readonly decisionExplanations: ReadonlyArray<DecisionExplanation>;
+          readonly constraintExplanations: ReadonlyArray<ConstraintExplanation>;
       }
     | {
-          hasError: true;
+          readonly hasError: true;
           /**
            * Is Null in case of an error.
            */
-          decisionExplanations: null;
+          readonly decisionExplanations: null;
           /**
            * Is Null in case of an error.
            */
-          constraintExplanations: null;
+          readonly constraintExplanations: null;
       }
 );
 
