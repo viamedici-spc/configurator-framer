@@ -19,8 +19,9 @@ drift, and the published package mixed formats.
   `.oxfmtrc.json`).
 - **Vitest** runs the tests, with jsdom: they need a DOM and React rendering.
 - **oxlint** lints, until Bun ships a linter of its own.
-- **tsdown** builds the package: the library as one ES module with its dependencies external and its declarations from the
-  TypeScript 7 compiler (`typescript` is a dev dependency for that alone), and the self-contained bundle. publint and arethetypeswrong check the packed result.
+- **tsdown** builds the package: the library as one ES module with its dependencies external and its declarations from
+  the TypeScript 7 compiler (`typescript` is a dev dependency for that alone), and the self-contained bundle. publint
+  and arethetypeswrong check the packed result.
 - **`bun run verify`** is the one gate, locally and in CI; its independent steps run in parallel
   (`bun run --parallel`).
 - **Publishing** goes through the shared CI workflow: Bun packs the tarball, `npm publish` uploads it with npm trusted

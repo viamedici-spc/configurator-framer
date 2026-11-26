@@ -21,7 +21,8 @@ status: living
   - `packages/configurator-framer/src/components/Singleton.tsx`: misses `singletonId`, reads a ref in the cleanup.
   - `packages/configurator-framer/src/components/Colorize.tsx`: a layout effect without dependencies sets state.
   - `packages/configurator-framer/src/components/SetSelections.tsx`: the effect misses `trigger`.
-  - `packages/configurator-framer/src/components/SetTemplateSlots.tsx`, `explain/styled/explainPopover/ShowMoreButton.tsx`,
+  - `packages/configurator-framer/src/components/SetTemplateSlots.tsx`,
+    `explain/styled/explainPopover/ShowMoreButton.tsx`,
     `packages/configurator-framer/src/hooks/useSortedChoiceValues.ts`, `localization.ts`, `useDebounceValue.ts`:
     memoised values and effects miss inputs they read.
   - `ChoiceSelect.tsx`, `BooleanSelect.tsx`, `ComponentSelect.tsx` (in `packages/configurator-framer/src/components/`):

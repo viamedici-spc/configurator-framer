@@ -5,7 +5,8 @@
 - **ES modules only:** both packages ship ES modules and no CommonJS build anymore. The bundle's file stays
   `dist/index.js`, so import URLs only change their version.
 - **The bundle ships no type declarations:** TypeScript projects use `@viamedici-spc/configurator-framer` for types.
-- **React baseline:** React is a peer dependency of `^18.2 || ^19` (React 17 is no longer supported); Framer runs React 18.
+- **React baseline:** React is a peer dependency of `^18.2 || ^19` (React 17 is no longer supported); Framer runs React
+  18.
 
 # Fixes
 

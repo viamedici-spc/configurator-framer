@@ -6,5 +6,5 @@ status: living
 
 Ideas with no commitment attached.
 
-- **A GitHub wiki with user-facing guides** (2026-11-26): hands-on tutorials prepared from the feature notes. The wiki of
-  a public repository is public too.
+- **A GitHub wiki with user-facing guides** (2026-11-26): hands-on tutorials prepared from the feature notes. The wiki
+  of a public repository is public too.

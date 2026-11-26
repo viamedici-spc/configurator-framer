@@ -11,7 +11,8 @@ The changelog uses a fixed heading structure so release notes are consistent acr
 Notes:
 - Level 1 headings (`#`) are reserved for sections: New Features, Improvements, Changes, Fixes.
 - Level 2 headings (`##`) are used for concrete items under each section (feature titles or grouped entries).
-- New Features use short paragraphs under `##` headings; Improvements, Changes, and Fixes are bullet lists under their `##` headings.
+- New Features use short paragraphs under `##` headings; Improvements, Changes, and Fixes are bullet lists under their
+  `##` headings.
 - Target audience: library users (Framer designers/developers). Avoid overly technical or internal-only details.
 - This repo contains two packages, but releases are described **as one library**. Do not split by package.
 

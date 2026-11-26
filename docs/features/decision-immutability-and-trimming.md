@@ -202,7 +202,7 @@ Identical structure to `BooleanSelect` with `Included` / `Excluded` instead of `
 Numeric has no enumerable state set, so the bucket model does not apply. Instead a single rule:
 
 - **`readOnly` when `isPossibleDecisionStatesImmutable === true`.** Value-independent — whether a decision is currently set or not. Read-only (rather than disabled) keeps the value selectable for copy/paste workflows.
-- **`!isPossibleDecisionStatesImmutable`:** behaviour unchanged — user can edit, Explain runs on rejected values.
+- **`!isPossibleDecisionStatesImmutable`:** behavior unchanged — user can edit, Explain runs on rejected values.
 - **No new properties.**
 - **Rationale.** The Fixed-vs-Unavailable distinction reduces to a single read-only state for numeric: the user cannot influence the value either way, and Explain has no useful response for an immutable numeric. The presence (Fixed) or absence (Unavailable) of an underlying decision is reflected by
   the input value the engine returns; the UI does not need to branch on it.
