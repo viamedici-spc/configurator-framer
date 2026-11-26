@@ -15,6 +15,7 @@ jobs:
     uses: viamedici-spc/github-ci/.github/workflows/build-bun.yml@feature/v4
     with:
       project-dir: packages/configurator-framer
+      publish-environment: npm
 
   configurator-framer-bundle:
     needs: configurator-framer
@@ -24,3 +25,4 @@ jobs:
     uses: viamedici-spc/github-ci/.github/workflows/build-bun.yml@feature/v4
     with:
       project-dir: packages/configurator-framer-bundle
+      publish-environment: npm

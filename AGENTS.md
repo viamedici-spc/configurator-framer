@@ -30,8 +30,12 @@ Bun workspace with two packages: `packages/configurator-framer` (the library) an
 - Short, sentence-case messages in the past tense; one concern per commit; issue references as `Fixes #<n>`. Ask
   before committing.
 - CI (`.github/workflows/main.yml`) runs the shared workflow `viamedici-spc/github-ci` (`build-bun.yml`) once per
-  package: it verifies every push and publishes with npm trusted publishing — `main` as release candidates, `feature/*`
-  branches as prereleases under a dist-tag named after the branch, version tags as releases.
+  package: it verifies every push and pull request (a branch with an open pull request runs twice) and publishes, on a
+  push or a manual run only, with npm trusted publishing — `main` as release candidates, `feature/*` branches as
+  prereleases under a dist-tag named after the branch, version tags as releases.
+- Publishing runs in the GitHub environment `npm`, whose rules admit `main`, `feature/*`, `release/*`, `hotfix/*`,
+  `support/*` and version tags; npm accepts a publish of either package only from that environment.
+- Only repository admins create, move or delete version tags; a tag ruleset enforces it.
 - `prepack`/`postpack` copy the root `README.md` into each published package.
 
 ## This repository is public
