@@ -24,19 +24,19 @@ const ruleSortingTestCases = [
             },
             // Orders numbers with units like "10 ml" by unit
             {
-                regex: "^[0-9]+(?:\.[0-9])?[0-9]*([^0-9]+)$",
+                regex: "^[0-9]+(?:.[0-9])?[0-9]*([^0-9]+)$",
                 mode: "string",
                 direction: "asc"
             },
             // Orders numbers with units like "10 ml" by value
             {
-                regex: "^([0-9]+(?:\.[0-9])?[0-9]*)[^0-9.]",
+                regex: "^([0-9]+(?:.[0-9])?[0-9]*)[^0-9.]",
                 mode: "numeric",
                 direction: "asc"
             },
             // Orders pure numbers
             {
-                regex: "^[0-9]+(?:\.[0-9])?[0-9]*$",
+                regex: "^[0-9]+(?:.[0-9])?[0-9]*$",
                 mode: "numeric",
                 direction: "asc"
             },
@@ -67,7 +67,7 @@ describe("ChoiceValue Sorting tests", () => {
             it("Mode - isMatch", () => {
                 testSortingRule(
                     {
-                        regex: "^([0-9]+(?:\.[0-9])?[0-9]*)[^0-9]",
+                        regex: "^([0-9]+(?:.[0-9])?[0-9]*)[^0-9]",
                         mode: "isMatch"
                     },
                     ["87.78 l", "x87.78 l"],
@@ -80,7 +80,7 @@ describe("ChoiceValue Sorting tests", () => {
                 testSortingRule(
                     {
                         // Orders numbers with units like "10 ml" by value
-                        regex: "^([0-9]+(?:\.[0-9])?[0-9]*)[^0-9]",
+                        regex: "^([0-9]+(?:.[0-9])?[0-9]*)[^0-9]",
                         mode: "numeric"
                     },
                     ["87.78 l", "x87.78 l", "1000 l"],
@@ -93,7 +93,7 @@ describe("ChoiceValue Sorting tests", () => {
                 testSortingRule(
                     {
                         // Orders numbers with units like "10 ml" by unit
-                        regex: "^[0-9]+(?:\.[0-9])?[0-9]*([^0-9]+)$",
+                        regex: "^[0-9]+(?:.[0-9])?[0-9]*([^0-9]+)$",
                         mode: "string"
                     },
                     ["28 kg", "87.78 l", "51 cm", "92.72", "Apple"],

@@ -69,7 +69,7 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
 
 addPropertyControls(StoreConfiguration, propertyControls);
 
-function downloadJsonFile(data: Object, filename: string) {
+function downloadJsonFile(data: object, filename: string) {
     const json = JSON.stringify(data)
     const blob = new Blob([json], {type: "application/json"})
     const url = window.URL.createObjectURL(blob)
@@ -85,7 +85,7 @@ function downloadJsonFile(data: Object, filename: string) {
     window.URL.revokeObjectURL(url)
 }
 
-function copyJsonToClipboard(data: Object) {
+function copyJsonToClipboard(data: object) {
     const json = JSON.stringify(data)
     navigator.clipboard.writeText(json)
         .catch((error) => {

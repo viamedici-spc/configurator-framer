@@ -2,7 +2,7 @@ import type { PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer"
 import styled from "styled-components"
 import type { ComponentAttribute, ConfiguratorError} from "@viamedici-spc/configurator-ts";
-import {AttributeInterpreter, ComponentDecisionState, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
+import {ComponentDecisionState, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
 import {useComponentAttribute} from "@viamedici-spc/configurator-react"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import type { SelectProps} from "../props/selectProps";

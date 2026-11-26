@@ -1,5 +1,5 @@
 import type { CausedByDecision, ExplicitDecision} from "@viamedici-spc/configurator-ts";
-import {AttributeType, ComponentDecisionState, ExplainQuestionSubject} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ComponentDecisionState} from "@viamedici-spc/configurator-ts";
 import {match, P} from "ts-pattern";
 import type {ChoiceValueNames} from "../../../hooks/localization";
 import type {CommonExplainProps} from "../../../props/explain/commonExplainProps";

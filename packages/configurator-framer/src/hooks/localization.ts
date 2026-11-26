@@ -5,7 +5,7 @@ import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import type {LocalizableText, Localization} from "../props/localizationProps";
 import {useLocaleInfo} from "framer";
 import type { Option} from "@viamedici-spc/fp-ts-extensions";
-import {flow, O, pipe, RA, RM, RR} from "@viamedici-spc/fp-ts-extensions";
+import {flow, O, pipe, RA, RM} from "@viamedici-spc/fp-ts-extensions";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import useRequiredContext from "../common/useRequiredContext";
 

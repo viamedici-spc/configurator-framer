@@ -39,7 +39,7 @@ export default function ExplainController(props: PropsWithChildren<Props>) {
                     constraintExplanations: constraintExplanations
                 });
             }
-        } catch (e) {
+        } catch  {
             if (promiseRef == activePromiseRef.current) {
                 setExplainProcess({
                     controlId: controlId,

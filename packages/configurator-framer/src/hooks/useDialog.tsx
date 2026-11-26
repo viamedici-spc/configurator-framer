@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useClick, useDismiss, useFloating, useInteractions, useRole} from "@floating-ui/react";
+import {useClick, useDismiss, useFloating, useInteractions} from "@floating-ui/react";
 
 export interface DialogOptions {
     initialOpen?: boolean;

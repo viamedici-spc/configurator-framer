@@ -43,10 +43,10 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
         <Root style={{...getBoxStyle(explanationCard), ...getMarginStyle(explanationCard)}}>
             <List>
                 {causedByRules.map(r => (
-                    <li>
+                    <li key={r.configurationModelId}>
                         <span style={getTextStyle(constraintExplanation.configurationModelId)}>{r.configurationModelId}</span>
                         <SubList style={getTextStyle(constraintExplanation.ruleId)}>
-                            {r.rules.map(ruleId => <li>{ruleId}</li>)}
+                            {r.rules.map(ruleId => <li key={ruleId}>{ruleId}</li>)}
                         </SubList>
                     </li>
                 ))}
@@ -55,7 +55,7 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
                     <li style={getTextStyle(constraintExplanation.ruleId)}>
                         <span>Cardinality</span>
                         <SubList>
-                            {causedByCardinalities.map(c => <li>{c.localId}</li>)}
+                            {causedByCardinalities.map(c => <li key={c.localId}>{c.localId}</li>)}
                         </SubList>
                     </li>
                 )}

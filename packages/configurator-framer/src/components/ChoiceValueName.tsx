@@ -1,18 +1,14 @@
 import type { PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import type {ReactElement, ReactNode} from "react";
-import {cloneElement} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import type { AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {useChoiceValueName} from "../hooks/localization";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {Replacer} from "../common/react-element-replace/Replacer";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
 import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
-import normalizePropName from "../common/normalizePropName";
 import type { ReplaceTextProps} from "../props/replaceTextProps";
 import {replaceTextPropertyControls} from "../props/replaceTextProps";
 import ReplaceText from "./ReplaceText";
@@ -26,7 +22,7 @@ type Props = AttributeIdProps & ChoiceValueIdProps & ReplaceTextProps & {
  * @framerSupportedLayoutHeight any
  */
 const ChoiceValueName = withErrorBoundary((props: Props) => {
-    const {choiceValueId, children, customName, mode, replaceString, propName, elementName} = props;
+    const {choiceValueId, customName} = props;
     const globalAttributeId = parseGlobalAttributeId(props);
     const hasCustomName = customName != null && customName.length > 0;
     const hasChoiceValueId = choiceValueId.length > 0;

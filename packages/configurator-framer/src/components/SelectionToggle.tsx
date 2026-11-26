@@ -104,7 +104,6 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
         .with({isComponentAttribute: true, state: "excluded"}, () => ComponentDecisionState.Excluded)
         .otherwise(() => null)
 
-    const isToggleFromActive = isToggleStateActive(props.toggleFrom);
     const isToggleToActive = isToggleStateActive(props.toggleTo);
 
     const onClick = async () => {

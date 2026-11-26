@@ -20,7 +20,7 @@ type Props = AttributeIdProps & ReplaceTextProps & {
  * @framerSupportedLayoutHeight any
  */
 const AttributeName = withErrorBoundary((props: Props) => {
-    const {attributeId, children, customName} = props;
+    const {attributeId, customName} = props;
     const globalAttributeId = parseGlobalAttributeId(props);
     const hasCustomName = customName != null && customName.length > 0;
     const renderPlaceholder = useRenderPlaceholder();
