@@ -11,7 +11,7 @@ export default function withExplainPopover<T, TProps extends ExplainProps>(
         const renderPlaceholder = useRenderPlaceholder();
 
         if (props.explain !== "popover" || renderPlaceholder) {
-            return <Component {...(props as TProps)} />;
+            return <Component {...(props as TProps)} ref={ref} />;
         }
 
         return (

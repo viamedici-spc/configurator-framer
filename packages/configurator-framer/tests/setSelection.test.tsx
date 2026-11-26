@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {act} from "react";
+import {act, createRef} from "react";
 import SetSelection from "../src/components/SetSelection";
 import type {Rendered} from "./support/mocks";
 import {choiceAttribute, renderInConfiguration, resetSession, session} from "./support/mocks";
@@ -36,6 +36,25 @@ describe("SetSelection", () => {
 
         expect(rendered.container.textContent).toBe("Choice Value Id missing");
         expect(session.makeDecision).not.toHaveBeenCalled();
+    });
+
+    it("forwards its ref to the content when explain is not a popover", async () => {
+        const ref = createRef<HTMLElement>();
+        rendered = await renderInConfiguration(
+            <SetSelection
+                ref={ref}
+                {...attributeProps}
+                choiceValueId="Red"
+                setSelection="included"
+                numericValue={0}
+                attributeIds={[]}
+                explain="disabled"
+            >
+                <button>Select</button>
+            </SetSelection>,
+        );
+
+        expect(ref.current).toBe(rendered.container.querySelector("button"));
     });
 
     it("clears the choice attribute's decisions without a choice value id when set to undefined", async () => {
