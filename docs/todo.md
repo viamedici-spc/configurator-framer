@@ -28,6 +28,32 @@ status: living
     the select has no accessible label.
   **Waits on** a session with Framer open. **Done when** the three rules are on again and `bun run verify` passes.
 
+- [ ] **Follow the Rules of Hooks** (2026-11-26) — `react/rules-of-hooks` is not in oxlint's `correctness` category, so
+  the lint runs without it. Switched on, it reports 22 sites:
+  - Hooks after an early return, so a changed prop (in the editor, say) changes the number of hooks:
+    `packages/configurator-framer/src/hooks/localization.ts` (`useChoiceValueNames` returns before two `useMemo` for an
+    unknown attribute), `packages/configurator-framer/src/components/PropagateHeight.tsx`,
+    `packages/configurator-framer/src/components/StoreConfiguration.tsx`,
+    `packages/configurator-framer/src/components/SelectionIndicator.tsx`,
+    `packages/configurator-framer/src/components/InitializationError.tsx`,
+    `packages/configurator-framer/src/components/popover/PopoverClose.tsx`,
+    `packages/configurator-framer/src/components/explain/custom/explainPopover/ExplainContent.tsx`,
+    `packages/configurator-framer/src/props/useCommonExplainProps.tsx`.
+  - Hooks inside a helper function that runs only under a condition (a custom name, the canvas, a found attribute):
+    `packages/configurator-framer/src/components/AttributeName.tsx`,
+    `packages/configurator-framer/src/components/ChoiceValueName.tsx`,
+    `packages/configurator-framer/src/components/SelectedNumericValue.tsx`,
+    `packages/configurator-framer/src/components/SatisfactionIndicator.tsx`; and hooks inside the `match` callbacks of
+    `packages/configurator-framer/src/components/explain/styled/common/ExplainHeader.tsx`, which run per explain
+    subject.
+  - False positives: `packages/configurator-framer/src/hooks/useParseRawAttributeRelations.tsx`,
+    `packages/configurator-framer/src/hooks/useParseRawLocalization.tsx` and
+    `packages/configurator-framer/src/hooks/useParseRawChoiceValueSorting.tsx` create a hook at module level with
+    `useGenericParseRawData`.
+  A violation is fixed by calling the hooks before the condition, or by splitting the component in two: an outer one
+  that decides the placeholder and an inner one with the hooks. **Waits on** a session with Framer open, as the rules
+  above. **Done when** `react/rules-of-hooks` is on and `bun run verify` passes.
+
 ## Dependencies
 
 - [ ] **`framer` 3 for development** (2026-11-26) — version 3 changes the typings of property controls (FusedNumber
