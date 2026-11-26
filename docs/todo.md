@@ -54,6 +54,17 @@ status: living
   that decides the placeholder and an inner one with the hooks. **Waits on** a session with Framer open, as the rules
   above. **Done when** `react/rules-of-hooks` is on and `bun run verify` passes.
 
+## Release
+
+- [ ] **Call the shared workflow at `@v4`** (2026-11-26) — `.github/workflows/main.yml` (both jobs) calls
+  `build-bun.yml@feature/v4`, a branch; before merging into `main`, it calls the released `@v4`. **Waits on** the v4
+  release of github-ci. **Done when** the workflow names `@v4` and its run on `main` is green.
+- [ ] **fp-ts-extensions at its release** (2026-11-26) — `packages/configurator-framer/package.json` and
+  `packages/configurator-framer-bundle/package.json` pin the prerelease `2.0.0-modern-toolchain-20261126094931`; before
+  merging into `main`, they pin the released 2.0.0. **Waits on** the fp-ts-extensions 2.0.0 release. **Done when**
+  `packages/configurator-framer/package.json` and `packages/configurator-framer-bundle/package.json` name `2.0.0` and
+  `bun run verify` passes.
+
 ## Dependencies
 
 - [ ] **`framer` 3 for development** (2026-11-26) — version 3 changes the typings of property controls (FusedNumber
