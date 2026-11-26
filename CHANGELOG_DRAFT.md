@@ -9,6 +9,8 @@
 
 # Fixes
 
+## Installation and stability
+
 - **Installing the bundle with npm works again:** its package no longer has a `preinstall` script or a `file:`
   dependency, and the library no longer runs a `postinstall` script.
 - **No crash without an active locale:** localized names fall back to the default name when Framer reports no locale.
