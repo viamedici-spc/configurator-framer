@@ -22,7 +22,7 @@ type Props = AttributeIdProps & ReplaceTextProps & {
 const AttributeName = withErrorBoundary((props: Props) => {
     const {attributeId, children, customName} = props;
     const globalAttributeId = parseGlobalAttributeId(props);
-    const hasCustomName = customName?.length > 0 ?? false;
+    const hasCustomName = customName != null && customName.length > 0;
     const renderPlaceholder = useRenderPlaceholder();
 
     const getAttributeName = () => {

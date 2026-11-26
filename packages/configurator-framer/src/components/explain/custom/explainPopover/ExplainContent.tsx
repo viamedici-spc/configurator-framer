@@ -32,7 +32,7 @@ const ExplainContent = withErrorBoundary((props: PropsWithChildren<Props>) => {
     const explanation = process.decisionExplanations?.[0];
 
     return (
-        <decisionExplanationContext.Provider value={explanation}>
+        <decisionExplanationContext.Provider value={explanation ?? null}>
             <Inner {...props} hasError={process.hasError} hasSolution={Boolean(explanation?.solution)}/>
         </decisionExplanationContext.Provider>
     );

@@ -35,7 +35,7 @@ export function useGenericParseRawData<R, O>(name: string, zodType: ZodType<R>, 
             E.fromOption<ReactNode>(() => null),
             E.chain(flow(
                 json.parse,
-                E.mapLeft(l => "The JSON content could not be parsed. Please check for syntax errors.\n" + l.toString()),
+                E.mapLeft(l => "The JSON content could not be parsed. Please check for syntax errors.\n" + String(l)),
                 E.chain(o => pipe(
                     zodType.safeParse(o),
                     pr => pr.success ? E.right(pr.data) : E.left(pr.error),

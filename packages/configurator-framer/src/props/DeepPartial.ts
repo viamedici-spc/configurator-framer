@@ -6,4 +6,4 @@ type DeepPartial<T> = {
         : T[P];
 };
 
-export default DeepPartial;
+export type {DeepPartial as default};

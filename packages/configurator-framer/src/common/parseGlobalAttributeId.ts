@@ -5,6 +5,6 @@ export default function parseGlobalAttributeId(a: AttributeIdProps): GlobalAttri
     return {
         localId: a.attributeId,
         componentPath: a.componentPath === "" ? [] : a.componentPath?.split(" -> ") ?? [],
-        sharedConfigurationModelId: a.sharedConfigurationModel === "" ? null : a.sharedConfigurationModel,
+        sharedConfigurationModelId: a.sharedConfigurationModel === "" ? undefined : a.sharedConfigurationModel,
     };
 }

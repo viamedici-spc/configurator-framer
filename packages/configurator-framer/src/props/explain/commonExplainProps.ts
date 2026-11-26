@@ -55,7 +55,7 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         controls: {
             ...createExplainHeaderPropertyControls(defaults.header ?? {})
         },
-        hidden: (props) => props.useCustomExplain
+        hidden: (props) => props.useCustomExplain === true
     },
     attributeName: {
         title: "Attribute Name",
@@ -63,7 +63,7 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         controls: {
             ...createTextPropertyControls(defaults.attributeName ?? {})
         },
-        hidden: (props) => props.useCustomExplain
+        hidden: (props) => props.useCustomExplain === true
     },
     attributeValue: {
         title: "Attribute Value",
@@ -145,7 +145,7 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
             ...createButtonPropertyControls(defaults.applySolutionButton ?? {}),
             ...createMarginPropertyControls(defaults.applySolutionButton ?? {})
         },
-        hidden: (props) => props.useCustomExplain
+        hidden: (props) => props.useCustomExplain === true
     },
     closeButton: {
         title: "Close Button",
@@ -153,7 +153,7 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
         controls: {
             ...createButtonPropertyControls(defaults.closeButton ?? {})
         },
-        hidden: (props) => props.useCustomExplain
+        hidden: (props) => props.useCustomExplain === true
     },
     infoMessage: {
         title: "Info Message",
@@ -201,6 +201,6 @@ export const createCommonExplainPropertyControls = (defaults: DeepPartial<Common
                 defaultValue: defaults.infoMessage?.noSolutionFoundText ?? "There was no solution found for {{question}}."
             },
         },
-        hidden: (props) => props.useCustomExplain
+        hidden: (props) => props.useCustomExplain === true
     }
 }) satisfies PropertyControls<CommonExplainProps>;

@@ -1,6 +1,7 @@
 import type { PropertyControls} from "framer";
 import {ControlType} from "framer";
-import {createContext, useContext} from "react";
+import {createContext} from "react";
+import useRequiredContext from "../../common/useRequiredContext";
 import type {CommonExplainProps} from "./commonExplainProps";
 import { createCommonExplainPropertyControls} from "./commonExplainProps";
 import type {BoxProps} from "../boxProps";
@@ -240,5 +241,5 @@ export const explainDialogPropertyControls = {
     },
 } satisfies PropertyControls<ExplainDialogProps>;
 
-export const explainDialogPropsContext = createContext<ExplainDialogProps>(null);
-export const useExplainDialogProps = (): ExplainDialogProps => useContext(explainDialogPropsContext);
+export const explainDialogPropsContext = createContext<ExplainDialogProps | null>(null);
+export const useExplainDialogProps = (): ExplainDialogProps => useRequiredContext(explainDialogPropsContext, "ExplainDialog");

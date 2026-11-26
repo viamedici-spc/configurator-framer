@@ -111,6 +111,11 @@ function Arrow() {
     const {context, arrow} = usePopoverContext();
     const explainPopoverProps = useExplainPopoverProps();
 
+    // ExplainPopover always passes the arrow options to its Popover.
+    if (arrow == null) {
+        return null;
+    }
+
     return (
         <FloatingArrow style={getArrowStyle(explainPopoverProps)}
                        ref={arrow.element}

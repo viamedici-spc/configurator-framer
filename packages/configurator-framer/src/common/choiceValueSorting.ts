@@ -31,7 +31,7 @@ export const isMatchModeOrd = pipe(
 
 export const numericModeOrd = Num.Ord;
 
-export function getOrdForAttribute(attributeId: GlobalAttributeId, sorting: ChoiceValueSorting): OrdT<ChoiceValueId> {
+export function getOrdForAttribute(attributeId: GlobalAttributeId, sorting: ChoiceValueSorting | null): OrdT<ChoiceValueId> {
     return pipe(
         sorting?.attributes ?? [],
         RA.findFirst(a => globalAttributeIdEq.equals(parseGlobalAttributeId(a), attributeId)),
@@ -133,7 +133,7 @@ export function getSomeAlwaysOnTopOrd<T>(ord: OrdT<T>): OrdT<Option<T>> {
 }
 
 export function applyDirection(direction: SortingRule["direction"]): <T>(ord: OrdT<T>) => OrdT<T> {
-    return <T>(ord) => match(direction)
+    return <T>(ord: OrdT<T>) => match(direction)
         .returnType<OrdT<T>>()
         .with("asc", () => ord)
         .with("desc", () => Ord.reverse(ord))

@@ -90,7 +90,7 @@ function Inner(props: { style?: CSSProperties, children: ReactNode }) {
     );
 }
 
-function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string }) {
+function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string | null }) {
     const {attribute, itemTemplate, controlId} = props;
     const attributeName = useAttributeName(attribute.attributeId) ?? attribute.attributeId.localId;
     const choiceValueNames = useChoiceValueNames(attribute.attributeId);
@@ -117,7 +117,7 @@ function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElem
     );
 }
 
-function AttributePlaceholder(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string }) {
+function AttributePlaceholder(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string | null }) {
     const {attribute, itemTemplate, controlId} = props;
     const {attributeId, componentPath, sharedConfigurationModel} = mapAttributeId(attribute.attributeId);
     const attributeName = attributeId;
@@ -136,14 +136,14 @@ function createPlaceholderAttributes(): ReadonlyArray<ExplainAttribute> {
     const makeAttributeId = (localId: string): GlobalAttributeId => ({
         localId,
         componentPath: [],
-        sharedConfigurationModelId: null
-    } as GlobalAttributeId);
+        sharedConfigurationModelId: undefined
+    });
 
     return pipe(
         ["Attribute A", "Attribute B", "Attribute C"],
         RA.map(id => {
             const attributeId = makeAttributeId(id);
-            const decisions = [];
+            const decisions: ExplainAttribute["decisions"] = [];
             return {key: id, attributeId, decisions};
         })
     )

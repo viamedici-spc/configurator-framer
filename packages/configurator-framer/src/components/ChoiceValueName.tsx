@@ -1,7 +1,8 @@
 import type { PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer"
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {cloneElement, ReactElement, ReactNode} from "react";
+import type {ReactElement, ReactNode} from "react";
+import {cloneElement} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import type { AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
@@ -27,7 +28,7 @@ type Props = AttributeIdProps & ChoiceValueIdProps & ReplaceTextProps & {
 const ChoiceValueName = withErrorBoundary((props: Props) => {
     const {choiceValueId, children, customName, mode, replaceString, propName, elementName} = props;
     const globalAttributeId = parseGlobalAttributeId(props);
-    const hasCustomName = customName.length > 0;
+    const hasCustomName = customName != null && customName.length > 0;
     const hasChoiceValueId = choiceValueId.length > 0;
     const renderPlaceholder = useRenderPlaceholder();
 

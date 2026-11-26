@@ -16,8 +16,8 @@ type Props = {
  * @framerSupportedLayoutHeight any
  */
 const Colorize = withErrorBoundary((props: PropsWithChildren<Props>) => {
-    const rootRef = useRef<HTMLDivElement>();
-    const [renderedColor, setRenderedColor] = useState(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const [renderedColor, setRenderedColor] = useState<string | null>(null);
     const lastRenderedColor = useRef(renderedColor);
 
     const useRenderedColor = useMemo(() => props.color.startsWith("var"), [props.color]);

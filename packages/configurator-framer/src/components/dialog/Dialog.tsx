@@ -5,7 +5,7 @@ import useDialog from "../../hooks/useDialog";
 
 type ContextType = ReturnType<typeof useDialog>;
 
-const DialogContext = React.createContext<ContextType>(null);
+const DialogContext = React.createContext<ContextType | null>(null);
 
 export const useDialogContext = () => {
     const context = React.useContext(DialogContext);

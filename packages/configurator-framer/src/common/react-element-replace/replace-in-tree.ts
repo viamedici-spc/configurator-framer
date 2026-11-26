@@ -54,7 +54,7 @@ export function replaceInTree<S = any>(
             visit(
                 element: React.ReactNode,
                 state: S,
-                children: ChildrenFunc<React.ReactNode, S>
+                children?: ChildrenFunc<React.ReactNode, S>
             ): React.ReactNode {
                 const newState = updateState ? updateState(state as any) : state;
                 const resolvedChildren = children ? children(newState) : undefined;

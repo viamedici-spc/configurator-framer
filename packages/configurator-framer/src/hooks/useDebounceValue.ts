@@ -4,7 +4,7 @@ import {useForceUpdate} from "framer-motion";
 
 export default function useDebounceValue<TValue>(sourceValue: TValue, setSourceValue: (value: TValue) => void, inputValue: TValue, setInputValue: (value: TValue) => void, wait: number = 1000) {
     const [forceUpdate] = useForceUpdate();
-    const debounced = useDebouncedCallback(v => {
+    const debounced = useDebouncedCallback((v: TValue) => {
         setSourceValue(v);
         forceUpdate();
     }, wait);

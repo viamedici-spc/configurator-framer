@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import AttributeList from "../common/AttributeList";
 import ShowMoreButton from "./ShowMoreButton";
 import ApplySolutionButton from "../common/ApplySolutionButton";
@@ -55,7 +55,7 @@ const StyledInfoMessage = styled(InfoMessage)`
 `
 
 export default function ExplainContent() {
-    const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {decisionExplanations, constraintExplanations, hasError} = useOngoingExplainProcess();
     const {subline} = useExplainPopoverProps();
 
     if (hasError) {

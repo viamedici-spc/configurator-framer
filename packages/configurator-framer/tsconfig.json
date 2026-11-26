@@ -8,8 +8,7 @@
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "strict": false,
-    "strictNullChecks": false,
+    "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": []

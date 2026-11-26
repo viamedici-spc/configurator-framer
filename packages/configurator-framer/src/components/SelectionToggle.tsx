@@ -10,7 +10,7 @@ import type { AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
 import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {useControlId} from "../common/controlId";
@@ -67,16 +67,21 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
         return <span>Numeric Attribute is not supported</span>;
     }
 
-    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
+    let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
 
-    const isToggleStateActive = (state: SelectionState) => match({state, attribute})
+    // Toggling a choice attribute needs a choice value; without one there is nothing to toggle.
+    if (isChoiceAttribute && choiceValue == null) {
+        return <span>Choice Value Id missing</span>;
+    }
+
+    const isToggleStateActive = (state: SelectionState) => match({state, attribute, choiceValue})
         // Choice
-        .with({attribute: {type: AttributeType.Choice}, state: "undefined"}, () => choiceValue.decision == null)
-        .with({attribute: {type: AttributeType.Choice}, state: "included"}, () => choiceValue.decision?.state === ChoiceValueDecisionState.Included && choiceValue.decision?.kind === DecisionKind.Explicit)
-        .with({attribute: {type: AttributeType.Choice}, state: "excluded"}, () => choiceValue.decision?.state === ChoiceValueDecisionState.Excluded && choiceValue.decision?.kind === DecisionKind.Explicit)
+        .with({attribute: {type: AttributeType.Choice}, choiceValue: P.nonNullable, state: "undefined"}, ({choiceValue}) => choiceValue.decision == null)
+        .with({attribute: {type: AttributeType.Choice}, choiceValue: P.nonNullable, state: "included"}, ({choiceValue}) => choiceValue.decision?.state === ChoiceValueDecisionState.Included && choiceValue.decision?.kind === DecisionKind.Explicit)
+        .with({attribute: {type: AttributeType.Choice}, choiceValue: P.nonNullable, state: "excluded"}, ({choiceValue}) => choiceValue.decision?.state === ChoiceValueDecisionState.Excluded && choiceValue.decision?.kind === DecisionKind.Explicit)
 
         // Boolean, Component
         .with({attribute: {type: AttributeType.Boolean}, state: "undefined"}, {attribute: {type: AttributeType.Component}, state: "undefined"}, ({attribute}) => attribute.decision == null)
@@ -108,7 +113,7 @@ const SelectionToggle = explainableComponent<HTMLElement, PropsWithChildren<Prop
 
         const isComponentStatePossible = isComponentAttribute ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState) : false;
         const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
-        const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
+        const isChoiceValueStatePossible = choiceValue != null && choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState);
         const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
 
         // An immutable attribute / choice value can never change. Acting on it is

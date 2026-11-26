@@ -75,7 +75,7 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     };
 
     const onChange = async (optionValue: string) => {
-        const hasExplicitDecision = attribute.decision?.kind === DecisionKind.Explicit ?? false;
+        const hasExplicitDecision = attribute.decision?.kind === DecisionKind.Explicit;
         if (optionValue === resetValue && hasExplicitDecision) {
             await makeDecision(undefined);
         } else if (optionValue === includedValue) {

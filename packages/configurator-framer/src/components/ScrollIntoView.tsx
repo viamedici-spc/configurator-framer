@@ -21,12 +21,13 @@ export default function ScrollIntoView(props: Props) {
     const rootRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!rootRef.current) {
+        const root = rootRef.current;
+        if (!root) {
             return;
         }
 
         const timeout = setTimeout(() => {
-            rootRef.current.scrollIntoView();
+            root.scrollIntoView();
         }, props.delay)
 
         return () => clearTimeout(timeout);

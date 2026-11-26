@@ -1,4 +1,4 @@
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import {match, P} from "ts-pattern";
 import type {HTMLProps, ReactNode} from "react";
 import {ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
@@ -10,7 +10,7 @@ type Variant = 'failedToExplain' | 'noExplanationFound' | 'noSolutionFound';
 
 export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant: Variant }) {
     const {variant, ...restProps} = props;
-    const {explainQuestion} = useExplainProcess();
+    const {explainQuestion} = useOngoingExplainProcess();
     const {infoMessage} = useCommonExplainProps();
 
     const question = match(explainQuestion)

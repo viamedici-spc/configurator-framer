@@ -84,7 +84,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
     const p = Object.assign({}, props, propOverrides) as PropsWithChildren<ConfigurationProps>;
 
     const {activeLocale} = useLocaleInfo();
-    const localeCode = activeLocale.code;
+    const localeCode = activeLocale?.code;
 
     useEffect(() => {
         console.info("[Configuration] Current locale code:", localeCode)
@@ -117,19 +117,19 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
             p.choiceValueSorting as ChoiceValueSorting,
             E.fromNullable<ReactNode>(null)
         )),
-        E.getOrElse(() => ({
+        E.getOrElse((): ChoiceValueSorting => ({
             attributes: [],
             defaultRules: []
-        } satisfies ChoiceValueSorting))
+        }))
     ), [parsedRawChoiceValueSorting, p.choiceValueSorting]);
 
     const parsedRawLocalization = useParseRawLocalization(p.localization?.jsonDefinition);
     const resolvedLocalization = useMemo<Localization>(() => pipe(
         parsedRawLocalization,
-        E.getOrElse(() => ({
+        E.getOrElse((): Localization => ({
             attributes: [],
             choiceValues: []
-        } satisfies Localization))
+        }))
     ), [parsedRawLocalization]);
 
     const wizardAttributeRelations = pipe(
@@ -151,8 +151,9 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
     const sessionContext = useMemo(() => ({
         apiBaseUrl: urlJoin(p.hcaBaseUrl, "api", "engine"),
         sessionInitialisationOptions: match(p.sessionCreation)
-            .with("client-side", () => ({accessToken: p.accessToken}) satisfies ClientSideSessionInitialisationOptions)
-            .with("server-side", () => ({sessionCreateUrl: p.sessionCreateUrl}) satisfies ServerSideSessionInitialisationOptions)
+            // Framer passes the String control's value. An empty control is handed on unchanged.
+            .with("client-side", () => ({accessToken: p.accessToken as string}) satisfies ClientSideSessionInitialisationOptions)
+            .with("server-side", () => ({sessionCreateUrl: p.sessionCreateUrl as string}) satisfies ServerSideSessionInitialisationOptions)
             .exhaustive(),
         configurationModelSource: {
             type: ConfigurationModelSourceType.Channel,
@@ -293,7 +294,8 @@ addPropertyControls(Configuration, {
     attributeRelations: {
         title: "Attribute Relations",
         type: ControlType.Object,
-        defaultValue: null,
+        // Framer's type has no null here; the control passes null as its default.
+        defaultValue: null as unknown as undefined,
         buttonTitle: "Definition…",
         controls: {
             jsonDefinition: {

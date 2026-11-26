@@ -10,7 +10,8 @@ import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
 import {getItemTemplate} from "../../../../common/listRenderer";
 import {mapAttributeId} from "../../../../common/RawDataParsing";
-import {ComponentDecisionState, ExplainQuestion, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
+import type {ExplainQuestion} from "@viamedici-spc/configurator-ts";
+import {ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
 
 type Props = {
@@ -119,7 +120,7 @@ function buildQuestionProps(question: ExplainQuestion) {
     };
 }
 
-function renderPlaceholderItem(itemTemplate: ReactElement, controlId: string) {
+function renderPlaceholderItem(itemTemplate: ReactElement, controlId: string | null) {
     const layoutId = `${controlId}_placeholder`;
     return cloneElement(itemTemplate, {
         key: layoutId,

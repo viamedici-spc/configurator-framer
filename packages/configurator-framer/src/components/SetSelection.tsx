@@ -68,7 +68,7 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
         return <span>Attribute is not a Choice Attribute</span>;
     }
 
-    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
+    let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
@@ -87,7 +87,8 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
     const onClick = async () => {
         if (isChoiceAttribute && !hasChoiceValueId && props.setSelection === "undefined") {
             try {
-                await choiceAttribute.clearDecisions();
+                // Defined: useAttributes found this attribute as a choice attribute.
+                await choiceAttribute!.clearDecisions();
             } catch {
                 showMakeDecisionFailure();
             }
@@ -95,7 +96,7 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
             const targetDecision = mapSelectionStateToDecision();
             const isComponentStatePossible = isComponentAttribute ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState) : false;
             const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
-            const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
+            const isChoiceValueStatePossible = choiceValue != null && choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState);
             const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
 
             // An immutable attribute / choice value can never change. Acting on it is

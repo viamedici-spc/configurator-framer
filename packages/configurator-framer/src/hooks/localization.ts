@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo} from "react";
+import {createContext, useMemo} from "react";
 import type {ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 import { globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
@@ -7,14 +7,15 @@ import {useLocaleInfo} from "framer";
 import type { Option} from "@viamedici-spc/fp-ts-extensions";
 import {flow, O, pipe, RA, RM, RR} from "@viamedici-spc/fp-ts-extensions";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
+import useRequiredContext from "../common/useRequiredContext";
 
-export const localizationContext = createContext<Localization>(null);
+export const localizationContext = createContext<Localization | null>(null);
 export type ChoiceValueNames = ReadonlyMap<ChoiceValueId, string>;
 
 export function useAttributeName(attributeId: GlobalAttributeId): string | undefined {
-    const {attributes} = useContext(localizationContext);
+    const {attributes} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();
-    const localeCode = activeLocale.code;
+    const localeCode = activeLocale?.code;
 
     return useMemo(() => pipe(
         attributes,
@@ -28,7 +29,7 @@ export function useAttributeName(attributeId: GlobalAttributeId): string | undef
 }
 
 export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValueNames {
-    const {choiceValues: choiceValueLocalizations} = useContext(localizationContext);
+    const {choiceValues: choiceValueLocalizations} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();
     const choiceAttribute = useChoiceAttribute(attributeId);
     if (!choiceAttribute) {
@@ -41,7 +42,7 @@ export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValue
         RA.filter(c => globalAttributeIdEq.equals(parseGlobalAttributeId(c), attributeId))
     ), [choiceValueLocalizations, attributeId.localId, attributeId.componentPath, attributeId.sharedConfigurationModelId]);
 
-    const localeCode = activeLocale.code;
+    const localeCode = activeLocale?.code;
     const values = choiceAttribute.attribute.values;
 
     return useMemo(() => pipe(
@@ -59,9 +60,9 @@ export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValue
 }
 
 export function useChoiceValueName(attributeId: GlobalAttributeId, choiceValueId: ChoiceValueId): string | undefined {
-    const {choiceValues} = useContext(localizationContext);
+    const {choiceValues} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();
-    const localeCode = activeLocale.code;
+    const localeCode = activeLocale?.code;
 
     return useMemo(() => pipe(
         choiceValues,
@@ -75,9 +76,9 @@ export function useChoiceValueName(attributeId: GlobalAttributeId, choiceValueId
 }
 
 
-function getLocalizedName(localeCode: string): (name: LocalizableText) => Option<string> {
+function getLocalizedName(localeCode: string | undefined): (name: Readonly<LocalizableText>) => Option<string> {
     return flow(
-        RA.findFirst(l => l.localeCode.localeCompare(localeCode, undefined, {sensitivity: "accent"}) === 0),
+        RA.findFirst(l => localeCode != null && l.localeCode.localeCompare(localeCode, undefined, {sensitivity: "accent"}) === 0),
         O.map(l => l.translation)
     );
 }

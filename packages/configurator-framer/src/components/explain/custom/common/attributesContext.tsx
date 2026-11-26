@@ -10,7 +10,7 @@ export type AttributesContext = {
     choiceValueNames: ChoiceValueNames
 };
 
-const attributesContext = createContext<AttributesContext>(null);
+const attributesContext = createContext<AttributesContext | null>(null);
 
 export function useAttributesContext() {
     return useContext(attributesContext);

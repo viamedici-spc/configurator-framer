@@ -14,9 +14,9 @@ type Props = {
 }
 
 export default function ExplainController(props: PropsWithChildren<Props>) {
-    const [explainProcess, setExplainProcess] = useState<ExplainProcess>(null);
+    const [explainProcess, setExplainProcess] = useState<ExplainProcess | null>(null);
     const {explain, applySolution} = useExplain();
-    const activePromiseRef = useRef<string>(null);
+    const activePromiseRef = useRef<string | null>(null);
 
     const evaluatePromise = useCallback(async (lazyPromise: () => Promise<DecisionsExplainAnswer | ConstraintsExplainAnswer>, question: ExplainQuestion | null, displayMode: DisplayMode, controlId: string | null): Promise<void> => {
         const promiseRef = guid();
@@ -53,16 +53,16 @@ export default function ExplainController(props: PropsWithChildren<Props>) {
         }
     }, []);
 
-    const explainFn = useCallback<ExplainContext["explain"]>((question: ExplainQuestionParam, displayMode: DisplayMode, controlId?: string) => {
+    const explainFn = useCallback<ExplainContext["explain"]>((question: ExplainQuestionParam, displayMode: DisplayMode, controlId?: string | null) => {
         const explainQuestion = typeof question === "function" ? question(explainQuestionBuilder) : question;
         return evaluatePromise(() => props.explainConstraints
                 ? explain(explainQuestion, "full")
                 : explain(explainQuestion, "decisions"),
-            explainQuestion, displayMode, controlId);
+            explainQuestion, displayMode, controlId ?? null);
     }, [props.explainConstraints, explain, evaluatePromise]);
 
-    const handleExplainAnswerFn = useCallback<ExplainContext["handleExplainAnswer"]>((explainAnswer: DecisionsExplainAnswer, displayMode: DisplayMode, controlId?: string) =>
-            evaluatePromise(() => Promise.resolve(explainAnswer), null, displayMode, controlId),
+    const handleExplainAnswerFn = useCallback<ExplainContext["handleExplainAnswer"]>((explainAnswer: DecisionsExplainAnswer, displayMode: DisplayMode, controlId?: string | null) =>
+            evaluatePromise(() => Promise.resolve(explainAnswer), null, displayMode, controlId ?? null),
         [evaluatePromise]);
 
     const dismiss = useCallback<ExplainContext["dismiss"]>(() => {

@@ -1,6 +1,6 @@
 import type {ExplainContext} from "../common/explain";
 import { explainContext} from "../common/explain";
-import {useContext} from "react";
+import useRequiredContext from "../common/useRequiredContext";
 
 export type UseExplainResult = {
     explain: ExplainContext["explain"],
@@ -8,7 +8,7 @@ export type UseExplainResult = {
 };
 
 export default function useExplain(): UseExplainResult {
-    const {explain, handleExplainAnswer} = useContext(explainContext);
+    const {explain, handleExplainAnswer} = useRequiredContext(explainContext, "Configuration");
 
     return {
         explain: explain,

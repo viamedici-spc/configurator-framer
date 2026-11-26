@@ -69,7 +69,8 @@ const MotionOverlay = styled(motion(FloatingOverlay))`
     ${defaultOverlayStyle}
 `
 
-function Overlay(props: ComponentPropsWithoutRef<typeof MotionOverlay>) {
+// The HTML drag and animation handlers clash with the motion handlers of the same name. DialogContent passes none of them.
+function Overlay(props: Omit<ComponentPropsWithoutRef<typeof FloatingOverlay>, "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart">) {
     return (
         <MotionOverlay {...props}
                        initial={{backgroundColor: "rgba(0,0,0,0)"}}

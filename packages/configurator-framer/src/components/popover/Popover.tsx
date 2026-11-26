@@ -5,7 +5,7 @@ import usePopover from "../../hooks/usePopover";
 
 type ContextType = ReturnType<typeof usePopover>;
 
-const PopoverContext = createContext<ContextType>(null);
+const PopoverContext = createContext<ContextType | null>(null);
 
 export const usePopoverContext = () => {
     const context = useContext(PopoverContext);

@@ -5,6 +5,6 @@ export function globalAttributeIdToString(attributeId: GlobalAttributeId): strin
     const componentPath = (attributeId.componentPath ?? []).join("::");
 
     return [sharedModel, componentPath, attributeId.localId]
-        .filter(s => s?.length > 0)
+        .filter(s => (s?.length ?? 0) > 0)
         .join("::");
 }

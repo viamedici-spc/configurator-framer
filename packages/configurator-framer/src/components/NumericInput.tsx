@@ -62,12 +62,13 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
     const [valueInput, setValueInput] = useState(value);
     const {min, max} = attribute.range;
 
-    const setSourceValue = async (value: number) => {
-        if (value < min) {
+    // An empty input passes undefined, which removes the decision.
+    const setSourceValue = async (value: number | undefined) => {
+        if (value != null && value < min) {
             alert(`The value must be greater than or equal to ${min}.`)
             return;
         }
-        if (value > max) {
+        if (value != null && value > max) {
             alert(`The value must be smaller than or equal to ${max}.`)
             return;
         }
@@ -79,7 +80,8 @@ const NumericInput = explainableComponent<NumberFormat<unknown>, Props>((props, 
             const isValueNotPossible = error.type === ConfiguratorErrorType.SetDecisionConflict;
             if (!isValueNotPossible) {
                 showMakeDecisionFailure();
-            } else if (props.explain !== "disabled") {
+            } else if (props.explain !== "disabled" && value != null) {
+                // Removing a decision (value undefined) cannot conflict, so there is nothing to explain then.
                 await explain(b => b.whyIsStateNotPossible.numeric(attribute.id).state(value), props.explain, controlId);
             }
         }

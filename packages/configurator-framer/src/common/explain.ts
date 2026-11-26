@@ -14,21 +14,26 @@ export type ExplainProcess = {
      * Is Null if no controlId was provided.
      */
     controlId: string | null,
-    hasError: boolean,
+} & ({
+    hasError: false,
+    decisionExplanations: ReadonlyArray<DecisionExplanation>,
+    constraintExplanations: ReadonlyArray<ConstraintExplanation>,
+} | {
+    hasError: true,
     /**
      * Is Null in case of an error.
      */
-    decisionExplanations: ReadonlyArray<DecisionExplanation> | null,
+    decisionExplanations: null,
     /**
      * Is Null in case of an error.
      */
-    constraintExplanations: ReadonlyArray<ConstraintExplanation> | null,
-};
+    constraintExplanations: null,
+});
 
 export type ExplainContext = {
     switchMode: (displayMode: DisplayMode) => void,
-    explain: (question: ExplainQuestionParam, displayMode: DisplayMode, controlId?: string) => Promise<void>,
-    handleExplainAnswer: (explainAnswer: DecisionsExplainAnswer, displayMode: DisplayMode, controlId?: string) => Promise<void>,
+    explain: (question: ExplainQuestionParam, displayMode: DisplayMode, controlId?: string | null) => Promise<void>,
+    handleExplainAnswer: (explainAnswer: DecisionsExplainAnswer, displayMode: DisplayMode, controlId?: string | null) => Promise<void>,
     applySolution: UseExplainResult["applySolution"],
     dismiss: () => void,
     /**
@@ -37,4 +42,4 @@ export type ExplainContext = {
     process: ExplainProcess | null,
 };
 
-export const explainContext = createContext<ExplainContext>(null);
+export const explainContext = createContext<ExplainContext | null>(null);

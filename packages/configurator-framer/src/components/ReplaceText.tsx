@@ -1,5 +1,5 @@
 import type { ReactElement} from "react";
-import {cloneElement} from "react";
+import {cloneElement, isValidElement} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import {Replacer} from "../common/react-element-replace/Replacer";
 import normalizePropName from "../common/normalizePropName";
@@ -21,7 +21,7 @@ const ReplaceText = withErrorBoundary((props: Props) => {
         )
     } else if (mode === "set-prop") {
         return (
-            <Replacer match={(e: ReactElement) => (e.type as any)?.displayName === elementName}
+            <Replacer match={n => isValidElement(n) && (n.type as any)?.displayName === elementName}
                       replace={(element: ReactElement) => cloneElement(element, {[normalizePropName(propName)]: text})}>
                 {children}
             </Replacer>

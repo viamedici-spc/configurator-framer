@@ -94,7 +94,7 @@ function Inner(props: { style?: CSSProperties, children: ReactNode }) {
     );
 }
 
-function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string): ReactNode {
+function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string | null): ReactNode {
     const items = [
         {displayName: "Value A", intention: "add" as DecisionIntention},
         {displayName: "Value B", intention: "remove" as DecisionIntention},

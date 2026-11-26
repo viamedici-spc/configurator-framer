@@ -53,7 +53,8 @@ export const choiceValueSortingPropertyControls = {
     choiceValueSorting: {
         title: "Choice Value Sorting",
         type: ControlType.Object,
-        defaultValue: null,
+        // Framer's type has no null here; the control passes null as its default.
+        defaultValue: null as unknown as undefined,
         buttonTitle: "Definition…",
         controls: {
             defaultRules: {

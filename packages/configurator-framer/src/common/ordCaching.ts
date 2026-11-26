@@ -33,7 +33,8 @@ export function createOrdCache<T>(eq: EqT<T>, ord: OrdT<T>): OrdCache<T> {
 }
 
 export function createOrdCacheProvider(): OrdCacheProvider {
-    const caches: { eq: EqT<unknown>, ord: OrdT<unknown>, ordCache: OrdCache<unknown> }[] = [];
+    // eq and ord only serve as identity keys; an entry found by them holds the OrdCache of the same T.
+    const caches: { eq: unknown, ord: unknown, ordCache: unknown }[] = [];
 
     return {
         getCache: <T>(eq: EqT<T>, ord: OrdT<T>) => {

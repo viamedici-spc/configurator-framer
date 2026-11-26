@@ -175,7 +175,7 @@ function readFromClipboard(): TaskEither<Error, string> {
 function loadStoredConfiguration(source: "file" | "clipboard", fileExtension: string): Promise<Option<StoredConfiguration>> {
     return pipe(
         source === "file" ? openFile(fileExtension) : readFromClipboard(),
-        TE.chainEitherK(a => E.tryCatch(() => JSON.parse(a) as StoredConfigurationEnvelop, () => Error.parseError)),
+        TE.chainEitherK(a => E.tryCatch(() => JSON.parse(a) as StoredConfigurationEnvelop, (): Error => Error.parseError)),
         TE.filterOrElse(s => s.type === "spc-stored-configuration", () => Error.noConfiguration),
         TE.map(s => s.storedConfiguration),
         TE.doIfLeft(e => () => {

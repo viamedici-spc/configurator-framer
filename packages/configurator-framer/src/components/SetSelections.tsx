@@ -85,7 +85,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
             };
         }
 
-        let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
+        let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
         if (hasChoiceValueId && choiceValue == null) {
             return {
                 error: <span>Choice Value not found</span>
@@ -133,7 +133,8 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
 
 
     const trigger = async () => {
-        const decisions = attributes.reduce((xs, x) => [...xs, ...x.getDecisions()], new Array<ExplicitDecision>());
+        // Every entry has getDecisions here, since entries with an error returned above.
+        const decisions = attributes.reduce((xs, x) => [...xs, ...(x.getDecisions?.() ?? [])], new Array<ExplicitDecision>());
         const mode: MakeManyDecisionsMode = match(props.existingSelections)
             .with("keep", () => ({type: "KeepExistingDecisions"}) satisfies KeepExistingDecisionsMode)
             .with("drop", () => ({

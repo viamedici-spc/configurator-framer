@@ -28,7 +28,7 @@ export default function ApplySolutionButton(props: Props) {
     const {applySolutionButton} = useCommonExplainProps();
 
     return (
-        <Root {...restProps} onClick={() => process.applySolution(explanation.solution)} style={{
+        <Root {...restProps} onClick={() => process?.applySolution(explanation.solution)} style={{
             ...getButtonStyle(applySolutionButton),
             ...getMarginStyle(applySolutionButton)
         }}>

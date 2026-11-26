@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import DecisionExplanation from "./DecisionExplanation";
 import ConstraintExplanation from "./ConstraintExplanation";
 import InfoMessage from "../common/InfoMessage";
@@ -29,7 +29,7 @@ const StyledInfoMessage = styled(InfoMessage)`
 `
 
 export default function ExplainContent() {
-    const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {decisionExplanations, constraintExplanations, hasError} = useOngoingExplainProcess();
     const {decisionExplanationSolutionsTitle, constraintExplanationSolutionsTitle} = useExplainDialogProps();
 
     if (hasError) {

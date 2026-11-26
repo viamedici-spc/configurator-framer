@@ -1,4 +1,4 @@
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import {match} from "ts-pattern";
 import {ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ const Value = styled.span`
 `
 
 export default function ExplainHeader(props: HTMLProps<HTMLDivElement>) {
-    const {explainQuestion} = useExplainProcess();
+    const {explainQuestion} = useOngoingExplainProcess();
     const {header, attributeValue} = useCommonExplainProps();
 
     if (!explainQuestion) {

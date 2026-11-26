@@ -6,7 +6,7 @@ type SingletonCandidate = {
 }
 
 type Singleton = {
-    chosen: SingletonCandidate
+    chosen: SingletonCandidate | null
     candidates: Set<SingletonCandidate>
 }
 

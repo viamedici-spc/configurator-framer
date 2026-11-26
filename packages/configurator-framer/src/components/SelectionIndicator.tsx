@@ -80,7 +80,7 @@ const SelectionIndicator = withErrorBoundary(forwardRef<HTMLElement, Props>(func
         return <span>Attribute is not a Choice Attribute</span>;
     }
 
-    const choiceValue: ChoiceValue = isChoiceAttribute && hasChoiceValueId ? attribute.values.get(choiceValueId) : null;
+    const choiceValue: ChoiceValue | null | undefined = isChoiceAttribute && hasChoiceValueId ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
