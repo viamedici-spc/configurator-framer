@@ -10,13 +10,16 @@
 
 ## Introduction
 
-The Configurator Components Library is a set of headless UI components that form the foundation of the [Configurator UIKit](https://spc-configurator-uikit.framer.ai/) for Framer.
+The Configurator Components Library is a set of headless UI components that form the foundation of the
+[Configurator UIKit](https://spc-configurator-uikit.framer.ai/) for Framer.
 
-These React-based UI components are optimized for seamless integration within Framer, while also being fully compatible with standalone React applications (React 18.2 or 19, through a bundler). Both packages ship ES modules only.
+These React-based UI components are optimized for seamless integration within Framer, while also being fully compatible
+with standalone React applications (React 18.2 or 19, through a bundler). Both packages ship ES modules only.
 
 ## Installation
 
-To integrate the UI components into a Framer application, start by creating a new code file (e.g. `ConfiguratorLib`). Import the `@viamedici-spc/configurator-framer-bundle` package and export the components you need.
+To integrate the UI components into a Framer application, start by creating a new code file (e.g. `ConfiguratorLib`).
+Import the `@viamedici-spc/configurator-framer-bundle` package and export the components you need.
 
 The exported components will then be available in the assets panel as local components.
 
@@ -41,11 +44,16 @@ bun add @viamedici-spc/configurator-framer react framer
 
 ### Why Use the Bundle?
 
-Framer allows direct importing of npm packages, such as `@viamedici-spc/configurator-framer`, as long as the package and all its dependencies are compliant with the JavaScript Module System. Framer resolves dependencies for you behind the scenes.
+Framer allows direct importing of npm packages, such as `@viamedici-spc/configurator-framer`, as long as the package and
+all its dependencies are compliant with the JavaScript Module System. Framer resolves dependencies for you behind the
+scenes.
 
-However, there is a limitation: you don't have control over the version of the referenced package. Once imported, updating to a newer version becomes impossible. Hopefully Framer supports version selection in the future.
+However, there is a limitation: you don't have control over the version of the referenced package. Once imported,
+updating to a newer version becomes impossible. Hopefully Framer supports version selection in the future.
 
-To address this, the library is also provided as a bundled package with all dependencies integrated. This allows you to directly import the hosted `index.js` module (for example via jsDelivr), ensuring version control and easier updates. If Framer adds granular version selection later, direct package imports can become the preferred path again.
+To address this, the library is also provided as a bundled package with all dependencies integrated. This allows you to
+directly import the hosted `index.js` module (for example via jsDelivr), ensuring version control and easier updates. If
+Framer adds granular version selection later, direct package imports can become the preferred path again.
 
 The bundle ships no type declarations: in Framer, URL imports get no types. TypeScript projects use the
 `@viamedici-spc/configurator-framer` package.
