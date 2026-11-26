@@ -8,6 +8,11 @@ export type UseExplainProcessResult = ExplainProcess & {
     dismiss: ExplainContext["dismiss"];
 };
 
+/**
+ * Gets the ongoing explain process of `<Configuration />` with the commands that act on it.
+ * @returns The process, or `null` while no explain process is ongoing.
+ * @throws Error "This component must be wrapped in <Configuration />" outside a `<Configuration />`.
+ */
 export default function useExplainProcess(): UseExplainProcessResult | null {
     const {process, switchMode, applySolution, dismiss} = useRequiredContext(explainContext, "Configuration");
 

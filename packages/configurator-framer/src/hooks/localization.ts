@@ -12,6 +12,12 @@ import useRequiredContext from "../common/useRequiredContext";
 export const localizationContext = createContext<Localization | null>(null);
 export type ChoiceValueNames = ReadonlyMap<ChoiceValueId, string>;
 
+/**
+ * Gets the attribute's name from the localization of `<Configuration />`, in Framer's active locale.
+ * @returns The name, or `undefined` when the localization has none in the active locale or Framer reports no active
+ * locale.
+ * @throws Error "This component must be wrapped in <Configuration />" outside a `<Configuration />`.
+ */
 export function useAttributeName(attributeId: GlobalAttributeId): string | undefined {
     const {attributes} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();
@@ -38,6 +44,13 @@ export function useAttributeName(attributeId: GlobalAttributeId): string | undef
     );
 }
 
+/**
+ * Gets the names of a choice attribute's values from the localization of `<Configuration />`, in Framer's active
+ * locale.
+ * @returns The names by choice value id. A value without a name in the active locale is missing, and all are while
+ * Framer reports no active locale; the map is empty for an unknown attribute or one that is not a choice attribute.
+ * @throws Error "This component must be wrapped in <Configuration />" outside a `<Configuration />`.
+ */
 export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValueNames {
     const {choiceValues: choiceValueLocalizations} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();
@@ -84,6 +97,12 @@ export function useChoiceValueNames(attributeId: GlobalAttributeId): ChoiceValue
     );
 }
 
+/**
+ * Gets the name of one choice value from the localization of `<Configuration />`, in Framer's active locale.
+ * @returns The name, or `undefined` when the localization has none in the active locale or Framer reports no active
+ * locale.
+ * @throws Error "This component must be wrapped in <Configuration />" outside a `<Configuration />`.
+ */
 export function useChoiceValueName(attributeId: GlobalAttributeId, choiceValueId: ChoiceValueId): string | undefined {
     const {choiceValues} = useRequiredContext(localizationContext, "Configuration");
     const {activeLocale} = useLocaleInfo();

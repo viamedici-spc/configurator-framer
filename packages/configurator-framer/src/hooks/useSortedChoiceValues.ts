@@ -10,6 +10,12 @@ const ordCacheProvider = createOrdCacheProvider();
 
 export const choiceValueSortingContext = createContext<ChoiceValueSorting | null>(null);
 
+/**
+ * Sorts choice values by the choice value sorting of `<Configuration />` for the attribute.
+ * @param choiceValues The values to sort; the attribute's own values when omitted.
+ * @returns The sorted values. Without `choiceValues` the result is empty for an unknown attribute or one that is not a
+ * choice attribute.
+ */
 export default function useSortedChoiceValues(
     attributeId: GlobalAttributeId,
     choiceValues?: ReadonlyArray<ChoiceValue>,
