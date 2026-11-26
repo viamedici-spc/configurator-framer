@@ -51,7 +51,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@viamedici-spc/configurator-react": "5.0.0-modern-toolchain-20261126183755",
-    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126175746",
+    "@viamedici-spc/configurator-ts": "5.0.0-modern-toolchain-20261126195601",
     "@viamedici-spc/fp-ts-extensions": "2.0.0-modern-toolchain-20261126094931",
     "camelcase": "^8.0.0",
     "clsx": "^2.1.0",
