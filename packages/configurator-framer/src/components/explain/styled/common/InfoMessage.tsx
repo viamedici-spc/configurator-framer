@@ -6,9 +6,9 @@ import useCommonExplainProps from "../../../../props/useCommonExplainProps";
 import {getTextStyle} from "../../../../props/textProps";
 import Mustache from "mustache";
 
-type Variant = 'failedToExplain' | 'noExplanationFound' | 'noSolutionFound';
+type Variant = "failedToExplain" | "noExplanationFound" | "noSolutionFound";
 
-export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant: Variant }) {
+export default function InfoMessage(props: HTMLProps<HTMLDivElement> & {variant: Variant}) {
     const {variant, ...restProps} = props;
     const {explainQuestion} = useOngoingExplainProcess();
     const {infoMessage} = useCommonExplainProps();
@@ -16,16 +16,23 @@ export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant
     const question = match(explainQuestion)
         .returnType<string>()
         .with({question: ExplainQuestionType.whyIsStateNotPossible}, () => infoMessage.whyIsStateNotPossibleQuestion)
-        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration}, () => infoMessage.whyConfigurationIsNotSatisfiedQuestion)
-        .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute}, () => infoMessage.whyAttributeIsNotSatisfiedQuestion)
+        .with(
+            {question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration},
+            () => infoMessage.whyConfigurationIsNotSatisfiedQuestion,
+        )
+        .with(
+            {question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute},
+            () => infoMessage.whyAttributeIsNotSatisfiedQuestion,
+        )
         .with(P.nullish, () => infoMessage.generalConflictQuestion)
-        .exhaustive()
+        .exhaustive();
 
     const content = match(variant)
         .returnType<ReactNode>()
         .with("failedToExplain", () => (
             <>
-                {Mustache.render(infoMessage.failedToExplainText, {question})}<br/>
+                {Mustache.render(infoMessage.failedToExplainText, {question})}
+                <br />
                 {infoMessage.failedToExplainHintText}
             </>
         ))
@@ -37,5 +44,5 @@ export default function InfoMessage(props: HTMLProps<HTMLDivElement> & { variant
         <div {...restProps} style={getTextStyle(infoMessage)}>
             {content}
         </div>
-    )
+    );
 }

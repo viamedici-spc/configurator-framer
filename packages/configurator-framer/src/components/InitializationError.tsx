@@ -1,17 +1,17 @@
-import type { ReactNode} from "react";
+import type {ReactNode} from "react";
 import {Children} from "react";
 import {useConfigurationInitialization} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import type { FixedDecision} from "@viamedici-spc/configurator-ts";
+import type {FixedDecision} from "@viamedici-spc/configurator-ts";
 import {AttributeType, ConfiguratorErrorType} from "@viamedici-spc/configurator-ts";
 import {InitializationErrorMessage} from "./InitializationErrorMessage";
 
 type Props = {
-    configurationModelNotFoundContent?: ReactNode,
-    accessTokenInvalidContent?: ReactNode,
-    accessTokenRestrictionContent?: ReactNode,
-    errorContent?: ReactNode
-}
+    configurationModelNotFoundContent?: ReactNode;
+    accessTokenInvalidContent?: ReactNode;
+    accessTokenRestrictionContent?: ReactNode;
+    errorContent?: ReactNode;
+};
 export type InitializationErrorProps = Props;
 
 export default function InitializationError(props: Props) {
@@ -26,10 +26,9 @@ export default function InitializationError(props: Props) {
         return null;
     }
 
-    const standardErrorMessage = (message: string) => <InitializationErrorMessage
-        type="error"
-        title="Configuration initialization failed"
-        message={message}/>
+    const standardErrorMessage = (message: string) => (
+        <InitializationErrorMessage type="error" title="Configuration initialization failed" message={message} />
+    );
 
     switch (error.type) {
         case ConfiguratorErrorType.ConfigurationModelNotFound:
@@ -51,7 +50,9 @@ export default function InitializationError(props: Props) {
             const attributeIdText = `Attribute Id: ${error.globalAttributeId?.localId ?? ""}`;
             const componentPathText = `Component Path: ${error.globalAttributeId.componentPath?.join(" -> ") ?? ""}`;
             const sharedConfigurationModelText = `Shared Configuration Model: ${error.globalAttributeId?.sharedConfigurationModelId ?? ""}`;
-            return standardErrorMessage(`The definition of Attribute Relations is invalid: ${error.validationMessage}\n\n${attributeIdText}\n${componentPathText}\n${sharedConfigurationModelText}`);
+            return standardErrorMessage(
+                `The definition of Attribute Relations is invalid: ${error.validationMessage}\n\n${attributeIdText}\n${componentPathText}\n${sharedConfigurationModelText}`,
+            );
 
         case ConfiguratorErrorType.SessionParametersInvalid:
             return standardErrorMessage(`Configuration Session parameters are invalid: ${error.detail}`);
@@ -62,13 +63,17 @@ export default function InitializationError(props: Props) {
                 const qualifiers = [
                     componentPath?.length ? `Component Path: ${componentPath.join(" -> ")}` : null,
                     sharedConfigurationModelId ? `Shared Configuration Model: ${sharedConfigurationModelId}` : null,
-                ].filter(Boolean).join(", ");
+                ]
+                    .filter(Boolean)
+                    .join(", ");
                 const attributeText = `Attribute "${localId}"${qualifiers ? ` (${qualifiers})` : ""}`;
                 const choiceValueText = d.type === AttributeType.Choice ? `, Choice Value "${d.choiceValueId}"` : "";
                 return `- ${attributeText}${choiceValueText}`;
             };
             const rejectedText = error.rejectedDecisions.map(formatRejectedDecision).join("\n");
-            return standardErrorMessage(`The Fixed Decisions are invalid: ${error.validationMessage}\n\nRejected Fixed Decisions:\n${rejectedText}`);
+            return standardErrorMessage(
+                `The Fixed Decisions are invalid: ${error.validationMessage}\n\nRejected Fixed Decisions:\n${rejectedText}`,
+            );
         }
 
         default:

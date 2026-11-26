@@ -2,7 +2,13 @@ import {useCallback, useEffect, useRef} from "react";
 import {useDebouncedCallback} from "use-debounce";
 import {useForceUpdate} from "framer-motion";
 
-export default function useDebounceValue<TValue>(sourceValue: TValue, setSourceValue: (value: TValue) => void, inputValue: TValue, setInputValue: (value: TValue) => void, wait: number = 1000) {
+export default function useDebounceValue<TValue>(
+    sourceValue: TValue,
+    setSourceValue: (value: TValue) => void,
+    inputValue: TValue,
+    setInputValue: (value: TValue) => void,
+    wait: number = 1000,
+) {
     const [forceUpdate] = useForceUpdate();
     const debounced = useDebouncedCallback((v: TValue) => {
         setSourceValue(v);
@@ -60,6 +66,6 @@ export default function useDebounceValue<TValue>(sourceValue: TValue, setSourceV
     useEffect(() => () => flush(), [flush]);
 
     return {
-        flush
+        flush,
     };
 }

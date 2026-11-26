@@ -1,34 +1,31 @@
 import type {PropsWithChildren} from "react";
-import React, { useEffect, useRef, useState} from "react"
-import {addPropertyControls, ControlType} from "framer"
+import React, {useEffect, useRef, useState} from "react";
+import {addPropertyControls, ControlType} from "framer";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 
 export default function PropagateHeight(props: PropsWithChildren) {
-    const renderPlaceholder = useRenderPlaceholder()
+    const renderPlaceholder = useRenderPlaceholder();
 
     if (renderPlaceholder) {
-        return <div style={{width: "100%"}}>{props.children}</div>
+        return <div style={{width: "100%"}}>{props.children}</div>;
     }
 
-    const lastHeightRef = useRef<number>(0)
-    const [container, setContainer] = useState<HTMLDivElement | null>(null)
+    const lastHeightRef = useRef<number>(0);
+    const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
     const propagateHeight = (height: number) => {
-        window.parent.postMessage(
-            {type: "spc.configurator.height", height},
-            "*"
-        )
-    }
+        window.parent.postMessage({type: "spc.configurator.height", height}, "*");
+    };
 
     function updateHeight(el: HTMLDivElement | null = container): void {
         if (!el) {
             return;
         }
 
-        const containerHeight = el.offsetHeight
+        const containerHeight = el.offsetHeight;
         if (containerHeight !== lastHeightRef.current) {
-            lastHeightRef.current = containerHeight
-            propagateHeight(containerHeight)
+            lastHeightRef.current = containerHeight;
+            propagateHeight(containerHeight);
         }
     }
 
@@ -53,7 +50,7 @@ export default function PropagateHeight(props: PropsWithChildren) {
         <div ref={setContainer} style={{width: "100%"}}>
             {props.children}
         </div>
-    )
+    );
 }
 
 addPropertyControls(PropagateHeight, {
@@ -61,4 +58,4 @@ addPropertyControls(PropagateHeight, {
         title: "Content",
         type: ControlType.ComponentInstance,
     },
-})
+});

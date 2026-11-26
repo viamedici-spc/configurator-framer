@@ -41,7 +41,7 @@ describe("createHostParametersStore — native mode", () => {
     }
 
     it("reads data-* attributes with the prefix stripped", () => {
-        const anchor = mountNativeHost({"data-region": "eu", "data-webshop": "true", "class": "ignored"});
+        const anchor = mountNativeHost({"data-region": "eu", "data-webshop": "true", class: "ignored"});
         const store = createHostParametersStore(anchor);
         store.subscribe(() => {});
         expect(store.getSnapshot()).toEqual({region: "eu", webshop: "true"});
@@ -127,7 +127,9 @@ describe("createHostParametersStore — iframe mode", () => {
         store.subscribe(listener);
 
         // Wrong source.
-        window.dispatchEvent(new MessageEvent("message", {data: {type: MSG_PARAMETERS, parameters: {region: "eu"}}, source: null}));
+        window.dispatchEvent(
+            new MessageEvent("message", {data: {type: MSG_PARAMETERS, parameters: {region: "eu"}}, source: null}),
+        );
         // Wrong type.
         postFromParent({region: "eu"}, "spc.configurator.height");
 

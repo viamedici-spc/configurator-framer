@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {PropsWithChildren} from "react";
-import { Suspense} from "react";
-import type { Root} from "react-dom/client";
+import {Suspense} from "react";
+import type {Root} from "react-dom/client";
 import {createRoot} from "react-dom/client";
 import {act} from "react-dom/test-utils";
 import InitializationSuspense from "../src/components/InitializationSuspense";
@@ -41,7 +41,7 @@ function ThrowForever(): never {
 
 // Mirrors Framer's code component boundary, which hands a suspension up instead of showing a fallback.
 function FramerCodeBoundary({children}: PropsWithChildren) {
-    return <Suspense fallback={<ThrowForever/>}>{children}</Suspense>;
+    return <Suspense fallback={<ThrowForever />}>{children}</Suspense>;
 }
 
 function createLazyText(text: string) {
@@ -85,13 +85,15 @@ describe("InitializationSuspense", () => {
         initialization.set(false);
         const {LazyText, load} = createLazyText("Loaded");
 
-        await act(async () => root.render(
-            <InitializationSuspense>
-                <FramerCodeBoundary>
-                    <LazyText/>
-                </FramerCodeBoundary>
-            </InitializationSuspense>
-        ));
+        await act(async () =>
+            root.render(
+                <InitializationSuspense>
+                    <FramerCodeBoundary>
+                        <LazyText />
+                    </FramerCodeBoundary>
+                </InitializationSuspense>,
+            ),
+        );
         expect(container.textContent).toBe("");
 
         await act(async () => load());
@@ -102,19 +104,23 @@ describe("InitializationSuspense", () => {
         initialization.set(false);
         const {LazyText, load} = createLazyText("Step 2");
 
-        await act(async () => root.render(
-            <InitializationSuspense>
-                <span>Step 1</span>
-            </InitializationSuspense>
-        ));
-        await act(async () => root.render(
-            <InitializationSuspense>
-                <span>Step 1</span>
-                <FramerCodeBoundary>
-                    <LazyText/>
-                </FramerCodeBoundary>
-            </InitializationSuspense>
-        ));
+        await act(async () =>
+            root.render(
+                <InitializationSuspense>
+                    <span>Step 1</span>
+                </InitializationSuspense>,
+            ),
+        );
+        await act(async () =>
+            root.render(
+                <InitializationSuspense>
+                    <span>Step 1</span>
+                    <FramerCodeBoundary>
+                        <LazyText />
+                    </FramerCodeBoundary>
+                </InitializationSuspense>,
+            ),
+        );
         expect(container.innerHTML).toBe("<span>Step 1</span>");
 
         await act(async () => load());
@@ -124,13 +130,15 @@ describe("InitializationSuspense", () => {
     it("renders content that loaded during initialization once initialization completes", async () => {
         const {LazyText, load} = createLazyText("Loaded");
 
-        await act(async () => root.render(
-            <InitializationSuspense>
-                <FramerCodeBoundary>
-                    <LazyText/>
-                </FramerCodeBoundary>
-            </InitializationSuspense>
-        ));
+        await act(async () =>
+            root.render(
+                <InitializationSuspense>
+                    <FramerCodeBoundary>
+                        <LazyText />
+                    </FramerCodeBoundary>
+                </InitializationSuspense>,
+            ),
+        );
         await act(async () => load());
         expect(container.textContent).toBe("");
 
@@ -143,13 +151,15 @@ describe("InitializationSuspense", () => {
         initialization.set(false);
         const {LazyText, load} = createLazyText("Loaded");
 
-        await act(async () => root.render(
-            <Suspense fallback={<span>Regular fallback</span>}>
-                <InitializationSuspense>
-                    <LazyText/>
-                </InitializationSuspense>
-            </Suspense>
-        ));
+        await act(async () =>
+            root.render(
+                <Suspense fallback={<span>Regular fallback</span>}>
+                    <InitializationSuspense>
+                        <LazyText />
+                    </InitializationSuspense>
+                </Suspense>,
+            ),
+        );
         expect(container.textContent).toBe("Regular fallback");
 
         await act(async () => {

@@ -1,12 +1,12 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer";
 import type {ButtonHTMLAttributes} from "react";
-import { forwardRef} from "react";
+import {forwardRef} from "react";
 import {usePopoverContext} from "./Popover";
 import useRenderPlaceholder from "../../hooks/useRenderPlaceholder";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-    appearance?: "auto" | "none"
+    appearance?: "auto" | "none";
 };
 
 /**
@@ -16,12 +16,15 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 const PopoverClose = forwardRef<HTMLButtonElement, Props>((props, ref) => {
     const renderPlaceholder = useRenderPlaceholder();
     const {appearance, style, children, ...restProps} = props;
-    const resetStyle = appearance === "none" ? {
-        border: "none",
-        background: "transparent",
-        padding: 0,
-        outline: "none"
-    } : {};
+    const resetStyle =
+        appearance === "none"
+            ? {
+                  border: "none",
+                  background: "transparent",
+                  padding: 0,
+                  outline: "none",
+              }
+            : {};
     const mergedStyle = {...style, ...(appearance ? {appearance} : {}), ...resetStyle};
 
     if (renderPlaceholder) {
@@ -39,7 +42,7 @@ const PopoverClose = forwardRef<HTMLButtonElement, Props>((props, ref) => {
             ref={ref}
             {...restProps}
             style={mergedStyle}
-            onClick={(event) => {
+            onClick={event => {
                 props.onClick?.(event);
                 setOpen(false);
             }}
@@ -54,7 +57,7 @@ export default PopoverClose;
 const propertyControls: PropertyControls<Props> = {
     children: {
         title: "Content",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     appearance: {
         title: "Appearance",
@@ -62,8 +65,8 @@ const propertyControls: PropertyControls<Props> = {
         defaultValue: "auto",
         displaySegmentedControl: true,
         segmentedControlDirection: "horizontal",
-        options: ["auto", "none"]
-    }
+        options: ["auto", "none"],
+    },
 };
 
 addPropertyControls(PopoverClose, propertyControls);

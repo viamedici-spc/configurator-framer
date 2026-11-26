@@ -2,15 +2,31 @@
   "name": "@viamedici-spc/configurator-framer",
   "version": "0.0.0",
   "description": "Component library to build configurator apps with Framer based on Viamedici SPC.",
+  "keywords": [
+    "configuration",
+    "configurator",
+    "constraint",
+    "csp",
+    "framer",
+    "hca",
+    "problem",
+    "product",
+    "satisfaction",
+    "solver",
+    "spc",
+    "viamedici"
+  ],
+  "license": "MIT",
+  "author": "Viamedici Software GmbH",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/viamedici-spc/configurator-framer.git"
   },
-  "type": "module",
-  "sideEffects": false,
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -26,38 +42,6 @@
     "verify:package": "bun run build && publint --strict && attw --pack . --profile esm-only --format table-flipped",
     "prepack": "cp ../../README.md README.md",
     "postpack": "rm README.md"
-  },
-  "keywords": [
-    "viamedici",
-    "product",
-    "configuration",
-    "configurator",
-    "spc",
-    "hca",
-    "csp",
-    "constraint",
-    "satisfaction",
-    "problem",
-    "solver",
-    "framer"
-  ],
-  "author": "Viamedici Software GmbH",
-  "license": "MIT",
-  "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.5",
-    "@types/mustache": "^4.2.5",
-    "@types/react": "^18.3",
-    "@types/react-dom": "^18.3",
-    "framer": "^2.4.1",
-    "framer-motion": "^10.13.1",
-    "jsdom": "^31",
-    "oxlint": "^1.94.0",
-    "publint": "^0.3.25",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "tsdown": "^0.23.7",
-    "typescript": "7.0.2",
-    "vitest": "^5"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.9",
@@ -86,9 +70,25 @@
     "zod": "^3.24.2",
     "zod-validation-error": "^3.4.0"
   },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@types/mustache": "^4.2.5",
+    "@types/react": "^18.3",
+    "@types/react-dom": "^18.3",
+    "framer": "^2.4.1",
+    "framer-motion": "^10.13.1",
+    "jsdom": "^31",
+    "oxlint": "^1.94.0",
+    "publint": "^0.3.25",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tsdown": "^0.23.7",
+    "typescript": "7.0.2",
+    "vitest": "^5"
+  },
   "peerDependencies": {
-    "react": "^18.2 || ^19",
-    "framer": ">=2.4.1"
+    "framer": ">=2.4.1",
+    "react": "^18.2 || ^19"
   },
   "inlinedDependencies": {
     "framer-motion": "10.18.0"

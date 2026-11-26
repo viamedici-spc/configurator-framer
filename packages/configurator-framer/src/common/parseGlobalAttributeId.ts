@@ -4,7 +4,7 @@ import type {AttributeIdProps} from "../props/attributeIdProps";
 export default function parseGlobalAttributeId(a: AttributeIdProps): GlobalAttributeId {
     return {
         localId: a.attributeId,
-        componentPath: a.componentPath === "" ? [] : a.componentPath?.split(" -> ") ?? [],
+        componentPath: a.componentPath === "" ? [] : (a.componentPath?.split(" -> ") ?? []),
         sharedConfigurationModelId: a.sharedConfigurationModel === "" ? undefined : a.sharedConfigurationModel,
     };
 }

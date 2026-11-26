@@ -1,17 +1,17 @@
 import type {EqT, OrdT} from "@viamedici-spc/fp-ts-extensions";
-import { Ord} from "@viamedici-spc/fp-ts-extensions";
+import {Ord} from "@viamedici-spc/fp-ts-extensions";
 import type {Ordering} from "fp-ts/Ordering";
 
 export type OrdCacheProvider = {
-    getCache: <T>(eq: EqT<T>, ord: OrdT<T>) => OrdCache<T>
-}
+    getCache: <T>(eq: EqT<T>, ord: OrdT<T>) => OrdCache<T>;
+};
 
 export type OrdCache<T> = OrdT<T> & {
-    cachedOrderings: ReadonlyArray<{ first: T, second: T, ordering: Ordering }>
+    cachedOrderings: ReadonlyArray<{first: T; second: T; ordering: Ordering}>;
 };
 
 export function createOrdCache<T>(eq: EqT<T>, ord: OrdT<T>): OrdCache<T> {
-    const cachedOrderings: { first: T, second: T, ordering: Ordering }[] = [];
+    const cachedOrderings: {first: T; second: T; ordering: Ordering}[] = [];
 
     const getOrAdd = (first: T, second: T) => {
         const existingOrdering = cachedOrderings.find(v => eq.equals(v.first, first) && eq.equals(v.second, second));
@@ -28,13 +28,13 @@ export function createOrdCache<T>(eq: EqT<T>, ord: OrdT<T>): OrdCache<T> {
 
     return {
         cachedOrderings: cachedOrderings,
-        ...cachedOrd
+        ...cachedOrd,
     };
 }
 
 export function createOrdCacheProvider(): OrdCacheProvider {
     // eq and ord only serve as identity keys; an entry found by them holds the OrdCache of the same T.
-    const caches: { eq: unknown, ord: unknown, ordCache: unknown }[] = [];
+    const caches: {eq: unknown; ord: unknown; ordCache: unknown}[] = [];
 
     return {
         getCache: <T>(eq: EqT<T>, ord: OrdT<T>) => {
@@ -46,6 +46,6 @@ export function createOrdCacheProvider(): OrdCacheProvider {
             const cache = createOrdCache(eq, ord);
             caches.push({eq: eq, ord: ord, ordCache: cache});
             return cache;
-        }
+        },
     };
 }

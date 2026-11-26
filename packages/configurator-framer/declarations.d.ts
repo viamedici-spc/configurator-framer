@@ -15,9 +15,13 @@ declare module "use-debounce" {
         (...args: Parameters<T>): ReturnType<T> | undefined;
     }
 
-    export function useDebouncedCallback<T extends (...args: any) => ReturnType<T>>(func: T, wait?: number, options?: {
-        leading?: boolean;
-        trailing?: boolean;
-        maxWait?: number;
-    }): DebouncedState<T>;
+    export function useDebouncedCallback<T extends (...args: any) => ReturnType<T>>(
+        func: T,
+        wait?: number,
+        options?: {
+            leading?: boolean;
+            trailing?: boolean;
+            maxWait?: number;
+        },
+    ): DebouncedState<T>;
 }

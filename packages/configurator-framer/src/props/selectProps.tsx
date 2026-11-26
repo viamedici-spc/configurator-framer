@@ -1,49 +1,49 @@
 import type {CSSProperties} from "react";
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {ControlType} from "framer";
 import {match, P} from "ts-pattern";
-import type { InputProps, InputStateColors} from "./inputProps";
+import type {InputProps, InputStateColors} from "./inputProps";
 import {getInputStyle, inputPropertyControls, inputStateColorProperty} from "./inputProps";
 
 export type SelectProps = InputProps & {
-    resetLabel: string,
-    blockedLabel: string,
-    unavailableLabel: string,
-    excludeUnavailableOptions: boolean,
-    allOptionsBlockedColors: InputStateColors,
-    noOptionsAvailableColors: InputStateColors,
-    appearance: "auto" | "none"
-}
+    resetLabel: string;
+    blockedLabel: string;
+    unavailableLabel: string;
+    excludeUnavailableOptions: boolean;
+    allOptionsBlockedColors: InputStateColors;
+    noOptionsAvailableColors: InputStateColors;
+    appearance: "auto" | "none";
+};
 
 export const selectPropertyControls = {
     ...inputPropertyControls,
     resetLabel: {
         title: "Reset Label",
         type: ControlType.String,
-        defaultValue: "Reset"
+        defaultValue: "Reset",
     },
     blockedLabel: {
         title: "Blocked Label",
         type: ControlType.String,
-        defaultValue: "Blocked"
+        defaultValue: "Blocked",
     },
     unavailableLabel: {
         title: "Unavailable Label",
         type: ControlType.String,
-        defaultValue: "Unavailable"
+        defaultValue: "Unavailable",
     },
     excludeUnavailableOptions: {
         title: "Exclude Unavailable Options",
         type: ControlType.Boolean,
-        defaultValue: true
+        defaultValue: true,
     },
     allOptionsBlockedColors: {
         ...inputStateColorProperty,
-        title: "All Options Blocked Colors"
+        title: "All Options Blocked Colors",
     },
     noOptionsAvailableColors: {
         ...inputStateColorProperty,
-        title: "No Options Available Colors"
+        title: "No Options Available Colors",
     },
     appearance: {
         title: "Appearance",
@@ -51,9 +51,9 @@ export const selectPropertyControls = {
         defaultValue: "auto",
         displaySegmentedControl: true,
         segmentedControlDirection: "horizontal",
-        options: ["auto", "none"]
-    }
-} satisfies PropertyControls<SelectProps>
+        options: ["auto", "none"],
+    },
+} satisfies PropertyControls<SelectProps>;
 
 // Style priority among the "nothing actionable" overrides:
 //   noOptionsAvailable (the stricter "all immutable-blocked" case) >
@@ -68,40 +68,55 @@ export const getSelectStyle = (
     isImplicitSelected: boolean,
     isFixedSelected: boolean = false,
     allOptionsBlocked: boolean = false,
-    noOptionsAvailable: boolean = false
+    noOptionsAvailable: boolean = false,
 ): CSSProperties => {
     const baseStyle: CSSProperties = {
         ...getInputStyle(props, isSatisfied, isImplicitSelected, isFixedSelected),
-        appearance: props.appearance
+        appearance: props.appearance,
     };
-    return ({
+    return {
         ...baseStyle,
         backgroundColor: match({
             allOptionsBlocked,
             noOptionsAvailable,
             allOptionsBlockedFill: props.allOptionsBlockedColors?.fill,
-            noOptionsAvailableFill: props.noOptionsAvailableColors?.fill
+            noOptionsAvailableFill: props.noOptionsAvailableColors?.fill,
         })
-            .with({noOptionsAvailable: true, noOptionsAvailableFill: P.string.minLength(1)}, p => p.noOptionsAvailableFill)
+            .with(
+                {noOptionsAvailable: true, noOptionsAvailableFill: P.string.minLength(1)},
+                p => p.noOptionsAvailableFill,
+            )
             .with({allOptionsBlocked: true, allOptionsBlockedFill: P.string.minLength(1)}, p => p.allOptionsBlockedFill)
             .otherwise(() => baseStyle.backgroundColor),
         borderColor: match({
             allOptionsBlocked,
             noOptionsAvailable,
             allOptionsBlockedBorderColor: props.allOptionsBlockedColors?.borderColor,
-            noOptionsAvailableBorderColor: props.noOptionsAvailableColors?.borderColor
+            noOptionsAvailableBorderColor: props.noOptionsAvailableColors?.borderColor,
         })
-            .with({noOptionsAvailable: true, noOptionsAvailableBorderColor: P.string.minLength(1)}, p => p.noOptionsAvailableBorderColor)
-            .with({allOptionsBlocked: true, allOptionsBlockedBorderColor: P.string.minLength(1)}, p => p.allOptionsBlockedBorderColor)
+            .with(
+                {noOptionsAvailable: true, noOptionsAvailableBorderColor: P.string.minLength(1)},
+                p => p.noOptionsAvailableBorderColor,
+            )
+            .with(
+                {allOptionsBlocked: true, allOptionsBlockedBorderColor: P.string.minLength(1)},
+                p => p.allOptionsBlockedBorderColor,
+            )
             .otherwise(() => baseStyle.borderColor),
         color: match({
             allOptionsBlocked,
             noOptionsAvailable,
             allOptionsBlockedColor: props.allOptionsBlockedColors?.color,
-            noOptionsAvailableColor: props.noOptionsAvailableColors?.color
+            noOptionsAvailableColor: props.noOptionsAvailableColors?.color,
         })
-            .with({noOptionsAvailable: true, noOptionsAvailableColor: P.string.minLength(1)}, p => p.noOptionsAvailableColor)
-            .with({allOptionsBlocked: true, allOptionsBlockedColor: P.string.minLength(1)}, p => p.allOptionsBlockedColor)
-            .otherwise(() => baseStyle.color)
-    });
+            .with(
+                {noOptionsAvailable: true, noOptionsAvailableColor: P.string.minLength(1)},
+                p => p.noOptionsAvailableColor,
+            )
+            .with(
+                {allOptionsBlocked: true, allOptionsBlockedColor: P.string.minLength(1)},
+                p => p.allOptionsBlockedColor,
+            )
+            .otherwise(() => baseStyle.color),
+    };
 };

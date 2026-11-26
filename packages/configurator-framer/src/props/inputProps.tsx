@@ -1,30 +1,33 @@
 import type {CSSProperties} from "react";
 import type {ControlDescription, PropertyControls} from "framer";
-import { ControlType} from "framer";
-import type { AttributeIdProps} from "./attributeIdProps";
+import {ControlType} from "framer";
+import type {AttributeIdProps} from "./attributeIdProps";
 import {attributeIdPropertyControls} from "./attributeIdProps";
-import type { BoxProps} from "./boxProps";
+import type {BoxProps} from "./boxProps";
 import {createBoxPropertyControls, getBoxStyle} from "./boxProps";
-import type { TextProps} from "./textProps";
+import type {TextProps} from "./textProps";
 import {getTextStyle, createTextPropertyControls} from "./textProps";
 import {match, P} from "ts-pattern";
-import type { ExplainProps} from "./explainProps";
+import type {ExplainProps} from "./explainProps";
 import {explainPropertyControls} from "./explainProps";
 
-export type InputProps = AttributeIdProps & BoxProps & TextProps & ExplainProps & {
-    style: CSSProperties,
-    implicitLabelPrefix: string,
-    fixedLabelPrefix: string,
-    unsatisfiedColors: InputStateColors,
-    implicitSelectedColors: InputStateColors,
-    fixedColors: InputStateColors
-}
+export type InputProps = AttributeIdProps &
+    BoxProps &
+    TextProps &
+    ExplainProps & {
+        style: CSSProperties;
+        implicitLabelPrefix: string;
+        fixedLabelPrefix: string;
+        unsatisfiedColors: InputStateColors;
+        implicitSelectedColors: InputStateColors;
+        fixedColors: InputStateColors;
+    };
 
 export type InputStateColors = {
-    fill: string,
-    color: string,
-    borderColor: string
-}
+    fill: string;
+    color: string;
+    borderColor: string;
+};
 
 export const inputStateColorProperty: ControlDescription<BoxProps> = {
     type: ControlType.Object,
@@ -33,19 +36,19 @@ export const inputStateColorProperty: ControlDescription<BoxProps> = {
         fill: {
             title: "Fill",
             type: ControlType.Color,
-            optional: true
+            optional: true,
         },
         color: {
             title: "Color",
             type: ControlType.Color,
-            optional: true
+            optional: true,
         },
         borderColor: {
             title: "Border Color",
             type: ControlType.Color,
-            optional: true
-        }
-    }
+            optional: true,
+        },
+    },
 };
 
 export const inputPropertyControls = {
@@ -54,43 +57,48 @@ export const inputPropertyControls = {
         color: "black",
         text: {
             fontSize: 16,
-            textAlign: "left"
-        }
+            textAlign: "left",
+        },
     }),
     ...createBoxPropertyControls({
         fill: "#EBEBEB",
-        radius: 6
+        radius: 6,
     }),
     implicitLabelPrefix: {
         title: "Implicit Label Prefix",
         type: ControlType.String,
-        defaultValue: "Implicit: "
+        defaultValue: "Implicit: ",
     },
     fixedLabelPrefix: {
         title: "Fixed Label Prefix",
         type: ControlType.String,
-        defaultValue: "Fixed: "
+        defaultValue: "Fixed: ",
     },
     unsatisfiedColors: {
         ...inputStateColorProperty,
-        title: "Unsatisfied Colors"
+        title: "Unsatisfied Colors",
     },
     implicitSelectedColors: {
         ...inputStateColorProperty,
-        title: "Implicit Selected Colors"
+        title: "Implicit Selected Colors",
     },
     fixedColors: {
         ...inputStateColorProperty,
-        title: "Fixed Colors"
+        title: "Fixed Colors",
     },
-    ...explainPropertyControls
-} satisfies PropertyControls<InputProps>
+    ...explainPropertyControls,
+} satisfies PropertyControls<InputProps>;
 
-export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplicitSelected: boolean, isFixedSelected: boolean = false): CSSProperties => {
+export const getInputStyle = (
+    props: InputProps,
+    isSatisfied: boolean,
+    isImplicitSelected: boolean,
+    isFixedSelected: boolean = false,
+): CSSProperties => {
     const boxStyle = getBoxStyle(props);
     const textStyle = getTextStyle(props);
 
-    return ({
+    return {
         ...boxStyle,
         ...textStyle,
         backgroundColor: match({
@@ -99,7 +107,7 @@ export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplici
             isFixedSelected,
             unsatisfiedFill: props.unsatisfiedColors?.fill,
             implicitSelectedFill: props.implicitSelectedColors?.fill,
-            fixedFill: props.fixedColors?.fill
+            fixedFill: props.fixedColors?.fill,
         })
             .with({isSatisfied: false, unsatisfiedFill: P.string.minLength(1)}, p => p.unsatisfiedFill)
             .with({isImplicitSelected: true, implicitSelectedFill: P.string.minLength(1)}, p => p.implicitSelectedFill)
@@ -111,13 +119,16 @@ export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplici
             isFixedSelected,
             unsatisfiedBorderColor: props.unsatisfiedColors?.borderColor,
             implicitSelectedBorderColor: props.implicitSelectedColors?.borderColor,
-            fixedBorderColor: props.fixedColors?.borderColor
+            fixedBorderColor: props.fixedColors?.borderColor,
         })
             .with({isSatisfied: false, unsatisfiedBorderColor: P.string.minLength(1)}, p => p.unsatisfiedBorderColor)
-            .with({
-                isImplicitSelected: true,
-                implicitSelectedBorderColor: P.string.minLength(1)
-            }, p => p.implicitSelectedBorderColor)
+            .with(
+                {
+                    isImplicitSelected: true,
+                    implicitSelectedBorderColor: P.string.minLength(1),
+                },
+                p => p.implicitSelectedBorderColor,
+            )
             .with({isFixedSelected: true, fixedBorderColor: P.string.minLength(1)}, p => p.fixedBorderColor)
             .otherwise(() => boxStyle.borderColor),
         color: match({
@@ -126,15 +137,18 @@ export const getInputStyle = (props: InputProps, isSatisfied: boolean, isImplici
             isFixedSelected,
             unsatisfiedColor: props.unsatisfiedColors?.color,
             implicitSelectedColor: props.implicitSelectedColors?.color,
-            fixedColor: props.fixedColors?.color
+            fixedColor: props.fixedColors?.color,
         })
             .with({isSatisfied: false, unsatisfiedColor: P.string.minLength(1)}, p => p.unsatisfiedColor)
-            .with({
-                isImplicitSelected: true,
-                implicitSelectedColor: P.string.minLength(1)
-            }, p => p.implicitSelectedColor)
+            .with(
+                {
+                    isImplicitSelected: true,
+                    implicitSelectedColor: P.string.minLength(1),
+                },
+                p => p.implicitSelectedColor,
+            )
             .with({isFixedSelected: true, fixedColor: P.string.minLength(1)}, p => p.fixedColor)
             .otherwise(() => textStyle.color),
-        ...props.style
-    });
-}
+        ...props.style,
+    };
+};

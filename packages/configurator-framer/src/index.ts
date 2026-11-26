@@ -34,12 +34,12 @@ import parseGlobalAttributeId from "./common/parseGlobalAttributeId";
 import cloneChildrenWithProps from "./common/cloneChildrenWithProps";
 import {getItemTemplate} from "./common/listRenderer";
 import type {AttributeIdProps} from "./props/attributeIdProps";
-import { attributeIdPropertyControls} from "./props/attributeIdProps";
+import {attributeIdPropertyControls} from "./props/attributeIdProps";
 import type {ChoiceValueIdProps} from "./props/choiceValueIdProps";
-import { choiceValueIdPropertyControls} from "./props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "./props/choiceValueIdProps";
 import {explainableComponent} from "./common/componentComposites";
 import type {ChoiceValueNames} from "./hooks/localization";
-import { useAttributeName, useChoiceValueNames, useChoiceValueName} from "./hooks/localization";
+import {useAttributeName, useChoiceValueNames, useChoiceValueName} from "./hooks/localization";
 import type {UseExplainResult} from "./hooks/useExplain";
 import useExplain from "./hooks/useExplain";
 import type {UseExplainProcessResult} from "./hooks/useExplainProcess";
@@ -118,5 +118,5 @@ export {
     AttributeList as CustomExplainAttributeList,
     AttributeValueList as CustomExplainAttributeValueList,
     ExplainContent as CustomExplainPopover,
-    ExplainQuestion as CustomExplainQuestion
+    ExplainQuestion as CustomExplainQuestion,
 };

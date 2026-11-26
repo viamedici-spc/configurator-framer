@@ -1,15 +1,15 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 import type {CSSProperties, PropsWithChildren} from "react";
-import { useLayoutEffect, useMemo, useRef, useState} from "react";
+import {useLayoutEffect, useMemo, useRef, useState} from "react";
 import {hexToCSSFilter} from "hex-to-css-filter";
 import rgbHex from "rgb-hex";
 import withErrorBoundary from "../common/withErrorBoundary";
 
 type Props = {
-    color: string,
-    style?: CSSProperties,
-}
+    color: string;
+    style?: CSSProperties;
+};
 
 /**
  * @framerSupportedLayoutWidth any
@@ -31,7 +31,7 @@ const Colorize = withErrorBoundary((props: PropsWithChildren<Props>) => {
         const hexColor = rgbHex(color);
         const result = hexToCSSFilter(`#${hexColor}`, {
             acceptanceLossPercentage: 1,
-            maxChecks: 30
+            maxChecks: 30,
         });
 
         return result.filter.replace(";", "");
@@ -51,8 +51,8 @@ const Colorize = withErrorBoundary((props: PropsWithChildren<Props>) => {
         <div ref={rootRef} style={{...props.style, color: props.color, filter}}>
             {props.children}
         </div>
-    )
-})
+    );
+});
 
 export default Colorize;
 
@@ -64,8 +64,8 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
     color: {
         title: "Color",
         type: ControlType.Color,
-        defaultValue: "#0000ff"
-    }
-}
+        defaultValue: "#0000ff",
+    },
+};
 
 addPropertyControls(Colorize, propertyControls);

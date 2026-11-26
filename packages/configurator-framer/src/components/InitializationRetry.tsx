@@ -1,6 +1,6 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
-import {useConfigurationInitialization} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import {useConfigurationInitialization} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import type {PropsWithChildren} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
@@ -23,7 +23,7 @@ const InitializationRetry = withErrorBoundary((props: PropsWithChildren) => {
     }
 
     return cloneChildrenWithProps(props.children, {onClick: error.retry});
-})
+});
 
 export default InitializationRetry;
 
@@ -31,7 +31,7 @@ const propertyControls: PropertyControls<PropsWithChildren> = {
     children: {
         title: "Content",
         type: ControlType.ComponentInstance,
-    }
-}
+    },
+};
 
 addPropertyControls(InitializationRetry, propertyControls);

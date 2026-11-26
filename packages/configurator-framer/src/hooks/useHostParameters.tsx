@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import type { HostParameters} from "../common/hostParametersStore";
+import type {HostParameters} from "../common/hostParametersStore";
 import {EMPTY_PARAMS} from "../common/hostParametersStore";
 
 /**

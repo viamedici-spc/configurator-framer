@@ -1,5 +1,5 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 import type {PropsWithChildren} from "react";
 
 /**
@@ -7,14 +7,14 @@ import type {PropsWithChildren} from "react";
  * @framerSupportedLayoutHeight any
  */
 export default function Slot(props: PropsWithChildren) {
-    return props.children
+    return props.children;
 }
 
 const propertyControls: PropertyControls<PropsWithChildren> = {
     children: {
         title: "Content",
         type: ControlType.ComponentInstance,
-    }
-}
+    },
+};
 
 addPropertyControls(Slot, propertyControls);

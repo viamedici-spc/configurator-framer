@@ -1,4 +1,4 @@
-import type { HTMLProps} from "react";
+import type {HTMLProps} from "react";
 import {forwardRef} from "react";
 import {FloatingFocusManager, FloatingPortal, useMergeRefs} from "@floating-ui/react";
 import {usePopoverContext} from "./Popover";
@@ -16,7 +16,8 @@ const PopoverContent = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>((pr
                 <div
                     ref={rootRef}
                     style={{...popoverContext.floatingStyles, ...style}}
-                    {...popoverContext.getFloatingProps(restProps)}>
+                    {...popoverContext.getFloatingProps(restProps)}
+                >
                     {children}
                 </div>
             </FloatingFocusManager>

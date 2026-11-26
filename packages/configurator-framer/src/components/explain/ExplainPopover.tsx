@@ -1,7 +1,7 @@
 import PopoverTrigger from "../popover/PopoverTrigger";
 import Popover, {usePopoverContext} from "../popover/Popover";
 import type {PropsWithChildren} from "react";
-import { useRef} from "react";
+import {useRef} from "react";
 import ExplainContent from "./styled/explainPopover/ExplainContent";
 import useExplainProcess from "../../hooks/useExplainProcess";
 import {useControlId} from "../../common/controlId";
@@ -20,7 +20,7 @@ const StyledPopoverContent = styled(PopoverContent)`
     &:focus {
         outline: none;
     }
-`
+`;
 
 const animationVariants = {
     initial: {
@@ -33,18 +33,18 @@ const animationVariants = {
         transition: {
             type: "spring",
             stiffness: 600,
-            damping: 40
-        }
+            damping: 40,
+        },
     },
     close: {
         opacity: 0,
         scale: 0,
         transition: {
             duration: 0.2,
-            ease: "cubicInOut"
-        }
-    }
-}
+            ease: "cubicInOut",
+        },
+    },
+};
 
 export default function ExplainPopover(props: PropsWithChildren) {
     const explainProcess = useExplainProcess();
@@ -55,25 +55,26 @@ export default function ExplainPopover(props: PropsWithChildren) {
     const arrowRef = useRef<SVGSVGElement>(null);
 
     return (
-        <Popover open={isOpen} onOpenChange={open => !open && isOpen && explainProcess?.dismiss()}
-                 arrow={{width: 20, height: 10, padding: 10, element: arrowRef}}>
-            <PopoverTrigger>
-                {props.children}
-            </PopoverTrigger>
+        <Popover
+            open={isOpen}
+            onOpenChange={open => !open && isOpen && explainProcess?.dismiss()}
+            arrow={{width: 20, height: 10, padding: 10, element: arrowRef}}
+        >
+            <PopoverTrigger>{props.children}</PopoverTrigger>
             <Animated isOpen={isOpen}>
                 {useCustomExplain && customPopover}
                 {!useCustomExplain && (
                     <ExplainShell>
-                        <ExplainContent/>
+                        <ExplainContent />
                     </ExplainShell>
                 )}
-                <Arrow/>
+                <Arrow />
             </Animated>
         </Popover>
-    )
+    );
 }
 
-function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
+function Animated(props: PropsWithChildren<{isOpen: boolean}>) {
     const {middlewareData, arrow, placement} = usePopoverContext();
     const arrowX = middlewareData.arrow?.x ?? 0;
     const arrowY = middlewareData.arrow?.y ?? 0;
@@ -87,24 +88,27 @@ function Animated(props: PropsWithChildren<{ isOpen: boolean }>) {
         .with("bottom", () => `${transformX}px ${-arrowHeight - 5}px`)
         .with("left", () => `calc(100% + ${arrowHeight}px) ${transformY}px`)
         .with("right", () => `${-arrowHeight}px ${transformY}px`)
-        .otherwise(() => "")
+        .otherwise(() => "");
 
     return (
         <AnimatePresence initial={false}>
             {props.isOpen && (
                 <StyledPopoverContent>
-                    <motion.div variants={animationVariants} initial="initial" animate="open" exit="close"
-                                style={{transformOrigin}}>
+                    <motion.div
+                        variants={animationVariants}
+                        initial="initial"
+                        animate="open"
+                        exit="close"
+                        style={{transformOrigin}}
+                    >
                         {/*Freeze the explain context otherwise the out-animation won't work correctly.*/}
                         {/*Freezing is ok okay, as the explain process won't update while displayed.*/}
-                        <FreezeExplainContext>
-                            {props.children}
-                        </FreezeExplainContext>
+                        <FreezeExplainContext>{props.children}</FreezeExplainContext>
                     </motion.div>
                 </StyledPopoverContent>
             )}
         </AnimatePresence>
-    )
+    );
 }
 
 function Arrow() {
@@ -117,11 +121,12 @@ function Arrow() {
     }
 
     return (
-        <FloatingArrow style={getArrowStyle(explainPopoverProps)}
-                       ref={arrow.element}
-                       context={context}
-                       width={arrow.width}
-                       height={arrow.height}
+        <FloatingArrow
+            style={getArrowStyle(explainPopoverProps)}
+            ref={arrow.element}
+            context={context}
+            width={arrow.width}
+            height={arrow.height}
         />
-    )
+    );
 }

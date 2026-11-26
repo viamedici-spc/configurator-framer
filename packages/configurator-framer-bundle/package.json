@@ -2,15 +2,31 @@
   "name": "@viamedici-spc/configurator-framer-bundle",
   "version": "0.0.0",
   "description": "Component library to build configurator apps with Framer based on Viamedici SPC. All dependencies are bundled together.",
+  "keywords": [
+    "configuration",
+    "configurator",
+    "constraint",
+    "csp",
+    "framer",
+    "hca",
+    "problem",
+    "product",
+    "satisfaction",
+    "solver",
+    "spc",
+    "viamedici"
+  ],
+  "license": "MIT",
+  "author": "Viamedici Software GmbH",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/viamedici-spc/configurator-framer.git"
   },
-  "type": "module",
-  "sideEffects": false,
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -25,22 +41,6 @@
     "prepack": "cp ../../README.md README.md",
     "postpack": "rm README.md"
   },
-  "keywords": [
-    "viamedici",
-    "product",
-    "configuration",
-    "configurator",
-    "spc",
-    "hca",
-    "csp",
-    "constraint",
-    "satisfaction",
-    "problem",
-    "solver",
-    "framer"
-  ],
-  "author": "Viamedici Software GmbH",
-  "license": "MIT",
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@types/bun": "^1.4.5",

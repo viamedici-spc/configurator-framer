@@ -1,51 +1,53 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {ControlType} from "framer";
 import type {CSSProperties} from "react";
 import type {BoxProps} from "./boxProps";
-import { createBoxPropertyControls, getBoxStyle} from "./boxProps";
-import type { StaticTextProps} from "./staticTextProps";
+import {createBoxPropertyControls, getBoxStyle} from "./boxProps";
+import type {StaticTextProps} from "./staticTextProps";
 import {createStaticTextPropertyControls, getStaticTextStyle} from "./staticTextProps";
 import type DeepPartial from "./DeepPartial";
 
-export type ButtonProps = BoxProps & StaticTextProps & {
-    fillHover: string,
-    focusOutline: {
-        color: string,
-        size: number,
-        offset: number
-    }
-}
+export type ButtonProps = BoxProps &
+    StaticTextProps & {
+        fillHover: string;
+        focusOutline: {
+            color: string;
+            size: number;
+            offset: number;
+        };
+    };
 
-export const createButtonPropertyControls = (defaults: DeepPartial<ButtonProps> = {}) => ({
-    fillHover: {
-        title: "Fill – Hover",
-        type: ControlType.Color,
-        defaultValue: defaults.fillHover,
-    },
-    focusOutline: {
-        title: "Focus Outline",
-        type: ControlType.Object,
-        controls: {
-            color: {
-                title: "Color",
-                type: ControlType.Color,
-                defaultValue: defaults.focusOutline?.color,
+export const createButtonPropertyControls = (defaults: DeepPartial<ButtonProps> = {}) =>
+    ({
+        fillHover: {
+            title: "Fill – Hover",
+            type: ControlType.Color,
+            defaultValue: defaults.fillHover,
+        },
+        focusOutline: {
+            title: "Focus Outline",
+            type: ControlType.Object,
+            controls: {
+                color: {
+                    title: "Color",
+                    type: ControlType.Color,
+                    defaultValue: defaults.focusOutline?.color,
+                },
+                size: {
+                    title: "Size",
+                    type: ControlType.Number,
+                    defaultValue: defaults.focusOutline?.size,
+                },
+                offset: {
+                    title: "Offset",
+                    type: ControlType.Number,
+                    defaultValue: defaults.focusOutline?.offset,
+                },
             },
-            size: {
-                title: "Size",
-                type: ControlType.Number,
-                defaultValue: defaults.focusOutline?.size,
-            },
-            offset: {
-                title: "Offset",
-                type: ControlType.Number,
-                defaultValue: defaults.focusOutline?.offset,
-            }
-        }
-    },
-    ...createBoxPropertyControls(defaults),
-    ...createStaticTextPropertyControls(defaults),
-}) satisfies PropertyControls<ButtonProps>;
+        },
+        ...createBoxPropertyControls(defaults),
+        ...createStaticTextPropertyControls(defaults),
+    }) satisfies PropertyControls<ButtonProps>;
 
 export const getButtonStyle = (props: ButtonProps): CSSProperties & Record<string, any> => ({
     ...getBoxStyle(props),
@@ -53,5 +55,5 @@ export const getButtonStyle = (props: ButtonProps): CSSProperties & Record<strin
     "--spc-color-button-fill-hover": props.fillHover,
     "--spc-color-button-focus-outline": props.focusOutline.color,
     "--spc-size-button-focus-outline": `${props.focusOutline.size}px`,
-    "--spc-size-button-focus-outline-offset": `${props.focusOutline.offset}px`
+    "--spc-size-button-focus-outline-offset": `${props.focusOutline.offset}px`,
 });

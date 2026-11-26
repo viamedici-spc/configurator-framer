@@ -1,6 +1,6 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer";
-import type { CSSProperties, ReactElement, ReactNode} from "react";
+import type {CSSProperties, ReactElement, ReactNode} from "react";
 import React, {cloneElement} from "react";
 import withErrorBoundary from "../../../../common/withErrorBoundary";
 import withControlId, {useControlId} from "../../../../common/controlId";
@@ -15,18 +15,18 @@ import type {AttributesContext} from "./attributesContext";
 import attributesContext from "./attributesContext";
 import {getItemTemplate} from "../../../../common/listRenderer";
 import type {ExplainAttribute, ExplainIntentionFilter} from "../../common/explainAttributes";
-import { getExplainAttributes} from "../../common/explainAttributes";
+import {getExplainAttributes} from "../../common/explainAttributes";
 import {useDecisionExplanationContext} from "./decisionExplanationContext";
 
 type Props = {
-    itemTemplate: ReactNode,
-    style?: CSSProperties,
-    intentionFilter: ExplainIntentionFilter
-}
+    itemTemplate: ReactNode;
+    style?: CSSProperties;
+    intentionFilter: ExplainIntentionFilter;
+};
 
 const Root = styled.div`
     display: contents;
-`
+`;
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -34,63 +34,68 @@ const GlobalStyle = createGlobalStyle`
             display: contents !important;
         }
     }
-`
+`;
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const AttributeList = withErrorBoundary(withControlId((props: Props) => {
-    const controlId = useControlId();
-    const renderPlaceholder = useRenderPlaceholder();
+const AttributeList = withErrorBoundary(
+    withControlId((props: Props) => {
+        const controlId = useControlId();
+        const renderPlaceholder = useRenderPlaceholder();
 
-    const itemTemplate = getItemTemplate(props.itemTemplate);
-    if (!itemTemplate) {
-        return <span>Attribute Template not defined</span>;
-    }
+        const itemTemplate = getItemTemplate(props.itemTemplate);
+        if (!itemTemplate) {
+            return <span>Attribute Template not defined</span>;
+        }
 
-    if (renderPlaceholder) {
-        const placeholderAttributes = createPlaceholderAttributes();
+        if (renderPlaceholder) {
+            const placeholderAttributes = createPlaceholderAttributes();
+            return (
+                <Inner style={props.style}>
+                    {placeholderAttributes.map(a => (
+                        <AttributePlaceholder
+                            key={a.key}
+                            attribute={a}
+                            itemTemplate={itemTemplate}
+                            controlId={controlId}
+                        />
+                    ))}
+                </Inner>
+            );
+        }
+
+        const explanation = useDecisionExplanationContext();
+        if (!explanation) {
+            return null;
+        }
+        const attributes = getExplainAttributes(explanation, props.intentionFilter);
+
         return (
             <Inner style={props.style}>
-                {placeholderAttributes.map(a => (
-                    <AttributePlaceholder key={a.key} attribute={a} itemTemplate={itemTemplate} controlId={controlId}/>
+                {attributes.map(a => (
+                    <Attribute key={a.key} attribute={a} itemTemplate={itemTemplate} controlId={controlId} />
                 ))}
             </Inner>
         );
-    }
-
-    const explanation = useDecisionExplanationContext();
-    if (!explanation) {
-        return null;
-    }
-    const attributes = getExplainAttributes(explanation, props.intentionFilter);
-
-    return (
-        <Inner style={props.style}>
-            {attributes.map(a => (
-                <Attribute key={a.key} attribute={a} itemTemplate={itemTemplate} controlId={controlId}/>
-            ))}
-        </Inner>
-    );
-}));
+    }),
+);
 
 export default AttributeList;
 
-function Inner(props: { style?: CSSProperties, children: ReactNode }) {
+function Inner(props: {style?: CSSProperties; children: ReactNode}) {
     return (
         <>
             <Singleton singletonId="CustomExplainAttributeList">
-                <GlobalStyle/>
+                <GlobalStyle />
             </Singleton>
-            <Root style={props.style}>
-                {props.children}
-            </Root>
+            <Root style={props.style}>{props.children}</Root>
         </>
     );
 }
 
-function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string | null }) {
+function Attribute(props: {attribute: ExplainAttribute; itemTemplate: ReactElement; controlId: string | null}) {
     const {attribute, itemTemplate, controlId} = props;
     const attributeName = useAttributeName(attribute.attributeId) ?? attribute.attributeId.localId;
     const choiceValueNames = useChoiceValueNames(attribute.attributeId);
@@ -100,7 +105,7 @@ function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElem
         attributeId: attribute.attributeId,
         attributeName,
         decisions: attribute.decisions,
-        choiceValueNames
+        choiceValueNames,
     };
 
     return (
@@ -111,13 +116,17 @@ function Attribute(props: { attribute: ExplainAttribute, itemTemplate: ReactElem
                 attributeId: attributeId,
                 componentPath: componentPath,
                 sharedConfigurationModel: sharedConfigurationModel,
-                attributeName
+                attributeName,
             })}
         </attributesContext.Provider>
     );
 }
 
-function AttributePlaceholder(props: { attribute: ExplainAttribute, itemTemplate: ReactElement, controlId: string | null }) {
+function AttributePlaceholder(props: {
+    attribute: ExplainAttribute;
+    itemTemplate: ReactElement;
+    controlId: string | null;
+}) {
     const {attribute, itemTemplate, controlId} = props;
     const {attributeId, componentPath, sharedConfigurationModel} = mapAttributeId(attribute.attributeId);
     const attributeName = attributeId;
@@ -128,7 +137,7 @@ function AttributePlaceholder(props: { attribute: ExplainAttribute, itemTemplate
         attributeId,
         componentPath,
         sharedConfigurationModel,
-        attributeName
+        attributeName,
     });
 }
 
@@ -136,7 +145,7 @@ function createPlaceholderAttributes(): ReadonlyArray<ExplainAttribute> {
     const makeAttributeId = (localId: string): GlobalAttributeId => ({
         localId,
         componentPath: [],
-        sharedConfigurationModelId: undefined
+        sharedConfigurationModelId: undefined,
     });
 
     return pipe(
@@ -145,21 +154,21 @@ function createPlaceholderAttributes(): ReadonlyArray<ExplainAttribute> {
             const attributeId = makeAttributeId(id);
             const decisions: ExplainAttribute["decisions"] = [];
             return {key: id, attributeId, decisions};
-        })
-    )
+        }),
+    );
 }
 
 const propertyControls: PropertyControls<Props> = {
     itemTemplate: {
         title: "Attribute Template",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     intentionFilter: {
         title: "Intention Filter",
         type: ControlType.Enum,
         defaultValue: "any",
-        options: ["any", "add", "remove"]
-    }
+        options: ["any", "add", "remove"],
+    },
 };
 
 addPropertyControls(AttributeList, propertyControls);

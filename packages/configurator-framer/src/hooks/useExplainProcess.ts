@@ -1,11 +1,11 @@
-import type { ExplainContext, ExplainProcess} from "../common/explain";
+import type {ExplainContext, ExplainProcess} from "../common/explain";
 import {explainContext} from "../common/explain";
 import useRequiredContext from "../common/useRequiredContext";
 
 export type UseExplainProcessResult = ExplainProcess & {
-    switchMode: ExplainContext["switchMode"],
-    applySolution: ExplainContext["applySolution"],
-    dismiss: ExplainContext["dismiss"]
+    switchMode: ExplainContext["switchMode"];
+    applySolution: ExplainContext["applySolution"];
+    dismiss: ExplainContext["dismiss"];
 };
 
 export default function useExplainProcess(): UseExplainProcessResult | null {
@@ -19,7 +19,7 @@ export default function useExplainProcess(): UseExplainProcessResult | null {
         ...process,
         switchMode,
         applySolution,
-        dismiss
+        dismiss,
     } satisfies UseExplainProcessResult;
 }
 

@@ -1,4 +1,4 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer";
 import type {PropsWithChildren, ReactNode} from "react";
 import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
@@ -8,8 +8,8 @@ import {useDecisionExplanationContext} from "./decisionExplanationContext";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
 
 type Props = {
-    children: ReactNode
-}
+    children: ReactNode;
+};
 
 /**
  * @framerSupportedLayoutWidth any
@@ -46,7 +46,7 @@ const propertyControls: PropertyControls<Props> = {
     children: {
         title: "Content",
         type: ControlType.ComponentInstance,
-    }
+    },
 };
 
 addPropertyControls(ApplySolution, propertyControls);

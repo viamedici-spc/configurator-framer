@@ -1,19 +1,20 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import withErrorBoundary from "../common/withErrorBoundary";
-import type { AttributeIdProps} from "../props/attributeIdProps";
+import type {AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {useAttributeName} from "../hooks/localization";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {useAttributes} from "@viamedici-spc/configurator-react";
 import ReplaceText from "./ReplaceText";
-import type { ReplaceTextProps} from "../props/replaceTextProps";
+import type {ReplaceTextProps} from "../props/replaceTextProps";
 import {replaceTextPropertyControls} from "../props/replaceTextProps";
 
-type Props = AttributeIdProps & ReplaceTextProps & {
-    customName?: string
-}
+type Props = AttributeIdProps &
+    ReplaceTextProps & {
+        customName?: string;
+    };
 
 /**
  * @framerSupportedLayoutWidth any
@@ -28,15 +29,15 @@ const AttributeName = withErrorBoundary((props: Props) => {
     const getAttributeName = () => {
         const attribute = useAttributes([globalAttributeId], false)[0];
         if (!attribute) {
-            return "Attribute not found"
+            return "Attribute not found";
         }
 
-        return useAttributeName(globalAttributeId) ?? attributeId
-    }
+        return useAttributeName(globalAttributeId) ?? attributeId;
+    };
 
     const name = hasCustomName ? customName : renderPlaceholder ? attributeId : getAttributeName();
-    return <ReplaceText {...props} text={name}/>
-})
+    return <ReplaceText {...props} text={name} />;
+});
 
 export default AttributeName;
 
@@ -44,9 +45,9 @@ const propertyControls: PropertyControls<Props> = {
     ...attributeIdPropertyControls,
     customName: {
         title: "Custom Name",
-        type: ControlType.String
+        type: ControlType.String,
     },
-    ...replaceTextPropertyControls("<AttributeName>")
-}
+    ...replaceTextPropertyControls("<AttributeName>"),
+};
 
 addPropertyControls(AttributeName, propertyControls);

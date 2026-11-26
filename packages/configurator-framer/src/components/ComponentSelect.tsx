@@ -1,11 +1,11 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
-import styled from "styled-components"
-import type { ComponentAttribute, ConfiguratorError} from "@viamedici-spc/configurator-ts";
-import {ComponentDecisionState, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
-import {useComponentAttribute} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import styled from "styled-components";
+import type {ComponentAttribute, ConfiguratorError} from "@viamedici-spc/configurator-ts";
+import {ComponentDecisionState, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts";
+import {useComponentAttribute} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import type { SelectProps} from "../props/selectProps";
+import type {SelectProps} from "../props/selectProps";
 import {getSelectStyle, selectPropertyControls} from "../props/selectProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {match} from "ts-pattern";
@@ -17,7 +17,7 @@ import {showMakeDecisionFailure} from "../common/failureAlerts";
 const Root = styled.select`
     color: inherit;
     cursor: inherit;
-`
+`;
 
 const resetValue = "<reset>";
 const nothingValue = "<nothing>";
@@ -25,9 +25,9 @@ const includedValue = "included";
 const excludedValue = "excluded";
 
 type Props = SelectProps & {
-    includedLabel?: string,
-    excludedLabel?: string
-}
+    includedLabel?: string;
+    excludedLabel?: string;
+};
 
 /**
  * @framerIntrinsicWidth 300
@@ -40,7 +40,7 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
         const style = getSelectStyle(props, true, false);
-        return <Root style={style}/>
+        return <Root style={style} />;
     }
 
     const controlId = useControlId();
@@ -57,7 +57,9 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     const makeDecisionWithExplain = async (state: ComponentDecisionState) => {
         const isStatePossible = attribute.possibleDecisionStates.includes(state);
         const explainMode = props.explain;
-        const maybeExplain = explainMode !== "disabled" && (() => explain(b => b.whyIsStateNotPossible.component(attribute.id).state(state), explainMode, controlId));
+        const maybeExplain =
+            explainMode !== "disabled" &&
+            (() => explain(b => b.whyIsStateNotPossible.component(attribute.id).state(state), explainMode, controlId));
         if (isStatePossible) {
             try {
                 await makeDecision(state);
@@ -111,53 +113,49 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
     // `noOptionsAvailableColors`. Also unreachable for Component. No
     // whole-element disable is wired for the same reason.
     const noOptionsAvailable = allOptionsBlocked && isImmutable;
-    const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected, isFixedSelected, allOptionsBlocked, noOptionsAvailable);
+    const style = getSelectStyle(
+        props,
+        attribute.isSatisfied,
+        isImplicitSelected,
+        isFixedSelected,
+        allOptionsBlocked,
+        noOptionsAvailable,
+    );
 
     const includedOption = (
         <option value={includedValue}>
             {decisionPrefix(attribute, ComponentDecisionState.Included, isImmutable, props)}
             {props.includedLabel}
         </option>
-    )
+    );
 
     const excludedOption = (
         <option value={excludedValue}>
             {decisionPrefix(attribute, ComponentDecisionState.Excluded, isImmutable, props)}
             {props.excludedLabel}
         </option>
-    )
+    );
 
     const includedUnavailableOption = (
         <option value={includedValue} disabled>
             {props.includedLabel}
         </option>
-    )
+    );
 
     const excludedUnavailableOption = (
         <option value={excludedValue} disabled>
             {props.excludedLabel}
         </option>
-    )
+    );
 
     const showBlockedGroup = isIncludedBlocked || isExcludedBlocked;
     const showUnavailableGroup = !props.excludeUnavailableOptions && (isIncludedUnavailable || isExcludedUnavailable);
 
     return (
-        <Root ref={ref}
-              value={selectedValue}
-              onChange={e => onChange(e.currentTarget.value)}
-              style={style}>
+        <Root ref={ref} value={selectedValue} onChange={e => onChange(e.currentTarget.value)} style={style}>
+            {selectedValue === nothingValue && <option value={nothingValue}></option>}
 
-            {selectedValue === nothingValue && (
-                <option value={nothingValue}>
-                </option>
-            )}
-
-            {canReset && (
-                <option value={resetValue}>
-                    {props.resetLabel}
-                </option>
-            )}
+            {canReset && <option value={resetValue}>{props.resetLabel}</option>}
 
             {isIncludedAllowed && includedOption}
             {isExcludedAllowed && excludedOption}
@@ -176,15 +174,20 @@ const ComponentSelect = explainableComponent<HTMLSelectElement, Props>((props, r
                 </optgroup>
             )}
         </Root>
-    )
-})
+    );
+});
 
 export default ComponentSelect;
 
-const decisionPrefix = (a: ComponentAttribute, value: ComponentDecisionState, isImmutable: boolean, props: Props): string => {
+const decisionPrefix = (
+    a: ComponentAttribute,
+    value: ComponentDecisionState,
+    isImmutable: boolean,
+    props: Props,
+): string => {
     if (a.decision?.kind !== DecisionKind.Implicit || a.decision?.state !== value) return "";
     return isImmutable ? props.fixedLabelPrefix : props.implicitLabelPrefix;
-}
+};
 
 const propertyControls: PropertyControls<Props> = {
     ...selectPropertyControls,
@@ -197,7 +200,7 @@ const propertyControls: PropertyControls<Props> = {
         title: "Excluded Label",
         type: ControlType.String,
         defaultValue: "Excluded",
-    }
-}
+    },
+};
 
 addPropertyControls(ComponentSelect, propertyControls);

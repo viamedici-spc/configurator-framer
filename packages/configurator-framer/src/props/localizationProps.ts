@@ -1,20 +1,20 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {ControlType} from "framer";
 import type {AttributeIdProps} from "./attributeIdProps";
 import type {ChoiceValueIdProps} from "./choiceValueIdProps";
 
 export type LocalizationProps = {
     localization: {
-        jsonDefinition: string
-    }
-}
+        jsonDefinition: string;
+    };
+};
 
-export type LocalizableText = Array<{ localeCode: string, translation: string }>
+export type LocalizableText = Array<{localeCode: string; translation: string}>;
 
 export type Localization = {
-    attributes: Array<AttributeIdProps & { name: LocalizableText }>
-    choiceValues: Array<AttributeIdProps & ChoiceValueIdProps & { name: LocalizableText }>
-}
+    attributes: Array<AttributeIdProps & {name: LocalizableText}>;
+    choiceValues: Array<AttributeIdProps & ChoiceValueIdProps & {name: LocalizableText}>;
+};
 
 export const localizationPropertyControls = {
     localization: {
@@ -27,8 +27,8 @@ export const localizationPropertyControls = {
             jsonDefinition: {
                 title: "Definition – JSON",
                 type: ControlType.String,
-                displayTextArea: true
-            }
-        }
-    }
+                displayTextArea: true,
+            },
+        },
+    },
 } satisfies PropertyControls<LocalizationProps>;

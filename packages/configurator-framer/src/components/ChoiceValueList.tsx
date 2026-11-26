@@ -1,21 +1,21 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
-import {useChoiceAttribute} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import {useChoiceAttribute} from "@viamedici-spc/configurator-react";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import type { CSSProperties, PropsWithChildren, ReactNode} from "react";
+import type {CSSProperties, PropsWithChildren, ReactNode} from "react";
 import React, {cloneElement} from "react";
-import type { AttributeIdProps} from "../props/attributeIdProps";
+import type {AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import withErrorBoundary from "../common/withErrorBoundary";
 import withControlId, {useControlId} from "../common/controlId";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "./Singleton";
-import type { ChoiceValueId} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueId} from "@viamedici-spc/configurator-ts";
 import {ChoiceValueDecisionState, DecisionKind} from "@viamedici-spc/configurator-ts";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import useSortedChoiceValues from "../hooks/useSortedChoiceValues";
 import type {ChoiceValueNames} from "../hooks/localization";
-import { useChoiceValueNames} from "../hooks/localization";
+import {useChoiceValueNames} from "../hooks/localization";
 import {match} from "ts-pattern";
 import {RM} from "@viamedici-spc/fp-ts-extensions";
 import {getItemTemplate} from "../common/listRenderer";
@@ -24,21 +24,21 @@ type SelectionState = "undefined" | "included" | "excluded";
 type Condition = "none" | "explicit" | "implicit" | "blocked" | "available" | "interactive";
 
 type Filter = {
-    selection: SelectionState,
-    condition: Condition
-}
+    selection: SelectionState;
+    condition: Condition;
+};
 
 type Props = AttributeIdProps & {
-    itemTemplate: ReactNode,
-    style: CSSProperties,
-    filter: Filter[],
-    designTimeItemCount?: number,
-    designTimeChoiceValueName?: string
-}
+    itemTemplate: ReactNode;
+    style: CSSProperties;
+    filter: Filter[];
+    designTimeItemCount?: number;
+    designTimeChoiceValueName?: string;
+};
 
 const Root = styled.div`
     display: contents;
-`
+`;
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -46,99 +46,132 @@ const GlobalStyle = createGlobalStyle`
             display: contents !important;
         }
     }
-`
+`;
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const ChoiceValueList = withErrorBoundary(withControlId((props: Props) => {
-    const controlId = useControlId();
-    const renderPlaceholder = useRenderPlaceholder();
+const ChoiceValueList = withErrorBoundary(
+    withControlId((props: Props) => {
+        const controlId = useControlId();
+        const renderPlaceholder = useRenderPlaceholder();
 
-    const itemTemplate = getItemTemplate(props.itemTemplate);
-    if (!itemTemplate) {
-        return <span>Choice Value Template not defined</span>
-    }
-
-    const renderChoiceValues = (choiceValues: ChoiceValueId[], choiceValueNames: ChoiceValueNames) => choiceValues.map(v => cloneElement(itemTemplate, {
-            key: v,
-            layoutId: `${controlId}_${v}`,
-            attributeId: props.attributeId,
-            componentPath: props.componentPath,
-            sharedConfigurationModel: props.sharedConfigurationModel,
-            choiceValueId: v,
-            choiceValueName: choiceValueNames.get(v) ?? v
+        const itemTemplate = getItemTemplate(props.itemTemplate);
+        if (!itemTemplate) {
+            return <span>Choice Value Template not defined</span>;
         }
-    ));
 
-    if (renderPlaceholder) {
-        const designTimeItemCount = Math.max(1, Math.floor(props.designTimeItemCount ?? 3));
-        const designTimeChoiceValueName = props.designTimeChoiceValueName?.trim() || "Choice Value";
-        const placeholderChoiceValues = Array.from(
-            {length: designTimeItemCount},
-            (_, index) => designTimeItemCount === 1
-                ? designTimeChoiceValueName
-                : `${designTimeChoiceValueName} ${index + 1}`
+        const renderChoiceValues = (choiceValues: ChoiceValueId[], choiceValueNames: ChoiceValueNames) =>
+            choiceValues.map(v =>
+                cloneElement(itemTemplate, {
+                    key: v,
+                    layoutId: `${controlId}_${v}`,
+                    attributeId: props.attributeId,
+                    componentPath: props.componentPath,
+                    sharedConfigurationModel: props.sharedConfigurationModel,
+                    choiceValueId: v,
+                    choiceValueName: choiceValueNames.get(v) ?? v,
+                }),
+            );
+
+        if (renderPlaceholder) {
+            const designTimeItemCount = Math.max(1, Math.floor(props.designTimeItemCount ?? 3));
+            const designTimeChoiceValueName = props.designTimeChoiceValueName?.trim() || "Choice Value";
+            const placeholderChoiceValues = Array.from({length: designTimeItemCount}, (_, index) =>
+                designTimeItemCount === 1 ? designTimeChoiceValueName : `${designTimeChoiceValueName} ${index + 1}`,
+            );
+
+            return <Inner {...props}>{renderChoiceValues(placeholderChoiceValues, RM.empty)}</Inner>;
+        }
+
+        const globalAttributeId = parseGlobalAttributeId(props);
+        const choiceAttribute = useChoiceAttribute(globalAttributeId);
+        if (!choiceAttribute) {
+            return <span>Choice Attribute not found</span>;
+        }
+
+        const choiceValueNames = useChoiceValueNames(globalAttributeId);
+        const filter = props.filter ?? new Array<Filter>();
+        const filteredChoiceValues = [...choiceAttribute.attribute.values.values()].filter(
+            v =>
+                filter.length === 0 ||
+                filter.some(({selection, condition}) =>
+                    match({selection, condition})
+                        .with(
+                            {selection: "included", condition: "blocked"},
+                            () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included),
+                        )
+                        .with({selection: "included", condition: "available"}, () =>
+                            v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included),
+                        )
+                        .with(
+                            {selection: "included", condition: "interactive"},
+                            () => !v.isPossibleDecisionStatesImmutable,
+                        )
+                        .with(
+                            {selection: "included", condition: "implicit"},
+                            () =>
+                                v.decision?.state === ChoiceValueDecisionState.Included &&
+                                v.decision?.kind === DecisionKind.Implicit,
+                        )
+                        .with(
+                            {selection: "included", condition: "explicit"},
+                            () =>
+                                v.decision?.state === ChoiceValueDecisionState.Included &&
+                                v.decision?.kind === DecisionKind.Explicit,
+                        )
+                        .with(
+                            {selection: "included", condition: "none"},
+                            () => v.decision?.state === ChoiceValueDecisionState.Included,
+                        )
+
+                        .with(
+                            {selection: "excluded", condition: "blocked"},
+                            () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded),
+                        )
+                        .with({selection: "excluded", condition: "available"}, () =>
+                            v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded),
+                        )
+                        .with(
+                            {selection: "excluded", condition: "implicit"},
+                            () =>
+                                v.decision?.state === ChoiceValueDecisionState.Excluded &&
+                                v.decision?.kind === DecisionKind.Implicit,
+                        )
+                        .with(
+                            {selection: "excluded", condition: "explicit"},
+                            () =>
+                                v.decision?.state === ChoiceValueDecisionState.Excluded &&
+                                v.decision?.kind === DecisionKind.Explicit,
+                        )
+                        .with(
+                            {selection: "excluded", condition: "none"},
+                            () => v.decision?.state === ChoiceValueDecisionState.Excluded,
+                        )
+
+                        .with({selection: "undefined"}, () => v.decision == null)
+
+                        .otherwise(() => false),
+                ),
         );
 
-        return (
-            <Inner {...props}>
-                {renderChoiceValues(placeholderChoiceValues, RM.empty)}
-            </Inner>
-        )
-    }
+        const choiceValues = useSortedChoiceValues(globalAttributeId, filteredChoiceValues);
+        const choiceValueIds = choiceValues.map(v => v.id);
 
-    const globalAttributeId = parseGlobalAttributeId(props);
-    const choiceAttribute = useChoiceAttribute(globalAttributeId);
-    if (!choiceAttribute) {
-        return <span>Choice Attribute not found</span>
-    }
-
-    const choiceValueNames = useChoiceValueNames(globalAttributeId);
-    const filter = props.filter ?? new Array<Filter>();
-    const filteredChoiceValues = [...choiceAttribute.attribute.values.values()]
-        .filter(v => filter.length === 0 || filter.some(({selection, condition}) => match({selection, condition})
-            .with({selection: "included", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
-            .with({selection: "included", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Included))
-            .with({selection: "included", condition: "interactive"}, () => !v.isPossibleDecisionStatesImmutable)
-            .with({selection: "included", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Implicit)
-            .with({selection: "included", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Included && v.decision?.kind === DecisionKind.Explicit)
-            .with({selection: "included", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Included)
-
-            .with({selection: "excluded", condition: "blocked"}, () => !v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
-            .with({selection: "excluded", condition: "available"}, () => v.possibleDecisionStates.includes(ChoiceValueDecisionState.Excluded))
-            .with({selection: "excluded", condition: "implicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Implicit)
-            .with({selection: "excluded", condition: "explicit"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded && v.decision?.kind === DecisionKind.Explicit)
-            .with({selection: "excluded", condition: "none"}, () => v.decision?.state === ChoiceValueDecisionState.Excluded)
-
-            .with({selection: "undefined"}, () => v.decision == null)
-
-            .otherwise(() => false))
-        )
-
-    const choiceValues = useSortedChoiceValues(globalAttributeId, filteredChoiceValues);
-    const choiceValueIds = choiceValues.map(v => v.id);
-
-    return (
-        <Inner {...props}>
-            {renderChoiceValues(choiceValueIds, choiceValueNames)}
-        </Inner>
-    )
-}))
+        return <Inner {...props}>{renderChoiceValues(choiceValueIds, choiceValueNames)}</Inner>;
+    }),
+);
 
 function Inner(props: PropsWithChildren<Props>) {
     return (
         <>
             <Singleton singletonId="ChoiceValueList">
-                <GlobalStyle/>
+                <GlobalStyle />
             </Singleton>
-            <Root style={props.style}>
-                {props.children}
-            </Root>
+            <Root style={props.style}>{props.children}</Root>
         </>
-    )
-
+    );
 }
 
 export default ChoiceValueList;
@@ -147,7 +180,7 @@ const propertyControls: PropertyControls<Props> = {
     ...attributeIdPropertyControls,
     itemTemplate: {
         title: "Choice Value Template",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     designTimeItemCount: {
         title: "Design Time Items",
@@ -155,12 +188,12 @@ const propertyControls: PropertyControls<Props> = {
         defaultValue: 3,
         min: 1,
         step: 1,
-        displayStepper: true
+        displayStepper: true,
     },
     designTimeChoiceValueName: {
         title: "Design Time Name",
         type: ControlType.String,
-        defaultValue: "Choice Value"
+        defaultValue: "Choice Value",
     },
     filter: {
         title: "Filter",
@@ -168,7 +201,7 @@ const propertyControls: PropertyControls<Props> = {
         // See docs/features/decision-immutability-and-trimming.md for more info
         defaultValue: [
             {selection: "included", condition: "available"},
-            {selection: "included", condition: "interactive"}
+            {selection: "included", condition: "interactive"},
         ],
         control: {
             type: ControlType.Object,
@@ -184,10 +217,10 @@ const propertyControls: PropertyControls<Props> = {
                     type: ControlType.Enum,
                     defaultValue: "none",
                     options: ["none", "explicit", "implicit", "blocked", "available", "interactive"],
-                }
-            }
-        }
-    }
-}
+                },
+            },
+        },
+    },
+};
 
 addPropertyControls(ChoiceValueList, propertyControls);

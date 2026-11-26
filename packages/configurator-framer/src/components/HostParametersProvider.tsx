@@ -1,4 +1,4 @@
-import type { PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
 import {createContext, useContext, useMemo, useState, useSyncExternalStore} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
@@ -43,11 +43,9 @@ function RuntimeHostParametersProvider(props: PropsWithChildren) {
 
     return (
         <>
-            <div ref={setAnchor} style={{display: "contents"}}/>
+            <div ref={setAnchor} style={{display: "contents"}} />
             <hostParametersPresenceContext.Provider value={true}>
-                <hostParametersContext.Provider value={parameters}>
-                    {props.children}
-                </hostParametersContext.Provider>
+                <hostParametersContext.Provider value={parameters}>{props.children}</hostParametersContext.Provider>
             </hostParametersPresenceContext.Provider>
         </>
     );

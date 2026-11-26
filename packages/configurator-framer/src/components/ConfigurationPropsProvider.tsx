@@ -1,4 +1,4 @@
-import type { PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
 import {createContext} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import type {ConfigurationOverrideableProps} from "./Configuration";
@@ -10,11 +10,7 @@ export const configurationPropsContext = createContext<ConfigurationOverrideable
 const ConfigurationPropsProvider = withErrorBoundary((props: Props) => {
     const {children, ...overrides} = props;
 
-    return (
-        <configurationPropsContext.Provider value={overrides}>
-            {children}
-        </configurationPropsContext.Provider>
-    )
-})
+    return <configurationPropsContext.Provider value={overrides}>{children}</configurationPropsContext.Provider>;
+});
 
 export default ConfigurationPropsProvider;

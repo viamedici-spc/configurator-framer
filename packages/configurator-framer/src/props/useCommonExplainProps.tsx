@@ -13,4 +13,4 @@ const useCommonExplainProps = (): CommonExplainProps => {
     return props;
 };
 
-export default useCommonExplainProps
+export default useCommonExplainProps;

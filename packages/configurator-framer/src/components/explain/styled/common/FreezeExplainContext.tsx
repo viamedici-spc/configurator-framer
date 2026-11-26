@@ -1,14 +1,10 @@
 import type {PropsWithChildren} from "react";
-import { useContext, useState} from "react";
+import {useContext, useState} from "react";
 import {explainContext} from "../../../../common/explain";
 
 export default function FreezeExplainContext(props: PropsWithChildren) {
     const context = useContext(explainContext);
     const [capturedExplainContext, _] = useState(context);
 
-    return (
-        <explainContext.Provider value={capturedExplainContext}>
-            {props.children}
-        </explainContext.Provider>
-    )
+    return <explainContext.Provider value={capturedExplainContext}>{props.children}</explainContext.Provider>;
 }

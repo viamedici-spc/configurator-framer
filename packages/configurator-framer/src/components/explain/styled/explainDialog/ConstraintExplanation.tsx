@@ -12,21 +12,21 @@ const Root = styled.div`
     }
 
     line-height: 1.5em;
-`
+`;
 
 const List = styled.ul`
     list-style-type: none;
     margin-inline-start: 0;
     padding-inline-start: 0;
-`
+`;
 
 const SubList = styled.ul`
     list-style-type: disc;
     margin-inline-start: 0;
     padding-inline-start: var(--space-lg);
-`
+`;
 
-export default function ConstraintExplanation(props: { explanation: ConstraintExplanation }) {
+export default function ConstraintExplanation(props: {explanation: ConstraintExplanation}) {
     const {explanation} = props;
     const {explanationCard, constraintExplanation} = useExplainDialogProps();
     const causedByCardinalities = explanation.causedByCardinalities;
@@ -35,8 +35,12 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
         RNEA.groupBy(d => d.configurationModelId),
         RR.collect(Str.Ord)((k, v) => ({
             configurationModelId: k,
-            rules: pipe(v, RA.map(r => r.localId), RA.sort(Str.Ord))
-        }))
+            rules: pipe(
+                v,
+                RA.map(r => r.localId),
+                RA.sort(Str.Ord),
+            ),
+        })),
     );
 
     return (
@@ -44,9 +48,13 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
             <List>
                 {causedByRules.map(r => (
                     <li key={r.configurationModelId}>
-                        <span style={getTextStyle(constraintExplanation.configurationModelId)}>{r.configurationModelId}</span>
+                        <span style={getTextStyle(constraintExplanation.configurationModelId)}>
+                            {r.configurationModelId}
+                        </span>
                         <SubList style={getTextStyle(constraintExplanation.ruleId)}>
-                            {r.rules.map(ruleId => <li key={ruleId}>{ruleId}</li>)}
+                            {r.rules.map(ruleId => (
+                                <li key={ruleId}>{ruleId}</li>
+                            ))}
                         </SubList>
                     </li>
                 ))}
@@ -55,11 +63,13 @@ export default function ConstraintExplanation(props: { explanation: ConstraintEx
                     <li style={getTextStyle(constraintExplanation.ruleId)}>
                         <span>Cardinality</span>
                         <SubList>
-                            {causedByCardinalities.map(c => <li key={c.localId}>{c.localId}</li>)}
+                            {causedByCardinalities.map(c => (
+                                <li key={c.localId}>{c.localId}</li>
+                            ))}
                         </SubList>
                     </li>
                 )}
             </List>
         </Root>
-    )
+    );
 }

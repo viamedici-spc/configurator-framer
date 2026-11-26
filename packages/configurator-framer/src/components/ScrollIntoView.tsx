@@ -1,17 +1,17 @@
 import {useEffect, useRef} from "react";
 import styled from "styled-components";
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer";
 
 const Root = styled.div`
     width: 10px;
     height: 10px;
     background-color: greenyellow;
-`
+`;
 
 type Props = {
-    delay: number
-}
+    delay: number;
+};
 
 /**
  * @framerSupportedLayoutWidth any
@@ -28,12 +28,12 @@ export default function ScrollIntoView(props: Props) {
 
         const timeout = setTimeout(() => {
             root.scrollIntoView();
-        }, props.delay)
+        }, props.delay);
 
         return () => clearTimeout(timeout);
     }, [rootRef.current]);
 
-    return <Root ref={rootRef}></Root>
+    return <Root ref={rootRef}></Root>;
 }
 
 const propertyControls: PropertyControls<Props> = {
@@ -43,8 +43,8 @@ const propertyControls: PropertyControls<Props> = {
         min: 0,
         unit: "ms",
         defaultValue: 0,
-        step: 1
-    }
-}
+        step: 1,
+    },
+};
 
 addPropertyControls(ScrollIntoView, propertyControls);

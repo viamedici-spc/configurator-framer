@@ -1,10 +1,10 @@
 import type {ExplainContext} from "../common/explain";
-import { explainContext} from "../common/explain";
+import {explainContext} from "../common/explain";
 import useRequiredContext from "../common/useRequiredContext";
 
 export type UseExplainResult = {
-    explain: ExplainContext["explain"],
-    handleExplainAnswer: ExplainContext["handleExplainAnswer"]
+    explain: ExplainContext["explain"];
+    handleExplainAnswer: ExplainContext["handleExplainAnswer"];
 };
 
 export default function useExplain(): UseExplainResult {
@@ -12,6 +12,6 @@ export default function useExplain(): UseExplainResult {
 
     return {
         explain: explain,
-        handleExplainAnswer: handleExplainAnswer
+        handleExplainAnswer: handleExplainAnswer,
     };
 }

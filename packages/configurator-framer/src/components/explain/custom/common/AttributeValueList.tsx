@@ -1,6 +1,6 @@
-import type { PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
 import {addPropertyControls, ControlType} from "framer";
-import type { CSSProperties, ReactElement, ReactNode} from "react";
+import type {CSSProperties, ReactElement, ReactNode} from "react";
 import React, {cloneElement} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "../../../Singleton";
@@ -16,13 +16,13 @@ import type {DecisionIntention} from "../../common/explainAttributes";
 import sortDecisions from "../../common/sortDecisions";
 
 type Props = {
-    itemTemplate: ReactNode,
-    style?: CSSProperties
-}
+    itemTemplate: ReactNode;
+    style?: CSSProperties;
+};
 
 const Root = styled.div`
     display: contents;
-`
+`;
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -30,66 +30,58 @@ const GlobalStyle = createGlobalStyle`
             display: contents !important;
         }
     }
-`
+`;
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const AttributeValueList = withErrorBoundary(withControlId((props: Props) => {
-    const controlId = useControlId();
-    const renderPlaceholder = useRenderPlaceholder();
-    const context = useAttributesContext();
-    const commonExplainProps = useCommonExplainProps();
+const AttributeValueList = withErrorBoundary(
+    withControlId((props: Props) => {
+        const controlId = useControlId();
+        const renderPlaceholder = useRenderPlaceholder();
+        const context = useAttributesContext();
+        const commonExplainProps = useCommonExplainProps();
 
-    const itemTemplate = getItemTemplate(props.itemTemplate);
-    if (!itemTemplate) {
-        return <span>Attribute Value Template not defined</span>;
-    }
+        const itemTemplate = getItemTemplate(props.itemTemplate);
+        if (!itemTemplate) {
+            return <span>Attribute Value Template not defined</span>;
+        }
 
-    if (renderPlaceholder) {
-        return (
-            <Inner style={props.style}>
-                {renderPlaceholderItems(itemTemplate, controlId)}
-            </Inner>
-        );
-    }
+        if (renderPlaceholder) {
+            return <Inner style={props.style}>{renderPlaceholderItems(itemTemplate, controlId)}</Inner>;
+        }
 
-    if (!context) {
-        return null;
-    }
+        if (!context) {
+            return null;
+        }
 
-    const attributeKey = globalAttributeIdToString(context.attributeId);
-    const sortedDecisions = sortDecisions(context.decisions, context.choiceValueNames, commonExplainProps);
-    const items = sortedDecisions.map((decision, index) => {
-        const displayName = getDecisionStateDisplayName(decision, context.choiceValueNames, commonExplainProps);
-        const layoutId = `${controlId}_${attributeKey}_${index}`;
-        return cloneElement(itemTemplate, {
-            key: layoutId,
-            layoutId,
-            displayName,
-            intention: decision.intention
+        const attributeKey = globalAttributeIdToString(context.attributeId);
+        const sortedDecisions = sortDecisions(context.decisions, context.choiceValueNames, commonExplainProps);
+        const items = sortedDecisions.map((decision, index) => {
+            const displayName = getDecisionStateDisplayName(decision, context.choiceValueNames, commonExplainProps);
+            const layoutId = `${controlId}_${attributeKey}_${index}`;
+            return cloneElement(itemTemplate, {
+                key: layoutId,
+                layoutId,
+                displayName,
+                intention: decision.intention,
+            });
         });
-    });
 
-    return (
-        <Inner style={props.style}>
-            {items}
-        </Inner>
-    );
-}));
+        return <Inner style={props.style}>{items}</Inner>;
+    }),
+);
 
 export default AttributeValueList;
 
-function Inner(props: { style?: CSSProperties, children: ReactNode }) {
+function Inner(props: {style?: CSSProperties; children: ReactNode}) {
     return (
         <>
             <Singleton singletonId="CustomExplainAttributeValueList">
-                <GlobalStyle/>
+                <GlobalStyle />
             </Singleton>
-            <Root style={props.style}>
-                {props.children}
-            </Root>
+            <Root style={props.style}>{props.children}</Root>
         </>
     );
 }
@@ -98,7 +90,7 @@ function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string | 
     const items = [
         {displayName: "Value A", intention: "add" as DecisionIntention},
         {displayName: "Value B", intention: "remove" as DecisionIntention},
-        {displayName: "Value C", intention: "remove" as DecisionIntention}
+        {displayName: "Value C", intention: "remove" as DecisionIntention},
     ];
 
     return items.map((item, index) => {
@@ -107,7 +99,7 @@ function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string | 
             key: layoutId,
             layoutId,
             displayName: item.displayName,
-            intention: item.intention
+            intention: item.intention,
         });
     });
 }
@@ -115,8 +107,8 @@ function renderPlaceholderItems(itemTemplate: ReactElement, controlId: string | 
 const propertyControls: PropertyControls<Props> = {
     itemTemplate: {
         title: "Attribute Value Template",
-        type: ControlType.ComponentInstance
-    }
+        type: ControlType.ComponentInstance,
+    },
 };
 
 addPropertyControls(AttributeValueList, propertyControls);

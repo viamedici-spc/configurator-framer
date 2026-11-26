@@ -28,8 +28,7 @@ export type HostParametersStore = {
 export const EMPTY_PARAMS: HostParameters = Object.freeze({});
 
 export const emptyStore: HostParametersStore = {
-    subscribe: () => () => {
-    },
+    subscribe: () => () => {},
     getSnapshot: () => EMPTY_PARAMS,
     getServerSnapshot: () => EMPTY_PARAMS,
 };
@@ -85,9 +84,7 @@ export function createHostParametersStore(anchorEl: Element): HostParametersStor
         }
     };
 
-    const hostElement = typeof anchorEl.closest === "function"
-        ? anchorEl.closest(NATIVE_HOST_TAG)
-        : null;
+    const hostElement = typeof anchorEl.closest === "function" ? anchorEl.closest(NATIVE_HOST_TAG) : null;
 
     // Seed synchronously (no listeners yet → no notification) so getSnapshot is correct from the
     // first render. subscribe later reconciles any change that happened in the meantime.

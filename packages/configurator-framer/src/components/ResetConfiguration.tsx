@@ -1,6 +1,6 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
-import {useConfigurationReset} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import {useConfigurationReset} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import type {ReactNode} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
@@ -8,9 +8,9 @@ import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {showResetConfigurationFailure} from "../common/failureAlerts";
 
 type Props = {
-    enabledChildren: ReactNode,
-    disabledChildren: ReactNode
-}
+    enabledChildren: ReactNode;
+    disabledChildren: ReactNode;
+};
 
 /**
  * @framerSupportedLayoutWidth any
@@ -29,15 +29,15 @@ const ResetConfiguration = withErrorBoundary((props: Props) => {
         }
 
         try {
-            await resetConfiguration()
+            await resetConfiguration();
         } catch {
             showResetConfigurationFailure();
         }
-    }
+    };
 
     const children = canResetConfiguration ? props.enabledChildren : props.disabledChildren;
-    return cloneChildrenWithProps(children, {onClick})
-})
+    return cloneChildrenWithProps(children, {onClick});
+});
 
 export default ResetConfiguration;
 
@@ -49,7 +49,7 @@ const propertyControls: PropertyControls<Props> = {
     disabledChildren: {
         title: "Content – Disabled",
         type: ControlType.ComponentInstance,
-    }
-}
+    },
+};
 
 addPropertyControls(ResetConfiguration, propertyControls);

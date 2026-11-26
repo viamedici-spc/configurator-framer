@@ -7,6 +7,6 @@ const Shapes = createGlobalStyle`
         --shape-border-radius-md: 12px;
         --shape-border-radius-lg: 20px;
     }
-`
+`;
 
 export default Shapes;

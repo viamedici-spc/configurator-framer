@@ -1,13 +1,13 @@
-import type { Either} from "@viamedici-spc/fp-ts-extensions";
+import type {Either} from "@viamedici-spc/fp-ts-extensions";
 import {E, flow, O, P, pipe, Str} from "@viamedici-spc/fp-ts-extensions";
 import type {ReactNode} from "react";
-import { useMemo} from "react";
+import {useMemo} from "react";
 import type {AttributeIdProps} from "../props/attributeIdProps";
 import {json} from "fp-ts";
 import {InitializationErrorMessage} from "../components/InitializationErrorMessage";
-import type { ZodType} from "zod";
+import type {ZodType} from "zod";
 import {z} from "zod";
-import {fromError} from 'zod-validation-error';
+import {fromError} from "zod-validation-error";
 import type {GlobalAttributeId} from "@viamedici-spc/configurator-ts";
 
 export const GlobalAttributeId_ = z.object({
@@ -26,30 +26,47 @@ export function mapAttributeId(attributeId: z.infer<typeof GlobalAttributeId_> |
 
 export function useGenericParseRawData<R, O>(name: string, zodType: ZodType<R>, mapper: (rawData: R) => O) {
     return (jsonDefinition: string): Either<ReactNode, O> => {
-        return useMemo(() => pipe(
-            // A missing JSON is considered an error but without returning an error output.
-            // This allows performing fallbacks.
-            jsonDefinition,
-            O.fromNullable,
-            O.filter(P.not(Str.isEmpty)),
-            E.fromOption<ReactNode>(() => null),
-            E.chain(flow(
-                json.parse,
-                E.mapLeft(l => "The JSON content could not be parsed. Please check for syntax errors.\n" + String(l)),
-                E.chain(o => pipe(
-                    zodType.safeParse(o),
-                    pr => pr.success ? E.right(pr.data) : E.left(pr.error),
-                    E.mapLeft(e => fromError(e, {maxIssuesInMessage: 5, issueSeparator: "\n- "})),
-                    E.mapLeft(e => "The JSON schema is invalid. Ensure all required fields and types are correctly defined.\n" + e.toString())
-                )),
-                E.map(mapper),
-                E.mapLeft<string, ReactNode>(s =>
-                    <InitializationErrorMessage
-                        type="warning"
-                        title={name + " definition is invalid and was ignored"}
-                        message={s}/>
-                )
-            ))
-        ), [jsonDefinition]);
+        return useMemo(
+            () =>
+                pipe(
+                    // A missing JSON is considered an error but without returning an error output.
+                    // This allows performing fallbacks.
+                    jsonDefinition,
+                    O.fromNullable,
+                    O.filter(P.not(Str.isEmpty)),
+                    E.fromOption<ReactNode>(() => null),
+                    E.chain(
+                        flow(
+                            json.parse,
+                            E.mapLeft(
+                                l =>
+                                    "The JSON content could not be parsed. Please check for syntax errors.\n" +
+                                    String(l),
+                            ),
+                            E.chain(o =>
+                                pipe(
+                                    zodType.safeParse(o),
+                                    pr => (pr.success ? E.right(pr.data) : E.left(pr.error)),
+                                    E.mapLeft(e => fromError(e, {maxIssuesInMessage: 5, issueSeparator: "\n- "})),
+                                    E.mapLeft(
+                                        e =>
+                                            "The JSON schema is invalid. Ensure all required fields and types are correctly defined.\n" +
+                                            e.toString(),
+                                    ),
+                                ),
+                            ),
+                            E.map(mapper),
+                            E.mapLeft<string, ReactNode>(s => (
+                                <InitializationErrorMessage
+                                    type="warning"
+                                    title={name + " definition is invalid and was ignored"}
+                                    message={s}
+                                />
+                            )),
+                        ),
+                    ),
+                ),
+            [jsonDefinition],
+        );
     };
 }

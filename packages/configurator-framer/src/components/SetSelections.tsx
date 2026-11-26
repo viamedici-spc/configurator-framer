@@ -1,34 +1,37 @@
-import type { PropertyControls} from "framer";
-import {addPropertyControls, ControlType} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 import type {
     AutomaticConflictResolution,
-    ChoiceValue, ConfiguratorError, DecisionsExplainAnswer,
+    ChoiceValue,
+    ConfiguratorError,
+    DecisionsExplainAnswer,
     ExplicitDecision,
     ManualConflictResolution,
     DropExistingDecisionsMode,
     KeepExistingDecisionsMode,
-    MakeManyDecisionsMode
+    MakeManyDecisionsMode,
 } from "@viamedici-spc/configurator-ts";
 import {
     AttributeType,
     ChoiceValueDecisionState,
-    ComponentDecisionState, ConfiguratorErrorType,
-    DecisionKind
-} from "@viamedici-spc/configurator-ts"
-import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react"
+    ComponentDecisionState,
+    ConfiguratorErrorType,
+    DecisionKind,
+} from "@viamedici-spc/configurator-ts";
+import {useAttributes, useMakeDecision} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import type {PropsWithChildren, ReactNode} from "react";
-import { useEffect} from "react";
-import type { AttributeIdProps} from "../props/attributeIdProps";
+import {useEffect} from "react";
+import type {AttributeIdProps} from "../props/attributeIdProps";
 import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import {match} from "ts-pattern";
-import type { ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type {ChoiceValueIdProps} from "../props/choiceValueIdProps";
 import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
-import type { ExplainProps} from "../props/explainProps";
+import type {ExplainProps} from "../props/explainProps";
 import {explainPropertyControls} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import {explainableComponent} from "../common/componentComposites";
@@ -41,14 +44,15 @@ import {explainableComponent} from "../common/componentComposites";
 type SelectionState = "undefined" | "included" | "excluded" | "true" | "false" | "numeric";
 
 type Props = ExplainProps & {
-    attributes: (AttributeIdProps & ChoiceValueIdProps & {
-        setSelection: SelectionState,
-        numericValue: number,
-    })[],
-    existingSelections: "keep" | "drop",
-    autoResolveConflicts: boolean,
-    trigger: "click" | "auto"
-}
+    attributes: (AttributeIdProps &
+        ChoiceValueIdProps & {
+            setSelection: SelectionState;
+            numericValue: number;
+        })[];
+    existingSelections: "keep" | "drop";
+    autoResolveConflicts: boolean;
+    trigger: "click" | "auto";
+};
 
 /**
  * @framerSupportedLayoutWidth any
@@ -64,10 +68,13 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
     const {makeManyDecisions} = useMakeDecision();
     const {handleExplainAnswer} = useExplain();
     const globalAttributeIds = props.attributes.map(parseGlobalAttributeId);
-    const attributes: { getDecisions?: () => ExplicitDecision[], error?: ReactNode }[] = useAttributes(globalAttributeIds, false).map((attribute, i) => {
+    const attributes: {getDecisions?: () => ExplicitDecision[]; error?: ReactNode}[] = useAttributes(
+        globalAttributeIds,
+        false,
+    ).map((attribute, i) => {
         if (!attribute) {
             return {
-                error: <span>Attribute not found</span>
+                error: <span>Attribute not found</span>,
             };
         }
 
@@ -81,49 +88,69 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
 
         if (!isChoiceAttribute && hasChoiceValueId) {
             return {
-                error: <span>Attribute is not a Choice Attribute</span>
+                error: <span>Attribute is not a Choice Attribute</span>,
             };
         }
 
-        let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
+        let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute
+            ? attribute.values.get(choiceValueId)
+            : null;
         if (hasChoiceValueId && choiceValue == null) {
             return {
-                error: <span>Choice Value not found</span>
+                error: <span>Choice Value not found</span>,
             };
         }
 
         const mapSelectionStateToDecision = () =>
-            match({isChoiceAttribute, isBooleanAttribute, isComponentAttribute, isNumericAttribute, hasChoiceValueId, state: attributeProps.setSelection})
-                .with({isChoiceAttribute: true, hasChoiceValueId: true, state: "included"}, () => ChoiceValueDecisionState.Included)
-                .with({isChoiceAttribute: true, hasChoiceValueId: true, state: "excluded"}, () => ChoiceValueDecisionState.Excluded)
+            match({
+                isChoiceAttribute,
+                isBooleanAttribute,
+                isComponentAttribute,
+                isNumericAttribute,
+                hasChoiceValueId,
+                state: attributeProps.setSelection,
+            })
+                .with(
+                    {isChoiceAttribute: true, hasChoiceValueId: true, state: "included"},
+                    () => ChoiceValueDecisionState.Included,
+                )
+                .with(
+                    {isChoiceAttribute: true, hasChoiceValueId: true, state: "excluded"},
+                    () => ChoiceValueDecisionState.Excluded,
+                )
                 .with({isBooleanAttribute: true, state: "true"}, () => true)
                 .with({isBooleanAttribute: true, state: "false"}, () => false)
                 .with({isComponentAttribute: true, state: "included"}, () => ComponentDecisionState.Included)
                 .with({isComponentAttribute: true, state: "excluded"}, () => ComponentDecisionState.Excluded)
                 .with({isNumericAttribute: true, state: "numeric"}, () => attributeProps.numericValue)
-                .otherwise(() => null)
+                .otherwise(() => null);
 
         return {
             getDecisions: () => {
                 if (isChoiceAttribute && !hasChoiceValueId && attributeProps.setSelection === "undefined") {
                     return [...attribute.values.values()]
                         .filter(v => v.decision?.kind === DecisionKind.Explicit)
-                        .map(v => ({
+                        .map(
+                            v =>
+                                ({
+                                    type: attribute.type,
+                                    attributeId: attribute.id,
+                                    choiceValueId: v.id,
+                                    state: null,
+                                }) as ExplicitDecision,
+                        );
+                } else {
+                    return [
+                        {
                             type: attribute.type,
                             attributeId: attribute.id,
-                            choiceValueId: v.id,
-                            state: null
-                        } as ExplicitDecision));
-                } else {
-                    return [{
-                        type: attribute.type,
-                        attributeId: attribute.id,
-                        choiceValueId: choiceValueId,
-                        state: mapSelectionStateToDecision()
-                    } as ExplicitDecision]
+                            choiceValueId: choiceValueId,
+                            state: mapSelectionStateToDecision(),
+                        } as ExplicitDecision,
+                    ];
                 }
-            }
-        }
+            },
+        };
     });
 
     const error = attributes.find(a => a.error)?.error;
@@ -131,33 +158,48 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
         return error;
     }
 
-
     const trigger = async () => {
         // Every entry has getDecisions here, since entries with an error returned above.
-        const decisions = attributes.reduce((xs, x) => [...xs, ...(x.getDecisions?.() ?? [])], new Array<ExplicitDecision>());
+        const decisions = attributes.reduce(
+            (xs, x) => [...xs, ...(x.getDecisions?.() ?? [])],
+            new Array<ExplicitDecision>(),
+        );
         const mode: MakeManyDecisionsMode = match(props.existingSelections)
             .with("keep", () => ({type: "KeepExistingDecisions"}) satisfies KeepExistingDecisionsMode)
-            .with("drop", () => ({
-                type: "DropExistingDecisions",
-                conflictHandling: match(props.autoResolveConflicts)
-                    .with(false, () => ({
-                        type: "Manual",
-                        includeConstraintsInConflictExplanation: false
-                    }) satisfies ManualConflictResolution)
-                    .with(true, () => ({
-                        type: "Automatic"
-                    }) satisfies AutomaticConflictResolution)
-                    .exhaustive()
-            }) satisfies DropExistingDecisionsMode)
-            .exhaustive()
+            .with(
+                "drop",
+                () =>
+                    ({
+                        type: "DropExistingDecisions",
+                        conflictHandling: match(props.autoResolveConflicts)
+                            .with(
+                                false,
+                                () =>
+                                    ({
+                                        type: "Manual",
+                                        includeConstraintsInConflictExplanation: false,
+                                    }) satisfies ManualConflictResolution,
+                            )
+                            .with(
+                                true,
+                                () =>
+                                    ({
+                                        type: "Automatic",
+                                    }) satisfies AutomaticConflictResolution,
+                            )
+                            .exhaustive(),
+                    }) satisfies DropExistingDecisionsMode,
+            )
+            .exhaustive();
 
         try {
             await makeManyDecisions(decisions, mode);
         } catch (e) {
             const error = e as ConfiguratorError;
-            console.debug("SetMany failed", error)
+            console.debug("SetMany failed", error);
 
-            const hasConflict = error?.type === ConfiguratorErrorType.MakeManyDecisionsConflict && error.decisionExplanations;
+            const hasConflict =
+                error?.type === ConfiguratorErrorType.MakeManyDecisionsConflict && error.decisionExplanations;
             if (hasConflict) {
                 if (props.explain !== "disabled") {
                     await handleExplainAnswer(error satisfies DecisionsExplainAnswer, props.explain, controlId);
@@ -175,14 +217,14 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
             showMakeDecisionFailure();
             return;
         }
-    }
+    };
 
     const onClick = () => {
         if (props.trigger !== "click") {
             return;
         }
         trigger();
-    }
+    };
 
     useEffect(() => {
         if (props.trigger !== "auto") {
@@ -192,7 +234,7 @@ const SetSelections = explainableComponent<HTMLElement, PropsWithChildren<Props>
     }, []);
 
     return cloneChildrenWithProps(props.children, {onClick, ref});
-})
+});
 
 export default SetSelections;
 
@@ -219,9 +261,9 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
                     title: "Numeric Value",
                     type: ControlType.Number,
                     defaultValue: 0,
-                }
-            }
-        }
+                },
+            },
+        },
     },
     existingSelections: {
         title: "Existing Selections",
@@ -233,7 +275,7 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
         title: "Auto Resolve Conflicts",
         type: ControlType.Boolean,
         defaultValue: true,
-        hidden: (props: Props) => props.existingSelections !== "drop"
+        hidden: (props: Props) => props.existingSelections !== "drop",
     },
     trigger: {
         title: "Trigger",
@@ -241,9 +283,9 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
         defaultValue: "click",
         options: ["click", "auto"],
         displaySegmentedControl: true,
-        segmentedControlDirection: "horizontal"
+        segmentedControlDirection: "horizontal",
     },
-    ...explainPropertyControls
-}
+    ...explainPropertyControls,
+};
 
 addPropertyControls(SetSelections, propertyControls);

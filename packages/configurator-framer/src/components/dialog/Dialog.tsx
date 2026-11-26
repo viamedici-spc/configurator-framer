@@ -20,10 +20,5 @@ export const useDialogContext = () => {
 export default function Dialog({children, ...options}: PropsWithChildren<DialogOptions>) {
     const dialog = useDialog(options);
 
-    return (
-        <DialogContext.Provider value={dialog}>
-            {children}
-        </DialogContext.Provider>
-    );
+    return <DialogContext.Provider value={dialog}>{children}</DialogContext.Provider>;
 }
-

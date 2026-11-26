@@ -1,12 +1,17 @@
-import {addPropertyControls, ControlType, useLocaleInfo} from "framer"
-import {StyleSheetManager} from "styled-components"
-import {cssVariablePrefixPlugin} from "../designSystem/cssVariablePrefixPlugin"
-import type { ClientSideSessionInitialisationOptions, ServerSideSessionInitialisationOptions, SessionContext, WizardStep} from "@viamedici-spc/configurator-ts";
-import {AllowedRulesInExplainType, ConfigurationModelSourceType} from "@viamedici-spc/configurator-ts"
-import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react"
+import {addPropertyControls, ControlType, useLocaleInfo} from "framer";
+import {StyleSheetManager} from "styled-components";
+import {cssVariablePrefixPlugin} from "../designSystem/cssVariablePrefixPlugin";
+import type {
+    ClientSideSessionInitialisationOptions,
+    ServerSideSessionInitialisationOptions,
+    SessionContext,
+    WizardStep,
+} from "@viamedici-spc/configurator-ts";
+import {AllowedRulesInExplainType, ConfigurationModelSourceType} from "@viamedici-spc/configurator-ts";
+import {Configuration as ViaConfiguration} from "@viamedici-spc/configurator-react";
 import type {PropsWithChildren, ReactNode} from "react";
-import { useContext, useEffect, useMemo} from "react"
-import urlJoin from "url-join"
+import {useContext, useEffect, useMemo} from "react";
+import urlJoin from "url-join";
 import {match} from "ts-pattern";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import type {InitializationErrorProps} from "./InitializationError";
@@ -14,63 +19,70 @@ import InitializationError from "./InitializationError";
 import withErrorBoundary from "../common/withErrorBoundary";
 import DesignSystem from "../designSystem/DesignSystem";
 import ExplainDialog from "./explain/ExplainDialog";
-import type { ExplainDialogProps} from "../props/explain/explainDialogProps";
+import type {ExplainDialogProps} from "../props/explain/explainDialogProps";
 import {explainDialogPropertyControls} from "../props/explain/explainDialogProps";
-import type { ExplainPopoverProps} from "../props/explain/explainPopoverProps";
+import type {ExplainPopoverProps} from "../props/explain/explainPopoverProps";
 import {explainPopoverPropertyControls, explainPopoverPropsContext} from "../props/explain/explainPopoverProps";
 import ExplainController from "./explain/ExplainController";
 import {O, pipe, E, RA} from "@viamedici-spc/fp-ts-extensions";
 import Singleton from "./Singleton";
 import type {ChoiceValueSorting, ChoiceValueSortingProps} from "../props/choiceValueSortingProps";
-import { choiceValueSortingPropertyControls} from "../props/choiceValueSortingProps";
+import {choiceValueSortingPropertyControls} from "../props/choiceValueSortingProps";
 import {choiceValueSortingContext} from "../hooks/useSortedChoiceValues";
 import type {Localization, LocalizationProps} from "../props/localizationProps";
-import { localizationPropertyControls} from "../props/localizationProps";
+import {localizationPropertyControls} from "../props/localizationProps";
 import {localizationContext} from "../hooks/localization";
 import useParseRawLocalization from "../hooks/useParseRawLocalization";
 import useParseRawChoiceValueSorting from "../hooks/useParseRawChoiceValueSorting";
 import useParseRawAttributeRelations from "../hooks/useParseRawAttributeRelations";
-import type { WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
+import type {WizardAttributeRelationsProps} from "../props/wizardAttributeRelationsProps";
 import {wizardAttributeRelationsPropertyControls} from "../props/wizardAttributeRelationsProps";
-import type { FixedDecisionsProps} from "../props/fixedDecisionsProps";
+import type {FixedDecisionsProps} from "../props/fixedDecisionsProps";
 import {fixedDecisionsPropertyControls, mapFixedDecision} from "../props/fixedDecisionsProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {configurationPropsContext} from "./ConfigurationPropsProvider";
 import HostParametersProvider from "./HostParametersProvider";
 import InitializationSuspense from "./InitializationSuspense";
 
-export type ConfigurationProps = InitializationErrorProps & ChoiceValueSortingProps & LocalizationProps & WizardAttributeRelationsProps & FixedDecisionsProps & {
-    hcaBaseUrl: string
-    sessionCreation: "client-side" | "server-side"
-    accessToken?: string,
-    sessionCreateUrl?: string,
-    sessionDeleteUrl?: string,
-    deploymentName: string,
-    channel: string,
-    explainDialogProps: ExplainDialogProps,
-    explainPopoverProps: ExplainPopoverProps,
-    customExplainPopover?: ReactNode,
-    explainConstraints: boolean,
-    trimming: boolean,
-    attributeRelations: {
-        jsonDefinition: string
-    }
-};
+export type ConfigurationProps = InitializationErrorProps &
+    ChoiceValueSortingProps &
+    LocalizationProps &
+    WizardAttributeRelationsProps &
+    FixedDecisionsProps & {
+        hcaBaseUrl: string;
+        sessionCreation: "client-side" | "server-side";
+        accessToken?: string;
+        sessionCreateUrl?: string;
+        sessionDeleteUrl?: string;
+        deploymentName: string;
+        channel: string;
+        explainDialogProps: ExplainDialogProps;
+        explainPopoverProps: ExplainPopoverProps;
+        customExplainPopover?: ReactNode;
+        explainConstraints: boolean;
+        trimming: boolean;
+        attributeRelations: {
+            jsonDefinition: string;
+        };
+    };
 
-export type ConfigurationOverrideableProps = Partial<Pick<ConfigurationProps,
-    "attributeRelations" |
-    "fixedDecisions" |
-    "choiceValueSorting" |
-    "localization" |
-    "wizardAttributeRelations" |
-    "hcaBaseUrl" |
-    "sessionCreation" |
-    "accessToken" |
-    "sessionCreateUrl" |
-    "sessionDeleteUrl" |
-    "deploymentName" |
-    "channel"
->>;
+export type ConfigurationOverrideableProps = Partial<
+    Pick<
+        ConfigurationProps,
+        | "attributeRelations"
+        | "fixedDecisions"
+        | "choiceValueSorting"
+        | "localization"
+        | "wizardAttributeRelations"
+        | "hcaBaseUrl"
+        | "sessionCreation"
+        | "accessToken"
+        | "sessionCreateUrl"
+        | "sessionDeleteUrl"
+        | "deploymentName"
+        | "channel"
+    >
+>;
 
 /**
  * These annotations control how your component sizes
@@ -87,7 +99,7 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
     const localeCode = activeLocale?.code;
 
     useEffect(() => {
-        console.info("[Configuration] Current locale code:", localeCode)
+        console.info("[Configuration] Current locale code:", localeCode);
     }, [localeCode]);
 
     const renderPlaceholder = useRenderPlaceholder();
@@ -97,75 +109,107 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
                 {p.children}
 
                 <Singleton singletonId="Configuration">
-                    <DesignSystem/>
+                    <DesignSystem />
                 </Singleton>
             </StyleSheetManager>
         );
     }
 
     const parsedRawAttributeRelations = useParseRawAttributeRelations(p.attributeRelations?.jsonDefinition);
-    const attributeRelations = useMemo(() => pipe(
-        parsedRawAttributeRelations,
-        O.fromEither,
-        O.toNullable
-    ), [parsedRawAttributeRelations]);
+    const attributeRelations = useMemo(
+        () => pipe(parsedRawAttributeRelations, O.fromEither, O.toNullable),
+        [parsedRawAttributeRelations],
+    );
 
     const parsedRawChoiceValueSorting = useParseRawChoiceValueSorting(p.choiceValueSorting?.jsonDefinition);
-    const choiceValueSorting = useMemo<ChoiceValueSorting>(() => pipe(
-        parsedRawChoiceValueSorting,
-        E.orElse(() => pipe(
-            p.choiceValueSorting as ChoiceValueSorting,
-            E.fromNullable<ReactNode>(null)
-        )),
-        E.getOrElse((): ChoiceValueSorting => ({
-            attributes: [],
-            defaultRules: []
-        }))
-    ), [parsedRawChoiceValueSorting, p.choiceValueSorting]);
+    const choiceValueSorting = useMemo<ChoiceValueSorting>(
+        () =>
+            pipe(
+                parsedRawChoiceValueSorting,
+                E.orElse(() => pipe(p.choiceValueSorting as ChoiceValueSorting, E.fromNullable<ReactNode>(null))),
+                E.getOrElse((): ChoiceValueSorting => ({
+                    attributes: [],
+                    defaultRules: [],
+                })),
+            ),
+        [parsedRawChoiceValueSorting, p.choiceValueSorting],
+    );
 
     const parsedRawLocalization = useParseRawLocalization(p.localization?.jsonDefinition);
-    const resolvedLocalization = useMemo<Localization>(() => pipe(
-        parsedRawLocalization,
-        E.getOrElse((): Localization => ({
-            attributes: [],
-            choiceValues: []
-        }))
-    ), [parsedRawLocalization]);
+    const resolvedLocalization = useMemo<Localization>(
+        () =>
+            pipe(
+                parsedRawLocalization,
+                E.getOrElse((): Localization => ({
+                    attributes: [],
+                    choiceValues: [],
+                })),
+            ),
+        [parsedRawLocalization],
+    );
 
     const wizardAttributeRelations = pipe(
         p.wizardAttributeRelations?.wizardSteps,
         O.fromNullable,
         O.filter(RA.isNonEmpty),
-        O.map(RA.map(s => ({attributes: pipe(s.attributes, RA.map(parseGlobalAttributeId))} satisfies WizardStep))),
-        O.toNullable
-    )
+        O.map(RA.map(s => ({attributes: pipe(s.attributes, RA.map(parseGlobalAttributeId))}) satisfies WizardStep)),
+        O.toNullable,
+    );
 
-    const fixedDecisions = useMemo(() => pipe(
-        p.fixedDecisions,
-        O.fromNullable,
-        O.map(RA.filterMap(d => O.fromNullable(mapFixedDecision(d)))),
-        O.filter(RA.isNonEmpty),
-        O.toNullable
-    ), [p.fixedDecisions])
+    const fixedDecisions = useMemo(
+        () =>
+            pipe(
+                p.fixedDecisions,
+                O.fromNullable,
+                O.map(RA.filterMap(d => O.fromNullable(mapFixedDecision(d)))),
+                O.filter(RA.isNonEmpty),
+                O.toNullable,
+            ),
+        [p.fixedDecisions],
+    );
 
-    const sessionContext = useMemo(() => ({
-        apiBaseUrl: urlJoin(p.hcaBaseUrl, "api", "engine"),
-        sessionInitialisationOptions: match(p.sessionCreation)
-            // Framer passes the String control's value. An empty control is handed on unchanged.
-            .with("client-side", () => ({accessToken: p.accessToken as string}) satisfies ClientSideSessionInitialisationOptions)
-            .with("server-side", () => ({sessionCreateUrl: p.sessionCreateUrl as string}) satisfies ServerSideSessionInitialisationOptions)
-            .exhaustive(),
-        configurationModelSource: {
-            type: ConfigurationModelSourceType.Channel,
-            channel: p.channel,
-            deploymentName: p.deploymentName,
-        },
-        attributeRelations,
-        wizardAttributeRelations,
-        fixedDecisions,
-        allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}},
-        disableConfigurationModelTrimming: !p.trimming
-    } satisfies SessionContext), [p.hcaBaseUrl, p.sessionCreation, p.accessToken, p.sessionCreateUrl, p.sessionDeleteUrl, p.channel, p.deploymentName, attributeRelations, fixedDecisions, p.trimming])
+    const sessionContext = useMemo(
+        () =>
+            ({
+                apiBaseUrl: urlJoin(p.hcaBaseUrl, "api", "engine"),
+                sessionInitialisationOptions: match(p.sessionCreation)
+                    // Framer passes the String control's value. An empty control is handed on unchanged.
+                    .with(
+                        "client-side",
+                        () => ({accessToken: p.accessToken as string}) satisfies ClientSideSessionInitialisationOptions,
+                    )
+                    .with(
+                        "server-side",
+                        () =>
+                            ({
+                                sessionCreateUrl: p.sessionCreateUrl as string,
+                            }) satisfies ServerSideSessionInitialisationOptions,
+                    )
+                    .exhaustive(),
+                configurationModelSource: {
+                    type: ConfigurationModelSourceType.Channel,
+                    channel: p.channel,
+                    deploymentName: p.deploymentName,
+                },
+                attributeRelations,
+                wizardAttributeRelations,
+                fixedDecisions,
+                allowedInExplain: {rules: {type: AllowedRulesInExplainType.all}},
+                disableConfigurationModelTrimming: !p.trimming,
+            }) satisfies SessionContext,
+        [
+            p.hcaBaseUrl,
+            p.sessionCreation,
+            p.accessToken,
+            p.sessionCreateUrl,
+            p.sessionDeleteUrl,
+            p.channel,
+            p.deploymentName,
+            attributeRelations,
+            fixedDecisions,
+            p.trimming,
+        ],
+    );
 
     return (
         <StyleSheetManager stylisPlugins={[cssVariablePrefixPlugin]}>
@@ -174,30 +218,29 @@ const Configuration = withErrorBoundary((props: PropsWithChildren<ConfigurationP
                 {pipe(parsedRawChoiceValueSorting, E.swap, O.fromEither, O.toNullable)}
                 {pipe(parsedRawAttributeRelations, E.swap, O.fromEither, O.toNullable)}
 
-                <InitializationError {...p}/>
+                <InitializationError {...p} />
 
                 <InitializationSuspense>
                     <localizationContext.Provider value={resolvedLocalization}>
                         <ExplainController explainConstraints={p.explainConstraints}>
-                            <explainPopoverPropsContext.Provider value={{...p.explainPopoverProps, customPopover: p.customExplainPopover}}>
+                            <explainPopoverPropsContext.Provider
+                                value={{...p.explainPopoverProps, customPopover: p.customExplainPopover}}
+                            >
                                 <choiceValueSortingContext.Provider value={choiceValueSorting}>
-                                    <HostParametersProvider>
-                                        {p.children}
-                                    </HostParametersProvider>
+                                    <HostParametersProvider>{p.children}</HostParametersProvider>
                                 </choiceValueSortingContext.Provider>
                             </explainPopoverPropsContext.Provider>
-                            <ExplainDialog {...p.explainDialogProps}/>
+                            <ExplainDialog {...p.explainDialogProps} />
                         </ExplainController>
                     </localizationContext.Provider>
                 </InitializationSuspense>
-
             </ViaConfiguration>
             <Singleton singletonId="Configuration">
-                <DesignSystem/>
+                <DesignSystem />
             </Singleton>
         </StyleSheetManager>
-    )
-})
+    );
+});
 
 export default Configuration;
 
@@ -232,64 +275,64 @@ addPropertyControls(Configuration, {
         title: "HCA Access Token",
         type: ControlType.String,
         obscured: true,
-        hidden: (props) => props.sessionCreation !== "client-side"
+        hidden: props => props.sessionCreation !== "client-side",
     },
     sessionCreateUrl: {
         title: "Create Session URl",
         type: ControlType.String,
-        hidden: (props) => props.sessionCreation !== "server-side"
+        hidden: props => props.sessionCreation !== "server-side",
         // description: "Example: https://my-service.org/configurator/session/create"
     },
     sessionDeleteUrl: {
         title: "Close Session URl",
         type: ControlType.String,
-        hidden: (props) => props.sessionCreation !== "server-side"
+        hidden: props => props.sessionCreation !== "server-side",
         // description: "Example: https://my-service.org/configurator/session/close"
     },
     configurationModelNotFoundContent: {
         title: "Content – Configuration Model not found",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     errorContent: {
         title: "Content – Error",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     accessTokenInvalidContent: {
         title: "Content – HCA Access Token invalid",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     accessTokenRestrictionContent: {
         title: "Content – HCA Access Token restriction",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     explainDialogProps: {
         title: "Explain Dialog",
         type: ControlType.Object,
         optional: false,
         controls: explainDialogPropertyControls,
-        buttonTitle: "Props…"
+        buttonTitle: "Props…",
     },
     explainPopoverProps: {
         title: "Explain Popover",
         type: ControlType.Object,
         optional: false,
         controls: explainPopoverPropertyControls,
-        buttonTitle: "Props…"
+        buttonTitle: "Props…",
     },
     customExplainPopover: {
         title: "Custom Explain Popover",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     explainConstraints: {
         title: "Explain Constraints",
         type: ControlType.Boolean,
-        defaultValue: false
+        defaultValue: false,
         // description: "If true, in addition to decisions, also constraints (rules, cardinalities) will be explained. This is primarily for development purposes."
     },
     trimming: {
         title: "Trimming",
         type: ControlType.Boolean,
-        defaultValue: true
+        defaultValue: true,
     },
     attributeRelations: {
         title: "Attribute Relations",
@@ -301,12 +344,12 @@ addPropertyControls(Configuration, {
             jsonDefinition: {
                 title: "Definition – JSON",
                 type: ControlType.String,
-                displayTextArea: true
-            }
-        }
+                displayTextArea: true,
+            },
+        },
     },
     ...fixedDecisionsPropertyControls,
     ...wizardAttributeRelationsPropertyControls,
     ...choiceValueSortingPropertyControls,
-    ...localizationPropertyControls
-})
+    ...localizationPropertyControls,
+});
