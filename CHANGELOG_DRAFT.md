@@ -2,8 +2,8 @@
 
 ## Errors
 
-- **A clear error outside `<Configuration />`:** a component fails with the error
-  `This component must be wrapped in <Configuration />` instead of a TypeError.
+- **A clear error outside `<Configuration />`:** a component that needs `<Configuration />` fails outside it with the
+  error `This component must be wrapped in <Configuration />` instead of a TypeError.
 
 # Changes
 
