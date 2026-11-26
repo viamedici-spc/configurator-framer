@@ -90,6 +90,6 @@
   },
   "peerDependencies": {
     "framer": ">=2.4.1",
-    "react": "^18.2 || ^19"
+    "react": "^18.2"
   }
 }

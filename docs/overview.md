@@ -38,8 +38,9 @@ controls, host parameters) are described in the [feature notes](features/) and [
 
 ## Supported environments
 
-Framer (React 18), through the bundle or by importing the library from npm; plain React applications with React 18.2
-or 19 through a bundler. ESM only, not Node.js ([ADR 0003](adr/0003-browser-target-esm-only-and-the-bundle.md)).
+Framer (React 18), through the bundle or by importing the library from npm; plain React applications with React 18.2,
+the version Framer runs, through a bundler ([ADR 0005](adr/0005-react-18-while-framer-requires-it.md)). ESM only, not
+Node.js ([ADR 0003](adr/0003-browser-target-esm-only-and-the-bundle.md)).
 
 ## Commands
 

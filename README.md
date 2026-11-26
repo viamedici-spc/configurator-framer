@@ -14,7 +14,8 @@ The Configurator Components Library is a set of headless UI components that form
 [Configurator UIKit](https://spc-configurator-uikit.framer.ai/) for Framer.
 
 These React-based UI components are optimized for seamless integration within Framer, while also being fully compatible
-with standalone React applications (React 18.2 or 19, through a bundler). Both packages ship ES modules only.
+with standalone React applications (React 18.2, the version Framer runs, through a bundler). Both packages ship ES
+modules only.
 
 ## Installation
 

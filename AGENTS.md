@@ -51,8 +51,8 @@ before pushing. The full rule is in
 
 ## Supported environments
 
-- **Framer** (React 18) through the bundle or the library package, and plain React applications (React 18.2 or 19)
-  through a bundler; **ESM only**. The bundle is loaded directly from jsDelivr.
+- **Framer** (React 18) through the bundle or the library package, and plain React applications (React 18.2, the version
+  Framer runs) through a bundler; **ESM only**. The bundle is loaded directly from jsDelivr.
 - **Not Node.js.** Server-side use goes through the engine's REST API, not this library. No `node:*` imports, no
   `process` or `Buffer` in `src/`.
 - **SSR frameworks:** the library runs on the client only; a module's top level touches no browser global.

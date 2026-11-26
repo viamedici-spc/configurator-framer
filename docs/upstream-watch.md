@@ -27,6 +27,24 @@ yet.
 - **Upstream:** fp-ts 2.x is in maintenance.
 - **Last checked:** fp-ts 2.16.11, 2026-11-26: no `exports` field.
 
+## framer
+
+### React 19 for plain React applications
+
+- **We would rather** allow React 19 for plain React applications and test on it.
+- **We do instead** peer `react` `^18.2` in `packages/configurator-framer/package.json`
+  ([ADR 0005](adr/0005-react-18-while-framer-requires-it.md)).
+- **What blocks it:** the library needs the `framer` package at runtime, and it peers `react ^18.2.0`.
+- **Check** (a range that admits 19 means the peer can widen):
+
+  ```bash
+  npm view framer@latest peerDependencies
+  ```
+
+- **What it would buy:** React 19 applications can use the library.
+- **Upstream:** the `framer` package's releases.
+- **Last checked:** framer 3.0.4, 2026-11-26: `react ^18.2.0`.
+
 ## Bun
 
 ### Lint with `bun lint`
