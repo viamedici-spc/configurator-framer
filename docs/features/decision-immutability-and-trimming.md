@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # Decision Immutability and Trimming
 
 ## Goal

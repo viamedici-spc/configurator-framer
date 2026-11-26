@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # ADR 0002: No Regular Suspense Boundary Around Framer Content After Initialization
 Date: 2026-10-13
 

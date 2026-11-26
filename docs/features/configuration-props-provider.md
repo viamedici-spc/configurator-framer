@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # Configuration Props Provider
 
 ## Goal

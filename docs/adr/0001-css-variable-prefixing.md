@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # ADR 0001: CSS Custom Property Prefixing via Stylis Plugin
 Date: 2026-05-07
 

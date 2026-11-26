@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # Custom Explain Popover
 
 ## Goal

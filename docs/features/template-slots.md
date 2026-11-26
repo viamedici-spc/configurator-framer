@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # Template Slots
 
 ## Goal
