@@ -1,3 +1,7 @@
+---
+status: accepted
+---
+
 # Changelog Convention
 
 This convention defines changelog creation for the **Configurator Framer** library (a JavaScript/TypeScript package).
