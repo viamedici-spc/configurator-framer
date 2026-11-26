@@ -10,7 +10,7 @@ import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
 import {getItemTemplate} from "../../../../common/listRenderer";
 import {mapAttributeId} from "../../../../common/RawDataParsing";
-import type {ExplainQuestion} from "@viamedici-spc/configurator-ts";
+import type {ExplainQuestion as EngineExplainQuestion} from "@viamedici-spc/configurator-ts";
 import {ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
 
@@ -88,7 +88,7 @@ function Inner(props: {children: ReactNode}) {
     );
 }
 
-function buildQuestionProps(question: ExplainQuestion) {
+function buildQuestionProps(question: EngineExplainQuestion) {
     const attributeId = "attributeId" in question ? question.attributeId : null;
     const choiceValueId = "choiceValueId" in question ? question.choiceValueId : null;
     const flattenedAttributeId = attributeId ? mapAttributeId(attributeId) : null;
@@ -141,7 +141,7 @@ type ExplainQuestionFilter =
     | "booleanValueBlocked"
     | "numericValueBlocked";
 
-function matchExplainQuestionFilter(question: ExplainQuestion, filter: ExplainQuestionFilter): boolean {
+function matchExplainQuestionFilter(question: EngineExplainQuestion, filter: ExplainQuestionFilter): boolean {
     if (filter === "any") {
         return true;
     }

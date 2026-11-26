@@ -17,3 +17,5 @@
   without explicit choice values.
 - **`ReplaceText` in set-prop mode** skips empty children and text instead of throwing.
 - **Explanation lists** no longer log React key warnings.
+- **The TypeScript declaration of `CustomExplainQuestion`** is the component; in 4.2.1 it was configurator-ts's
+  `ExplainQuestion` type, so using it as a value did not type-check.
