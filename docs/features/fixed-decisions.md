@@ -113,8 +113,8 @@ host parameter, resolve it with `useHostParameter` under a `HostParametersProvid
 
 ## Files touched
 
-- `src/props/fixedDecisionsProps.ts` — item props, native property controls, `mapFixedDecision` mapper (new)
-- `src/components/Configuration.tsx` — prop intersect, overrideable pick, mapping into `SessionContext`,
+- `packages/configurator-framer/src/props/fixedDecisionsProps.ts` — item props, native property controls, `mapFixedDecision` mapper (new)
+- `packages/configurator-framer/src/components/Configuration.tsx` — prop intersect, overrideable pick, mapping into `SessionContext`,
   property-control spread
-- `src/components/InitializationError.tsx` — `FixedDecisionsInvalid` case
+- `packages/configurator-framer/src/components/InitializationError.tsx` — `FixedDecisionsInvalid` case
 - `package.json` (both packages) — dependency bump

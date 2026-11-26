@@ -22,11 +22,13 @@ status: living
   - `packages/configurator-framer/src/components/Colorize.tsx`: a layout effect without dependencies sets state.
   - `packages/configurator-framer/src/components/SetSelections.tsx`: the effect misses `trigger`.
   - `packages/configurator-framer/src/components/SetTemplateSlots.tsx`,
-    `explain/styled/explainPopover/ShowMoreButton.tsx`,
-    `packages/configurator-framer/src/hooks/useSortedChoiceValues.ts`, `localization.ts`, `useDebounceValue.ts`:
-    memoised values and effects miss inputs they read.
-  - `ChoiceSelect.tsx`, `BooleanSelect.tsx`, `ComponentSelect.tsx` (in `packages/configurator-framer/src/components/`):
-    the select has no accessible label.
+    `packages/configurator-framer/src/components/explain/styled/explainPopover/ShowMoreButton.tsx`,
+    `packages/configurator-framer/src/hooks/useSortedChoiceValues.ts`,
+    `packages/configurator-framer/src/hooks/localization.ts`,
+    `packages/configurator-framer/src/hooks/useDebounceValue.ts`: memoised values and effects miss inputs they read.
+  - `packages/configurator-framer/src/components/ChoiceSelect.tsx`,
+    `packages/configurator-framer/src/components/BooleanSelect.tsx`,
+    `packages/configurator-framer/src/components/ComponentSelect.tsx`: the select has no accessible label.
   **Waits on** a session with Framer open. **Done when** the three rules are on again and `bun run verify` passes.
 
 - [ ] **Follow the Rules of Hooks** (2026-11-26) — `react/rules-of-hooks` is not in oxlint's `correctness` category, so

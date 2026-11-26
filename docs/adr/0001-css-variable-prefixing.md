@@ -32,8 +32,8 @@ Excluded from prefixing:
 - Framer's own variables (`--framer-*`) — set by Framer in the host and must not be renamed
 
 **Affected files:**
-- `src/designSystem/cssVariablePrefixPlugin.ts` — plugin implementation
-- `src/components/Configuration.tsx` — `StyleSheetManager` with plugin at the root
+- `packages/configurator-framer/src/designSystem/cssVariablePrefixPlugin.ts` — plugin implementation
+- `packages/configurator-framer/src/components/Configuration.tsx` — `StyleSheetManager` with plugin at the root
 
 ## Consequences
 
@@ -44,7 +44,7 @@ Excluded from prefixing:
 - The Stylis plugin API is not officially documented by styled-components — verify on major upgrades
 - Styled components rendered **outside** the `Configuration` component (unsupported use case) will not receive the prefix
 - The plugin only covers styled-components output — external stylesheets or Framer-side CSS variables remain unchanged
-- **CSS variables set via inline `style` objects bypass the plugin entirely** and must be manually prefixed with `--spc-`. Currently only `src/props/buttonProps.ts` does this (`--spc-color-button-fill-hover` etc.). Any new CSS variable introduced via an inline style object must follow the same convention.
+- **CSS variables set via inline `style` objects bypass the plugin entirely** and must be manually prefixed with `--spc-`. Currently only `packages/configurator-framer/src/props/buttonProps.ts` does this (`--spc-color-button-fill-hover` etc.). Any new CSS variable introduced via an inline style object must follow the same convention.
 - When overriding `element.return` in the Stylis plugin, the trailing semicolon must be included explicitly — Stylis does not add it automatically when `element.return` is set.
 
 ## Alternatives considered

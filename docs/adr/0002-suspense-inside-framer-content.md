@@ -37,9 +37,9 @@ Content that mounts after hydration inside `Configuration` (wizard steps, dialog
 - When initialization completes, the boundary re-renders and retries its content, which also recovers from a Framer suspension that arrived during initialization.
 
 **Affected files:**
-- `src/components/InitializationSuspense.tsx`
-- `src/components/Configuration.tsx`
-- `tests/initializationSuspense.test.tsx`
+- `packages/configurator-framer/src/components/InitializationSuspense.tsx`
+- `packages/configurator-framer/src/components/Configuration.tsx`
+- `packages/configurator-framer/tests/initializationSuspense.test.tsx`
 
 ## Consequences
 

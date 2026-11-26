@@ -106,6 +106,6 @@ When the host changes the parameter at runtime, the hook re-renders, the overrid
   (`=== "true"`).
 - Comparison is shallow; the hook re-renders only when the set of parameters actually changes.
 - Standalone (no embedding host): the hooks return an empty dictionary.
-- The prefix and message-type constants are duplicated in the host package
-  (`src/parameters.ts`) and here (`src/common/hostParametersStore.ts`) — the two packages share no
-  module, so keep them in sync.
+- The prefix and message-type constants are duplicated in the host package (the configurator-framer-host repository)
+  and here (`packages/configurator-framer/src/common/hostParametersStore.ts`) — the two packages share no module, so
+  keep them in sync.

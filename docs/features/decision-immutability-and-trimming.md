@@ -277,13 +277,13 @@ Framer does not auto-migrate property values between prop names, so a designer w
 
 ## Files touched
 
-- `src/components/Configuration.tsx` — `trimming` prop, `disableConfigurationModelTrimming` mapping, property control.
-- `src/components/SelectionIndicator.tsx` — `"immutable"` condition + 7 pattern cases (Choice ×2, Boolean ×2, Component ×2, Numeric ×1).
-- `src/components/ChoiceValueList.tsx` — `"interactive"` filter condition, default filter set `[(included, available), (included, interactive)]`.
-- `src/components/ChoiceSelect.tsx` — split rendering with `<option disabled>`, Fixed prefix routing, whole-element `disabled` when `excludeUnavailableOptions && no options available`. **`noOptionsAvailableColors` semantic shift (breaking — see migration matrix).** Local `getStyle` wrapper removed
+- `packages/configurator-framer/src/components/Configuration.tsx` — `trimming` prop, `disableConfigurationModelTrimming` mapping, property control.
+- `packages/configurator-framer/src/components/SelectionIndicator.tsx` — `"immutable"` condition + 7 pattern cases (Choice ×2, Boolean ×2, Component ×2, Numeric ×1).
+- `packages/configurator-framer/src/components/ChoiceValueList.tsx` — `"interactive"` filter condition, default filter set `[(included, available), (included, interactive)]`.
+- `packages/configurator-framer/src/components/ChoiceSelect.tsx` — split rendering with `<option disabled>`, Fixed prefix routing, whole-element `disabled` when `excludeUnavailableOptions && no options available`. **`noOptionsAvailableColors` semantic shift (breaking — see migration matrix).** Local `getStyle` wrapper removed
   in favor of the shared `getSelectStyle`.
-- `src/components/BooleanSelect.tsx` — three-bucket rendering, conditional whole-element disable, Fixed prefix routing, full parity via `SelectProps` (no own color/label props anymore).
-- `src/components/ComponentSelect.tsx` — three-bucket rendering, Fixed prefix routing, full parity via `SelectProps`. Whole-element disable not wired (engine guarantees at least one state remains).
-- `src/components/NumericInput.tsx` — `readOnly` when immutable, Fixed prefix routing.
-- `src/props/inputProps.tsx` — `fixedLabelPrefix`, `fixedColors`, `getInputStyle` extended with `isFixedSelected`.
-- `src/props/selectProps.tsx` — central home for `unavailableLabel`, `excludeUnavailableOptions`, `allOptionsBlockedColors`, `noOptionsAvailableColors`. `getSelectStyle` extended with `isFixedSelected`, `allOptionsBlocked`, `noOptionsAvailable` and the priority chain.
+- `packages/configurator-framer/src/components/BooleanSelect.tsx` — three-bucket rendering, conditional whole-element disable, Fixed prefix routing, full parity via `SelectProps` (no own color/label props anymore).
+- `packages/configurator-framer/src/components/ComponentSelect.tsx` — three-bucket rendering, Fixed prefix routing, full parity via `SelectProps`. Whole-element disable not wired (engine guarantees at least one state remains).
+- `packages/configurator-framer/src/components/NumericInput.tsx` — `readOnly` when immutable, Fixed prefix routing.
+- `packages/configurator-framer/src/props/inputProps.tsx` — `fixedLabelPrefix`, `fixedColors`, `getInputStyle` extended with `isFixedSelected`.
+- `packages/configurator-framer/src/props/selectProps.tsx` — central home for `unavailableLabel`, `excludeUnavailableOptions`, `allOptionsBlockedColors`, `noOptionsAvailableColors`. `getSelectStyle` extended with `isFixedSelected`, `allOptionsBlocked`, `noOptionsAvailable` and the priority chain.
