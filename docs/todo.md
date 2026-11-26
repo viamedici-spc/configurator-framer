@@ -14,7 +14,7 @@ status: living
 - [ ] **Resolve the deferred React lint rules** (2026-11-26) — `react-hooks/exhaustive-deps`, `react/refs` and
   `jsx-a11y/control-has-associated-label` are off in `.oxlintrc.json`: fixing them changes when effects run, how refs
   are read and what a select announces, which needs a look in Framer. The sites, from the repository root:
-  - `packages/configurator-framer/src/components/Configuration.tsx`: the memoised session context misses
+  - `packages/configurator-framer/src/components/Configuration.tsx`: the memoized session context misses
     `wizardAttributeRelations` and lists `sessionDeleteUrl` without using it.
   - `packages/configurator-framer/src/components/ScrollIntoView.tsx`: reads `rootRef.current` during render and misses
     `delay`.
@@ -27,7 +27,7 @@ status: living
     `packages/configurator-framer/src/components/explain/styled/explainPopover/ShowMoreButton.tsx`,
     `packages/configurator-framer/src/hooks/useSortedChoiceValues.ts`,
     `packages/configurator-framer/src/hooks/localization.ts`,
-    `packages/configurator-framer/src/hooks/useDebounceValue.ts`: memoised values and effects miss inputs they read.
+    `packages/configurator-framer/src/hooks/useDebounceValue.ts`: memoized values and effects miss inputs they read.
   - `packages/configurator-framer/src/components/ChoiceSelect.tsx`,
     `packages/configurator-framer/src/components/BooleanSelect.tsx`,
     `packages/configurator-framer/src/components/ComponentSelect.tsx`: the select has no accessible label.
