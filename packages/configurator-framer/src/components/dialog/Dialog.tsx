@@ -1,10 +1,11 @@
 import * as React from "react";
-import {PropsWithChildren} from "react";
-import useDialog, {DialogOptions} from "../../hooks/useDialog";
+import type {PropsWithChildren} from "react";
+import type {DialogOptions} from "../../hooks/useDialog";
+import useDialog from "../../hooks/useDialog";
 
 type ContextType = ReturnType<typeof useDialog>;
 
-const DialogContext = React.createContext<ContextType>(null);
+const DialogContext = React.createContext<ContextType | null>(null);
 
 export const useDialogContext = () => {
     const context = React.useContext(DialogContext);
@@ -19,10 +20,5 @@ export const useDialogContext = () => {
 export default function Dialog({children, ...options}: PropsWithChildren<DialogOptions>) {
     const dialog = useDialog(options);
 
-    return (
-        <DialogContext.Provider value={dialog}>
-            {children}
-        </DialogContext.Provider>
-    );
+    return <DialogContext.Provider value={dialog}>{children}</DialogContext.Provider>;
 }
-

@@ -1,15 +1,19 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type {AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {useNumericAttribute} from "@viamedici-spc/configurator-react";
-import {replaceTextPropertyControls, ReplaceTextProps} from "../props/replaceTextProps";
+import type {ReplaceTextProps} from "../props/replaceTextProps";
+import {replaceTextPropertyControls} from "../props/replaceTextProps";
 import ReplaceText from "./ReplaceText";
 
-type Props = AttributeIdProps & ReplaceTextProps & {
-    fallback: string
-}
+type Props = AttributeIdProps &
+    ReplaceTextProps & {
+        fallback: string;
+    };
 
 /**
  * @framerSupportedLayoutWidth any
@@ -23,16 +27,16 @@ const SelectedNumericValue = withErrorBoundary((props: Props) => {
     const getSelectedValue = () => {
         const numericAttribute = useNumericAttribute(globalAttributeId);
         if (!numericAttribute) {
-            return "Numeric Attribute not found"
+            return "Numeric Attribute not found";
         }
 
         const value = numericAttribute.attribute.decision?.state;
-        return value != null ? value.toLocaleString() : fallback
-    }
+        return value != null ? value.toLocaleString() : fallback;
+    };
 
     const value = renderPlaceholder ? "0.0" : getSelectedValue();
-    return <ReplaceText {...props} text={value}/>
-})
+    return <ReplaceText {...props} text={value} />;
+});
 
 export default SelectedNumericValue;
 
@@ -41,9 +45,9 @@ const propertyControls: PropertyControls<Props> = {
     fallback: {
         title: "Unselected Text",
         type: ControlType.String,
-        defaultValue: ""
+        defaultValue: "",
     },
-    ...replaceTextPropertyControls("<NumericValue>")
-}
+    ...replaceTextPropertyControls("<NumericValue>"),
+};
 
 addPropertyControls(SelectedNumericValue, propertyControls);

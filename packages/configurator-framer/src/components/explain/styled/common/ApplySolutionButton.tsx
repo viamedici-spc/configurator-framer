@@ -1,6 +1,6 @@
-import {DecisionExplanation} from "@viamedici-spc/configurator-ts";
+import type {DecisionExplanation} from "@viamedici-spc/configurator-ts";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
-import {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
+import type {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
 import {getButtonStyle} from "../../../../props/buttonProps";
 import styled from "styled-components";
 import {getMarginStyle} from "../../../../props/marginProps";
@@ -20,7 +20,9 @@ const Root = styled.button`
     }
 `;
 
-type Props = DetailedHTMLProps<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">, HTMLButtonElement> & { explanation: DecisionExplanation }
+type Props = DetailedHTMLProps<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">, HTMLButtonElement> & {
+    explanation: DecisionExplanation;
+};
 
 export default function ApplySolutionButton(props: Props) {
     const {explanation, ...restProps} = props;
@@ -28,11 +30,15 @@ export default function ApplySolutionButton(props: Props) {
     const {applySolutionButton} = useCommonExplainProps();
 
     return (
-        <Root {...restProps} onClick={() => process.applySolution(explanation.solution)} style={{
-            ...getButtonStyle(applySolutionButton),
-            ...getMarginStyle(applySolutionButton)
-        }}>
+        <Root
+            {...restProps}
+            onClick={() => process?.applySolution(explanation.solution)}
+            style={{
+                ...getButtonStyle(applySolutionButton),
+                ...getMarginStyle(applySolutionButton),
+            }}
+        >
             {applySolutionButton.staticText}
         </Root>
-    )
+    );
 }

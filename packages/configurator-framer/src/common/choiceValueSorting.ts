@@ -1,9 +1,11 @@
-import {ChoiceValueSorting, SortingRule} from "../props/choiceValueSortingProps";
-import {Bool, Num, O, Option, Ord, OrdT, pipe, RA, Str, MO} from "@viamedici-spc/fp-ts-extensions";
-import {ChoiceValueId, GlobalAttributeId, globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
+import type {ChoiceValueSorting, SortingRule} from "../props/choiceValueSortingProps";
+import type {Option, OrdT} from "@viamedici-spc/fp-ts-extensions";
+import {Bool, Num, O, Ord, pipe, RA, Str, MO} from "@viamedici-spc/fp-ts-extensions";
+import type {ChoiceValueId, GlobalAttributeId} from "@viamedici-spc/configurator-ts";
+import {globalAttributeIdEq} from "@viamedici-spc/configurator-ts";
 import {match, P} from "ts-pattern";
 import parseGlobalAttributeId from "./parseGlobalAttributeId";
-import {Ordering} from "fp-ts/Ordering";
+import type {Ordering} from "fp-ts/Ordering";
 
 const monoid = Ord.getMonoid<ChoiceValueId>();
 
@@ -19,51 +21,49 @@ const fallbackRule: SortingRule = {
 export const stringModeOrd = pipe(
     [intlCollatorBase, intlCollatorVariant],
     RA.map(getOrdForIntlCollator),
-    MO.concatAll(Ord.getMonoid<string>())
+    MO.concatAll(Ord.getMonoid<string>()),
 );
 
 export const isMatchModeOrd = pipe(
     Bool.Ord,
-    Ord.contramap((o: Option<string>) => O.isSome(o))
+    Ord.contramap((o: Option<string>) => O.isSome(o)),
 );
 
 export const numericModeOrd = Num.Ord;
 
-export function getOrdForAttribute(attributeId: GlobalAttributeId, sorting: ChoiceValueSorting): OrdT<ChoiceValueId> {
+export function getOrdForAttribute(
+    attributeId: GlobalAttributeId,
+    sorting: ChoiceValueSorting | null,
+): OrdT<ChoiceValueId> {
     return pipe(
         sorting?.attributes ?? [],
         RA.findFirst(a => globalAttributeIdEq.equals(parseGlobalAttributeId(a), attributeId)),
-        O.map(a => [
-            getOrdForExplicitChoiceValueSorting(a.choiceValues ?? []),
-            getOrdForSortingRules(a.rules ?? [])
-        ]),
-        O.getOrElse(() => [
-            getOrdForSortingRules(sorting?.defaultRules ?? [])
-        ]),
+        O.map(a => [getOrdForExplicitChoiceValueSorting(a.choiceValues ?? []), getOrdForSortingRules(a.rules ?? [])]),
+        O.getOrElse(() => [getOrdForSortingRules(sorting?.defaultRules ?? [])]),
         RA.append(getOrdFromSortingRule(fallbackRule)),
-        MO.concatAll(monoid)
+        MO.concatAll(monoid),
     );
 }
 
-export function getOrdForExplicitChoiceValueSorting(explicitSorting: ReadonlyArray<ChoiceValueId>): OrdT<ChoiceValueId> {
+export function getOrdForExplicitChoiceValueSorting(
+    explicitSorting: ReadonlyArray<ChoiceValueId>,
+): OrdT<ChoiceValueId> {
     return pipe(
         Num.Ord,
         Ord.reverse,
         O.getOrd,
         Ord.reverse,
-        Ord.contramap((id: ChoiceValueId) => pipe(
-            explicitSorting,
-            RA.findIndex(i => Str.Eq.equals(id, i))
-        ))
+        Ord.contramap((id: ChoiceValueId) =>
+            pipe(
+                explicitSorting,
+                RA.findIndex(i => Str.Eq.equals(id, i)),
+            ),
+        ),
     );
 }
 
 export function getOrdForSortingRules(sortingRules: ReadonlyArray<SortingRule>): OrdT<ChoiceValueId> {
-    return pipe(
-        sortingRules,
-        RA.map(getOrdFromSortingRule),
-        MO.concatAll(monoid)
-    );
+    return pipe(sortingRules, RA.map(getOrdFromSortingRule), MO.concatAll(monoid));
 }
 
 export function getOrdFromSortingRule(sortingRule: SortingRule): OrdT<ChoiceValueId> {
@@ -78,31 +78,28 @@ export function getOrdFromSortingRule(sortingRule: SortingRule): OrdT<ChoiceValu
 
     return pipe(
         handler,
-        Ord.contramap((choiceValueId: ChoiceValueId) => pipe(
-            regExp,
-            O.chainNullableK(r => {
-                // Reset the Regex.
-                r.lastIndex = 0;
-                return r[Symbol.match](choiceValueId);
-            }),
-            O.chain(a => pipe(
-                a,
-                RA.lookup(1),
-                O.alt(() => pipe(
-                    a,
-                    RA.lookup(0)
-                ))
-            ))
-        ))
+        Ord.contramap((choiceValueId: ChoiceValueId) =>
+            pipe(
+                regExp,
+                O.chainNullableK(r => {
+                    // Reset the Regex.
+                    r.lastIndex = 0;
+                    return r[Symbol.match](choiceValueId);
+                }),
+                O.chain(a =>
+                    pipe(
+                        a,
+                        RA.lookup(1),
+                        O.alt(() => pipe(a, RA.lookup(0))),
+                    ),
+                ),
+            ),
+        ),
     );
 }
 
 function getStringModeHandler(direction: SortingRule["direction"]): OrdT<Option<string>> {
-    return pipe(
-        stringModeOrd,
-        applyDirection(direction),
-        getSomeAlwaysOnTopOrd
-    );
+    return pipe(stringModeOrd, applyDirection(direction), getSomeAlwaysOnTopOrd);
 }
 
 function getNumericModeHandler(direction: SortingRule["direction"]): OrdT<Option<string>> {
@@ -110,38 +107,33 @@ function getNumericModeHandler(direction: SortingRule["direction"]): OrdT<Option
         numericModeOrd,
         applyDirection(direction),
         getSomeAlwaysOnTopOrd,
-        Ord.contramap(O.chain(Num.parseFloatO))
+        Ord.contramap(O.chain(Num.parseFloatO)),
     );
 }
 
 function getIsMatchModeHandler(direction: SortingRule["direction"]): OrdT<Option<string>> {
-    return pipe(
-        isMatchModeOrd,
-        applyDirection(direction)
-    );
+    return pipe(isMatchModeOrd, applyDirection(direction));
 }
 
 export function getSomeAlwaysOnTopOrd<T>(ord: OrdT<T>): OrdT<Option<T>> {
-    return pipe(
-        ord,
-        Ord.reverse,
-        O.getOrd,
-        Ord.reverse
-    );
+    return pipe(ord, Ord.reverse, O.getOrd, Ord.reverse);
 }
 
 export function applyDirection(direction: SortingRule["direction"]): <T>(ord: OrdT<T>) => OrdT<T> {
-    return <T>(ord) => match(direction)
-        .returnType<OrdT<T>>()
-        .with("asc", () => ord)
-        .with("desc", () => Ord.reverse(ord))
-        .exhaustive();
+    return <T>(ord: OrdT<T>) =>
+        match(direction)
+            .returnType<OrdT<T>>()
+            .with("asc", () => ord)
+            .with("desc", () => Ord.reverse(ord))
+            .exhaustive();
 }
 
 function getOrdForIntlCollator(collator: Intl.Collator): OrdT<string> {
-    return Ord.fromCompare<string>((first, second) => match(collator.compare(first, second))
-        .returnType<Ordering>()
-        .with(P.number.gt(0), () => 1)
-        .with(P.number.lt(0), () => -1)
-        .otherwise(() => 0));
+    return Ord.fromCompare<string>((first, second) =>
+        match(collator.compare(first, second))
+            .returnType<Ordering>()
+            .with(P.number.gt(0), () => 1)
+            .with(P.number.lt(0), () => -1)
+            .otherwise(() => 0),
+    );
 }

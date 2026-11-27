@@ -1,22 +1,23 @@
-import {ControlType, PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
+import {ControlType} from "framer";
 
 export type AttributeIdProps = {
-    attributeId: string
-    componentPath: string
-    sharedConfigurationModel: string
-}
+    attributeId: string;
+    componentPath: string;
+    sharedConfigurationModel: string;
+};
 
 export const attributeIdPropertyControls = {
     attributeId: {
         title: "Attribute Id",
-        type: ControlType.String
+        type: ControlType.String,
     },
     componentPath: {
         title: "Component Path",
-        type: ControlType.String
+        type: ControlType.String,
     },
     sharedConfigurationModel: {
         title: "Shared Configuration Model",
-        type: ControlType.String
-    }
+        type: ControlType.String,
+    },
 } satisfies PropertyControls<AttributeIdProps>;

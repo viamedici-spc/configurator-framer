@@ -1,10 +1,22 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useCallback, useEffect, useReducer, useRef} from "react";
 import {useDebouncedCallback} from "use-debounce";
-import {useForceUpdate} from "framer-motion";
 
-export default function useDebounceValue<TValue>(sourceValue: TValue, setSourceValue: (value: TValue) => void, inputValue: TValue, setInputValue: (value: TValue) => void, wait: number = 1000) {
-    const [forceUpdate] = useForceUpdate();
-    const debounced = useDebouncedCallback(v => {
+/**
+ * Keeps an input value and its source value in sync with a delay: a changed input value is applied to the source once
+ * it has not changed for `wait` milliseconds, and a changed source value replaces the input value at once, dropping an
+ * input value that was not applied yet.
+ * @param wait The delay in milliseconds.
+ * @returns `flush`, which applies a pending input value at once; it also runs on unmount.
+ */
+export default function useDebounceValue<TValue>(
+    sourceValue: TValue,
+    setSourceValue: (value: TValue) => void,
+    inputValue: TValue,
+    setInputValue: (value: TValue) => void,
+    wait: number = 1000,
+): {readonly flush: () => void} {
+    const [, forceUpdate] = useReducer((renderCount: number) => renderCount + 1, 0);
+    const debounced = useDebouncedCallback((v: TValue) => {
         setSourceValue(v);
         forceUpdate();
     }, wait);
@@ -60,6 +72,6 @@ export default function useDebounceValue<TValue>(sourceValue: TValue, setSourceV
     useEffect(() => () => flush(), [flush]);
 
     return {
-        flush
+        flush,
     };
 }

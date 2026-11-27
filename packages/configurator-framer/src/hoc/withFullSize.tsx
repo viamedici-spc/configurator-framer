@@ -1,13 +1,20 @@
-import {ComponentType, CSSProperties, forwardRef, PropsWithoutRef, RefAttributes} from "react";
+import type {ComponentType, CSSProperties, PropsWithoutRef, RefAttributes} from "react";
+import {forwardRef} from "react";
 
-export default function withFullSize<T, TProps extends { style?: CSSProperties }>(Component: ComponentType<TProps>): ComponentType<PropsWithoutRef<TProps> & RefAttributes<T>> {
+/**
+ * Makes a component fill its parent: its `style` gets a width and a height of 100%, over a width or height passed in.
+ * The ref is forwarded to the component.
+ */
+export default function withFullSize<T, TProps extends {style?: CSSProperties}>(
+    Component: ComponentType<TProps & RefAttributes<T>>,
+): ComponentType<PropsWithoutRef<TProps> & RefAttributes<T>> {
     return forwardRef<T, TProps>((props, ref) => {
         const extendedStyles: CSSProperties = {
             ...props.style,
             width: "100%",
-            height: "100%"
+            height: "100%",
         };
 
-        return <Component {...props} ref={ref} style={extendedStyles}/>
+        return <Component {...(props as TProps)} ref={ref} style={extendedStyles} />;
     });
 }

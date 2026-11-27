@@ -1,22 +1,21 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {ReactNode, useMemo} from "react";
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {ReactNode} from "react";
+import {useMemo} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
-import {TemplateSlotIndex, templateSlotIndices, TemplateSlotsContext} from "../common/templateSlotsContext";
+import type {TemplateSlotIndex} from "../common/templateSlotsContext";
+import {templateSlotIndices, TemplateSlotsContext} from "../common/templateSlotsContext";
 
-type SetTemplateSlotsProps = { template?: ReactNode, } & { [K in `content${TemplateSlotIndex}`]?: ReactNode };
+type SetTemplateSlotsProps = {template?: ReactNode} & {[K in `content${TemplateSlotIndex}`]?: ReactNode};
 
 const SetTemplateSlots = withErrorBoundary((props: SetTemplateSlotsProps) => {
     const slots = useMemo(
         () => new Map(templateSlotIndices.map(index => [index, props[`content${index}`]])),
-        [props.content1, props.content2, props.content3, props.content4, props.content5]
+        [props.content1, props.content2, props.content3, props.content4, props.content5],
     );
 
-    return (
-        <TemplateSlotsContext.Provider value={slots}>
-            {props.template}
-        </TemplateSlotsContext.Provider>
-    )
-})
+    return <TemplateSlotsContext.Provider value={slots}>{props.template}</TemplateSlotsContext.Provider>;
+});
 
 export default SetTemplateSlots;
 
@@ -26,7 +25,7 @@ const propertyControls: PropertyControls<SetTemplateSlotsProps> = {
         type: ControlType.ComponentInstance,
     },
     ...createContentPropertyControls(),
-}
+};
 
 addPropertyControls(SetTemplateSlots, propertyControls);
 
@@ -38,6 +37,7 @@ function createContentControl(index: TemplateSlotIndex) {
 }
 
 function createContentPropertyControls(): Omit<PropertyControls<SetTemplateSlotsProps>, "template"> {
-    return Object.fromEntries(templateSlotIndices.map(index => [`content${index}`, createContentControl(index)])
+    return Object.fromEntries(
+        templateSlotIndices.map(index => [`content${index}`, createContentControl(index)]),
     ) as Omit<PropertyControls<SetTemplateSlotsProps>, "template">;
 }

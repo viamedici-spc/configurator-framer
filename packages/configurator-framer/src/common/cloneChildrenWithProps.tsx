@@ -1,9 +1,13 @@
-import {Children, cloneElement, HTMLAttributes, isValidElement, ReactNode, Ref} from "react";
+import type {HTMLAttributes, ReactNode, Ref} from "react";
+import {Children, cloneElement, isValidElement} from "react";
 import mergeProps from "merge-props";
 
-type PropsWithChildrenAndRef = HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> };
+type PropsWithChildrenAndRef = HTMLAttributes<HTMLElement> & {ref?: Ref<HTMLElement>};
 
-export default function cloneChildrenWithProps(children: ReactNode, additionalProps: PropsWithChildrenAndRef): ReactNode {
+export default function cloneChildrenWithProps(
+    children: ReactNode,
+    additionalProps: PropsWithChildrenAndRef,
+): ReactNode {
     return Children.map(children, child => {
         if (isValidElement(child)) {
             const newProps = mergeProps(child.props, additionalProps);

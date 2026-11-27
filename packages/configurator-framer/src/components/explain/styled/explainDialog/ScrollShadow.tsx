@@ -1,4 +1,5 @@
-import React, {useEffect, useState, useRef, HTMLProps} from 'react';
+import type {HTMLProps} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 import clsx from "clsx";
 import mergeProps from "merge-props";
@@ -17,14 +18,17 @@ const Shadow = styled.div`
     @media only screen and (min-resolution: 2dppx) {
         border-top-width: 0.5px;
     }
-`
+`;
 
 export default function ScrollShadow(props: HTMLProps<HTMLDivElement>) {
     const [showShadow, setShowShadow] = useState(false);
     const topSentinelRef = useRef(null);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => setShowShadow(!entry.isIntersecting), {root: null, threshold: 1.0});
+        const observer = new IntersectionObserver(([entry]) => setShowShadow(!entry.isIntersecting), {
+            root: null,
+            threshold: 1.0,
+        });
 
         const topSentinelElement = topSentinelRef.current;
         if (topSentinelElement) {
@@ -41,7 +45,7 @@ export default function ScrollShadow(props: HTMLProps<HTMLDivElement>) {
     return (
         <>
             <div ref={topSentinelRef}></div>
-            <Shadow {...mergeProps(props, {className: clsx(showShadow && "active")})}/>
+            <Shadow {...mergeProps(props, {className: clsx(showShadow && "active")})} />
         </>
     );
 }

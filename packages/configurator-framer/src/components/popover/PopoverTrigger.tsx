@@ -1,4 +1,5 @@
-import {Children, cloneElement, forwardRef, isValidElement, PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
+import {Children, cloneElement, forwardRef, isValidElement} from "react";
 import {useMergeRefs} from "@floating-ui/react";
 import {usePopoverContext} from "./Popover";
 
@@ -15,12 +16,12 @@ const PopoverTrigger = forwardRef<Element, PropsWithChildren>(function PopoverTr
                 ref,
                 ...props,
                 ...children.props,
-                "data-state": context.open ? "open" : "closed"
-            })
+                "data-state": context.open ? "open" : "closed",
+            }),
         );
     }
 
-    return <span>Not valid children for PopoverTrigger</span>
+    return <span>Not valid children for PopoverTrigger</span>;
 });
 
 export default PopoverTrigger;

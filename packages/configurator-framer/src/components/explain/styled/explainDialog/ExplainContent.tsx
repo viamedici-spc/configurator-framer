@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import DecisionExplanation from "./DecisionExplanation";
 import ConstraintExplanation from "./ConstraintExplanation";
 import InfoMessage from "../common/InfoMessage";
@@ -8,54 +8,62 @@ import {getStaticTextStyle} from "../../../../props/staticTextProps";
 
 const GroupTitle = styled.div`
     margin-bottom: var(--space-xs);
-`
+`;
 
 const Explanations = styled.div`
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-`
+`;
 
 const Groups = styled.div`
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-`
+`;
 
 const StyledInfoMessage = styled(InfoMessage)`
     width: min-content;
     min-width: 400px;
     margin: var(--space-sm-fixed) var(--space-md-fixed) var(--space-sm-fixed) var(--space-sm-fixed);
-`
+`;
 
 export default function ExplainContent() {
-    const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {decisionExplanations, constraintExplanations, hasError} = useOngoingExplainProcess();
     const {decisionExplanationSolutionsTitle, constraintExplanationSolutionsTitle} = useExplainDialogProps();
 
     if (hasError) {
-        return <StyledInfoMessage variant="failedToExplain"/>
+        return <StyledInfoMessage variant="failedToExplain" />;
     }
 
     if (decisionExplanations.length === 0 && constraintExplanations.length === 0) {
-        return <StyledInfoMessage variant="noExplanationFound"/>
+        return <StyledInfoMessage variant="noExplanationFound" />;
     }
 
     return (
         <Groups>
             {decisionExplanations.length > 0 && (
                 <div>
-                    <GroupTitle style={getStaticTextStyle(decisionExplanationSolutionsTitle)}>{decisionExplanationSolutionsTitle.staticText}</GroupTitle>
+                    <GroupTitle style={getStaticTextStyle(decisionExplanationSolutionsTitle)}>
+                        {decisionExplanationSolutionsTitle.staticText}
+                    </GroupTitle>
                     <Explanations>
-                        {decisionExplanations.map(e => <DecisionExplanation key={decisionExplanations.indexOf(e)} explanation={e}/>)}
+                        {decisionExplanations.map(e => (
+                            <DecisionExplanation key={decisionExplanations.indexOf(e)} explanation={e} />
+                        ))}
                     </Explanations>
                 </div>
             )}
 
             {constraintExplanations.length > 0 && (
                 <div>
-                    <GroupTitle style={getStaticTextStyle(constraintExplanationSolutionsTitle)}>{constraintExplanationSolutionsTitle.staticText}</GroupTitle>
+                    <GroupTitle style={getStaticTextStyle(constraintExplanationSolutionsTitle)}>
+                        {constraintExplanationSolutionsTitle.staticText}
+                    </GroupTitle>
                     <Explanations>
-                        {constraintExplanations.map(e => <ConstraintExplanation key={constraintExplanations.indexOf(e)} explanation={e}/>)}
+                        {constraintExplanations.map(e => (
+                            <ConstraintExplanation key={constraintExplanations.indexOf(e)} explanation={e} />
+                        ))}
                     </Explanations>
                 </div>
             )}

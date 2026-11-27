@@ -5,11 +5,11 @@ import Shapes from "./Shapes";
 function DesignSystem() {
     return (
         <>
-            <Shapes/>
-            <Spacing/>
-            <Typography/>
+            <Shapes />
+            <Spacing />
+            <Typography />
         </>
-    )
+    );
 }
 
-export default DesignSystem
+export default DesignSystem;

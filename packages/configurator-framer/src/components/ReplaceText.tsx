@@ -1,32 +1,34 @@
-import {cloneElement, ReactElement} from "react";
+import type {ReactElement} from "react";
+import {cloneElement, isValidElement} from "react";
 import withErrorBoundary from "../common/withErrorBoundary";
 import {Replacer} from "../common/react-element-replace/Replacer";
 import normalizePropName from "../common/normalizePropName";
-import {ReplaceTextProps} from "../props/replaceTextProps";
+import type {ReplaceTextProps} from "../props/replaceTextProps";
 
 type Props = ReplaceTextProps & {
-    text: string
-}
+    text: string;
+};
 
 const ReplaceText = withErrorBoundary((props: Props) => {
     const {children, mode, replaceString, propName, elementName, text} = props;
 
     if (mode === "replace") {
         return (
-            <Replacer match={n => typeof n === "string"}
-                      replace={s => s === replaceString ? text : s}>
+            <Replacer match={n => typeof n === "string"} replace={s => (s === replaceString ? text : s)}>
                 {children}
             </Replacer>
-        )
+        );
     } else if (mode === "set-prop") {
         return (
-            <Replacer match={(e: ReactElement) => (e.type as any)?.displayName === elementName}
-                      replace={(element: ReactElement) => cloneElement(element, {[normalizePropName(propName)]: text})}>
+            <Replacer
+                match={n => isValidElement(n) && (n.type as any)?.displayName === elementName}
+                replace={(element: ReactElement) => cloneElement(element, {[normalizePropName(propName)]: text})}
+            >
                 {children}
             </Replacer>
-        )
+        );
     }
-    return children
-})
+    return children;
+});
 
 export default ReplaceText;

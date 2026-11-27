@@ -1,4 +1,4 @@
-import {PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -22,7 +22,7 @@ const Root = styled(motion.div)`
     max-height: min(calc(100vh - var(--space-md) * 2), 700px);
     max-width: min(calc(100vw - var(--space-md) * 2), 700px);
     min-width: min(calc(100vw - var(--space-md) * 2), 500px);
-`
+`;
 
 const Content = styled.div`
     overflow-y: auto;
@@ -30,12 +30,12 @@ const Content = styled.div`
     padding-left: var(--size-explain-dialog-box-padding-left);
     padding-right: var(--size-explain-dialog-box-padding-right);
     padding-bottom: var(--space-xs-fixed);
-`
+`;
 
 const StyledScrollShadow = styled(ScrollShadow)`
     margin-left: calc(var(--size-explain-dialog-box-padding-left) * -1);
     margin-right: calc(var(--size-explain-dialog-box-padding-right) * -1);
-`
+`;
 
 const CloseButton = styled(DialogClose)`
     position: absolute;
@@ -51,7 +51,7 @@ const CloseButton = styled(DialogClose)`
         outline: var(--size-button-focus-outline) solid var(--color-button-focus-outline);
         outline-offset: var(--size-button-focus-outline-offset);
     }
-`
+`;
 
 const StyledExplainHeader = styled(ExplainHeader)`
     grid-area: header;
@@ -63,7 +63,7 @@ const StyledExplainHeader = styled(ExplainHeader)`
     margin-right: var(--space-md);
     padding-left: var(--size-explain-dialog-box-padding-left);
     padding-right: var(--size-explain-dialog-box-padding-right);
-`
+`;
 
 const animationVariants = {
     initial: {
@@ -76,18 +76,18 @@ const animationVariants = {
         transition: {
             type: "spring",
             stiffness: 600,
-            damping: 40
-        }
+            damping: 40,
+        },
     },
     close: {
         opacity: 0,
         scale: 0.7,
         transition: {
             duration: 0.1,
-            ease: "cubicInOut"
-        }
-    }
-}
+            ease: "cubicInOut",
+        },
+    },
+};
 
 export function ExplainShell(props: PropsWithChildren) {
     const {dialogBox, closeButton} = useExplainDialogProps();
@@ -95,21 +95,27 @@ export function ExplainShell(props: PropsWithChildren) {
     const dialogBoxWithoutPadding = {
         ...dialogBox,
         padding: 0,
-        isMixedPadding: false
-    } satisfies typeof dialogBox
+        isMixedPadding: false,
+    } satisfies typeof dialogBox;
 
     return (
-        <Root style={getBoxStyle(dialogBoxWithoutPadding)} variants={animationVariants} initial="initial" animate="open" exit="close">
-            <StyledExplainHeader/>
+        <Root
+            style={getBoxStyle(dialogBoxWithoutPadding)}
+            variants={animationVariants}
+            initial="initial"
+            animate="open"
+            exit="close"
+        >
+            <StyledExplainHeader />
 
             <Content>
-                <StyledScrollShadow/>
+                <StyledScrollShadow />
                 {props.children}
             </Content>
 
             <CloseButton style={getButtonStyle(closeButton)}>
-                <FontAwesomeIcon icon={faXmark}/>
+                <FontAwesomeIcon icon={faXmark} />
             </CloseButton>
         </Root>
-    )
+    );
 }

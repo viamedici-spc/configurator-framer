@@ -1,38 +1,43 @@
 import {useEffect, useRef} from "react";
 import styled from "styled-components";
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import withErrorBoundary from "../common/withErrorBoundary";
 
 const Root = styled.div`
     width: 10px;
     height: 10px;
     background-color: greenyellow;
-`
+`;
 
 type Props = {
-    delay: number
-}
+    delay: number;
+};
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-export default function ScrollIntoView(props: Props) {
+const ScrollIntoView = withErrorBoundary(function ScrollIntoView(props: Props) {
     const rootRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!rootRef.current) {
+        const root = rootRef.current;
+        if (!root) {
             return;
         }
 
         const timeout = setTimeout(() => {
-            rootRef.current.scrollIntoView();
-        }, props.delay)
+            root.scrollIntoView();
+        }, props.delay);
 
         return () => clearTimeout(timeout);
     }, [rootRef.current]);
 
-    return <Root ref={rootRef}></Root>
-}
+    return <Root ref={rootRef}></Root>;
+});
+
+export default ScrollIntoView;
 
 const propertyControls: PropertyControls<Props> = {
     delay: {
@@ -41,8 +46,8 @@ const propertyControls: PropertyControls<Props> = {
         min: 0,
         unit: "ms",
         defaultValue: 0,
-        step: 1
-    }
-}
+        step: 1,
+    },
+};
 
 addPropertyControls(ScrollIntoView, propertyControls);

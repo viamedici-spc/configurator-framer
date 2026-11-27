@@ -1,21 +1,26 @@
-import {ControlType, PropertyControls} from "framer";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "./choiceValueIdProps";
-import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState, FixedDecision} from "@viamedici-spc/configurator-ts";
+import type {PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
+import type {ChoiceValueIdProps} from "./choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "./choiceValueIdProps";
+import type {FixedDecision} from "@viamedici-spc/configurator-ts";
+import {AttributeType, ChoiceValueDecisionState, ComponentDecisionState} from "@viamedici-spc/configurator-ts";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {match} from "ts-pattern";
 
 // The state to fix, without "undefined" — a fixed decision requires a concrete value (there is no reset).
 type FixedDecisionState = "included" | "excluded" | "true" | "false" | "numeric";
 
-export type FixedDecisionItemProps = AttributeIdProps & ChoiceValueIdProps & {
-    state: FixedDecisionState,
-    // Only relevant when state is "numeric"; optional so non-numeric decisions can omit it.
-    numericValue?: number,
-};
+export type FixedDecisionItemProps = AttributeIdProps &
+    ChoiceValueIdProps & {
+        state: FixedDecisionState;
+        // Only relevant when state is "numeric"; optional so non-numeric decisions can omit it.
+        numericValue?: number;
+    };
 
 export type FixedDecisionsProps = {
-    fixedDecisions: FixedDecisionItemProps[]
+    fixedDecisions: FixedDecisionItemProps[];
 };
 
 /**
@@ -38,10 +43,28 @@ export function mapFixedDecision(p: FixedDecisionItemProps): FixedDecision | nul
 
     return match({state: p.state, hasChoiceValueId})
         .returnType<FixedDecision | null>()
-        .with({state: "included", hasChoiceValueId: true}, () => ({type: AttributeType.Choice, attributeId, choiceValueId, state: ChoiceValueDecisionState.Included}))
-        .with({state: "excluded", hasChoiceValueId: true}, () => ({type: AttributeType.Choice, attributeId, choiceValueId, state: ChoiceValueDecisionState.Excluded}))
-        .with({state: "included", hasChoiceValueId: false}, () => ({type: AttributeType.Component, attributeId, state: ComponentDecisionState.Included}))
-        .with({state: "excluded", hasChoiceValueId: false}, () => ({type: AttributeType.Component, attributeId, state: ComponentDecisionState.Excluded}))
+        .with({state: "included", hasChoiceValueId: true}, () => ({
+            type: AttributeType.Choice,
+            attributeId,
+            choiceValueId,
+            state: ChoiceValueDecisionState.Included,
+        }))
+        .with({state: "excluded", hasChoiceValueId: true}, () => ({
+            type: AttributeType.Choice,
+            attributeId,
+            choiceValueId,
+            state: ChoiceValueDecisionState.Excluded,
+        }))
+        .with({state: "included", hasChoiceValueId: false}, () => ({
+            type: AttributeType.Component,
+            attributeId,
+            state: ComponentDecisionState.Included,
+        }))
+        .with({state: "excluded", hasChoiceValueId: false}, () => ({
+            type: AttributeType.Component,
+            attributeId,
+            state: ComponentDecisionState.Excluded,
+        }))
         .with({state: "true"}, () => ({type: AttributeType.Boolean, attributeId, state: true}))
         .with({state: "false"}, () => ({type: AttributeType.Boolean, attributeId, state: false}))
         .with({state: "numeric"}, () => ({type: AttributeType.Numeric, attributeId, state: p.numericValue ?? 0}))
@@ -67,8 +90,8 @@ export const fixedDecisionsPropertyControls = {
                     title: "Numeric Value",
                     type: ControlType.Number,
                     defaultValue: 0,
-                }
-            }
-        }
-    }
+                },
+            },
+        },
+    },
 } satisfies PropertyControls<FixedDecisionsProps>;

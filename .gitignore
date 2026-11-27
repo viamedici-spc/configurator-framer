@@ -5,3 +5,4 @@ node_modules
 .DS_Store
 /packages/configurator-framer/report/tests-results.xml
 /packages/configurator-framer/report/cobertura-coverage.xml
+/packages/configurator-framer/package-check/consumer/index.ts

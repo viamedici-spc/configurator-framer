@@ -1,22 +1,29 @@
-import {ControlType, PropertyControls} from "framer";
-import {createContext, useContext} from "react";
-import {CommonExplainProps, createCommonExplainPropertyControls} from "./commonExplainProps";
-import {BoxProps, createBoxPropertyControls} from "../boxProps";
-import {createStaticTextPropertyControls, StaticTextProps} from "../staticTextProps";
-import {createMarginPropertyControls, MarginProps} from "../marginProps";
-import {createTextPropertyControls, TextProps} from "../textProps";
+import type {PropertyControls} from "framer";
+import {ControlType} from "framer";
+import {createContext} from "react";
+import useRequiredContext from "../../common/useRequiredContext";
+import type {CommonExplainProps} from "./commonExplainProps";
+import {createCommonExplainPropertyControls} from "./commonExplainProps";
+import type {BoxProps} from "../boxProps";
+import {createBoxPropertyControls} from "../boxProps";
+import type {StaticTextProps} from "../staticTextProps";
+import {createStaticTextPropertyControls} from "../staticTextProps";
+import type {MarginProps} from "../marginProps";
+import {createMarginPropertyControls} from "../marginProps";
+import type {TextProps} from "../textProps";
+import {createTextPropertyControls} from "../textProps";
 
 export type ExplainDialogProps = CommonExplainProps & {
-    dialogBox: BoxProps
-    explanationCard: BoxProps & MarginProps
+    dialogBox: BoxProps;
+    explanationCard: BoxProps & MarginProps;
     constraintExplanation: {
-        configurationModelId: TextProps,
-        ruleId: TextProps
-    }
-    decisionExplanationSolutionsTitle: StaticTextProps
-    constraintExplanationSolutionsTitle: StaticTextProps
-    scrollShadowBorder: string
-}
+        configurationModelId: TextProps;
+        ruleId: TextProps;
+    };
+    decisionExplanationSolutionsTitle: StaticTextProps;
+    constraintExplanationSolutionsTitle: StaticTextProps;
+    scrollShadowBorder: string;
+};
 
 export const explainDialogPropertyControls = {
     dialogBox: {
@@ -31,8 +38,8 @@ export const explainDialogPropertyControls = {
             paddingBottom: 0,
             paddingLeft: 24,
             paddingRight: 24,
-            isMixedPadding: true
-        })
+            isMixedPadding: true,
+        }),
     },
     explanationCard: {
         title: "Explanation Card",
@@ -43,14 +50,14 @@ export const explainDialogPropertyControls = {
                 shadow: "2px 1px 10px -5px rgba(0, 0, 0, 0.4)",
                 radius: 7,
                 padding: 12,
-                isMixedPadding: false
+                isMixedPadding: false,
             }),
             ...createMarginPropertyControls({
                 marginLeft: -12,
                 marginRight: -12,
-                isMixedMargin: true
-            })
-        }
+                isMixedMargin: true,
+            }),
+        },
     },
     constraintExplanation: {
         title: "Constraint Explanation",
@@ -64,9 +71,9 @@ export const explainDialogPropertyControls = {
                     text: {
                         fontWeight: "400",
                         fontSize: 16,
-                        fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                    }
-                })
+                        fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                    },
+                }),
             },
             ruleId: {
                 title: "Rule Id",
@@ -76,11 +83,11 @@ export const explainDialogPropertyControls = {
                     text: {
                         fontWeight: "500",
                         fontSize: 14,
-                        fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                    }
-                })
-            }
-        }
+                        fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                    },
+                }),
+            },
+        },
     },
     ...createCommonExplainPropertyControls({
         header: {
@@ -89,25 +96,25 @@ export const explainDialogPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 19,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
             },
             suffix: {
                 color: "#171717",
                 text: {
                     fontWeight: "500",
                     fontSize: 19,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
-            }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
+            },
         },
         attributeName: {
             color: "#171717",
             text: {
                 fontWeight: "400",
                 fontSize: 16,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-            }
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+            },
         },
         attributeValue: {
             add: {
@@ -115,30 +122,30 @@ export const explainDialogPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 radius: 300,
                 fill: "#efefef",
                 iconFill: "#cfefc7",
-                iconColor: "#48c52b"
+                iconColor: "#48c52b",
             },
             remove: {
                 color: "#171717",
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 radius: 300,
                 fill: "#efefef",
                 iconFill: "#ffdada",
-                iconColor: "#c52b2b"
+                iconColor: "#c52b2b",
             },
             paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: 0,
             paddingRight: 10,
-            isMixedPadding: true
+            isMixedPadding: true,
         },
         applySolutionButton: {
             fill: "#F2F2F2",
@@ -155,15 +162,15 @@ export const explainDialogPropertyControls = {
                 textAlign: "center",
                 fontWeight: "600",
                 fontSize: 14,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
             },
             focusOutline: {
                 color: "#00a1e6",
                 size: 2,
-                offset: -1
+                offset: -1,
             },
             marginTop: 18,
-            isMixedMargin: true
+            isMixedMargin: true,
         },
         closeButton: {
             fill: "transparent",
@@ -180,21 +187,21 @@ export const explainDialogPropertyControls = {
                 textAlign: "center",
                 fontWeight: "400",
                 fontSize: 14,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
             },
             focusOutline: {
                 color: "#00a1e6",
                 size: 2,
-                offset: -1
-            }
+                offset: -1,
+            },
         },
         infoMessage: {
             color: "#171717",
             text: {
                 fontWeight: "400",
                 fontSize: 16,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-            }
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+            },
         },
     }),
     decisionExplanationSolutionsTitle: {
@@ -207,10 +214,10 @@ export const explainDialogPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 16,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
-            })
-        }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
+            }),
+        },
     },
     constraintExplanationSolutionsTitle: {
         title: "Constraint Explanation Solutions Title",
@@ -222,17 +229,18 @@ export const explainDialogPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 16,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
-            })
-        }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
+            }),
+        },
     },
     scrollShadowBorder: {
         title: "Scroll Shadow Border",
         type: ControlType.Color,
-        defaultValue: "rgba(0, 0, 0, 0.3)"
+        defaultValue: "rgba(0, 0, 0, 0.3)",
     },
 } satisfies PropertyControls<ExplainDialogProps>;
 
-export const explainDialogPropsContext = createContext<ExplainDialogProps>(null);
-export const useExplainDialogProps = (): ExplainDialogProps => useContext(explainDialogPropsContext);
+export const explainDialogPropsContext = createContext<ExplainDialogProps | null>(null);
+export const useExplainDialogProps = (): ExplainDialogProps =>
+    useRequiredContext(explainDialogPropsContext, "ExplainDialog");

@@ -1,14 +1,20 @@
-import {explainContext, ExplainContext, ExplainProcess} from "../common/explain";
-import {useContext} from "react";
+import type {ExplainContext, ExplainProcess} from "../common/explain";
+import {explainContext} from "../common/explain";
+import useRequiredContext from "../common/useRequiredContext";
 
 export type UseExplainProcessResult = ExplainProcess & {
-    switchMode: ExplainContext["switchMode"],
-    applySolution: ExplainContext["applySolution"],
-    dismiss: ExplainContext["dismiss"]
+    switchMode: ExplainContext["switchMode"];
+    applySolution: ExplainContext["applySolution"];
+    dismiss: ExplainContext["dismiss"];
 };
 
+/**
+ * Gets the ongoing explain process of `<Configuration />` with the commands that act on it.
+ * @returns The process, or `null` while no explain process is ongoing.
+ * @throws Error "This component must be wrapped in <Configuration />" outside a `<Configuration />`.
+ */
 export default function useExplainProcess(): UseExplainProcessResult | null {
-    const {process, switchMode, applySolution, dismiss} = useContext(explainContext);
+    const {process, switchMode, applySolution, dismiss} = useRequiredContext(explainContext, "Configuration");
 
     if (!process) {
         return null;
@@ -18,6 +24,19 @@ export default function useExplainProcess(): UseExplainProcessResult | null {
         ...process,
         switchMode,
         applySolution,
-        dismiss
+        dismiss,
     } satisfies UseExplainProcessResult;
+}
+
+/**
+ * For components that are only rendered while an explain process is ongoing, i.e. inside the explain popover or dialog.
+ */
+export function useOngoingExplainProcess(): UseExplainProcessResult {
+    const process = useExplainProcess();
+
+    if (process == null) {
+        throw new Error("This component must only be rendered while an explain process is ongoing");
+    }
+
+    return process;
 }

@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import type {ReactNode} from "react";
 import styled from "styled-components";
 
 const Root = styled.div`
@@ -13,28 +13,24 @@ const Root = styled.div`
     }
 
     &.error {
-        border: 1px solid #DB0100;
+        border: 1px solid #db0100;
         border-left-width: 15px;
     }
-`
+`;
 
 const Title = styled.h3`
     margin: 0 0 var(--space-xs);
-`
+`;
 
 const Message = styled.div`
     white-space: break-spaces;
-`
+`;
 
-export function InitializationErrorMessage(props: { title: ReactNode, message: ReactNode, type: "warning" | "error" }) {
+export function InitializationErrorMessage(props: {title: ReactNode; message: ReactNode; type: "warning" | "error"}) {
     return (
         <Root className={props.type}>
-            <Title>
-                {props.title}
-            </Title>
-            <Message>
-                {props.message}
-            </Message>
+            <Title>{props.title}</Title>
+            <Message>{props.message}</Message>
         </Root>
-    )
+    );
 }

@@ -1,6 +1,7 @@
 import {FloatingFocusManager, FloatingOverlay, FloatingPortal, useMergeRefs} from "@floating-ui/react";
 import {useDialogContext} from "./Dialog";
-import {ComponentProps, ComponentType, forwardRef, HTMLProps} from "react";
+import type {ComponentProps, ComponentType, HTMLProps} from "react";
+import {forwardRef} from "react";
 import styled, {css} from "styled-components";
 
 export const defaultOverlayStyle = css`
@@ -9,17 +10,17 @@ export const defaultOverlayStyle = css`
     align-items: center;
     z-index: 100;
     padding: var(--space-md-fixed);
-`
+`;
 
 const DefaultOverlay = styled(FloatingOverlay)`
     ${defaultOverlayStyle};
-`
+`;
 
 type Props = HTMLProps<HTMLDivElement> & {
     components?: {
-        Overlay?: ComponentType<ComponentProps<typeof FloatingOverlay>>
-    }
-}
+        Overlay?: ComponentType<ComponentProps<typeof FloatingOverlay>>;
+    };
+};
 
 const DialogContent = forwardRef<HTMLDivElement, Props>((props, ref) => {
     const {style, children, components, ...restProps} = props;
@@ -32,8 +33,7 @@ const DialogContent = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <FloatingPortal>
             <Overlay lockScroll>
                 <FloatingFocusManager context={dialogContext.context}>
-                    <div ref={rootRef}
-                         {...dialogContext.getFloatingProps(restProps)}>
+                    <div ref={rootRef} {...dialogContext.getFloatingProps(restProps)}>
                         {children}
                     </div>
                 </FloatingFocusManager>

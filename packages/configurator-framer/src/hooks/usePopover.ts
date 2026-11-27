@@ -1,5 +1,17 @@
-import {autoUpdate, flip, offset, Placement, shift, arrow as arrowMiddleware, useClick, useDismiss, useFloating, useInteractions, Middleware} from "@floating-ui/react";
-import {RefObject, useMemo, useState} from "react";
+import type {Placement} from "@floating-ui/react";
+import {
+    autoUpdate,
+    flip,
+    offset,
+    shift,
+    arrow as arrowMiddleware,
+    useClick,
+    useDismiss,
+    useFloating,
+    useInteractions,
+} from "@floating-ui/react";
+import type {RefObject} from "react";
+import {useMemo, useState} from "react";
 
 export interface PopoverOptions {
     initialOpen?: boolean;
@@ -7,7 +19,7 @@ export interface PopoverOptions {
     modal?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
-    arrow?: { width: number, height: number, padding: number, element: RefObject<SVGSVGElement> };
+    arrow?: {width: number; height: number; padding: number; element: RefObject<SVGSVGElement>};
 }
 
 export default function usePopover(options: PopoverOptions = {}) {
@@ -17,7 +29,7 @@ export default function usePopover(options: PopoverOptions = {}) {
         modal = false,
         open: controlledOpen,
         onOpenChange: setControlledOpen,
-        arrow
+        arrow,
     } = options;
     const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
 
@@ -34,23 +46,24 @@ export default function usePopover(options: PopoverOptions = {}) {
             flip({
                 crossAxis: placement.includes("-"),
                 fallbackAxisSideDirection: "end",
-                padding: 5
+                padding: 5,
             }),
             shift({padding: 5}),
-            ...(arrow ? [arrowMiddleware(arrow)] : [])
-        ]
+            ...(arrow ? [arrowMiddleware(arrow)] : []),
+        ],
     });
 
     const context = data.context;
 
     const click = useClick(context, {
-        enabled: controlledOpen == null
+        enabled: controlledOpen == null,
     });
     const dismiss = useDismiss(context);
 
     const interactions = useInteractions([click, dismiss]);
 
-    return useMemo(() => ({open, setOpen, ...interactions, ...data, modal, arrow}),
-        [open, setOpen, interactions, data, modal, arrow]
+    return useMemo(
+        () => ({open, setOpen, ...interactions, ...data, modal, arrow}),
+        [open, setOpen, interactions, data, modal, arrow],
     );
 }

@@ -1,9 +1,11 @@
-import {createContext, PropsWithChildren, useContext} from "react";
-import usePopover, {PopoverOptions} from "../../hooks/usePopover";
+import type {PropsWithChildren} from "react";
+import {createContext, useContext} from "react";
+import type {PopoverOptions} from "../../hooks/usePopover";
+import usePopover from "../../hooks/usePopover";
 
 type ContextType = ReturnType<typeof usePopover>;
 
-const PopoverContext = createContext<ContextType>(null);
+const PopoverContext = createContext<ContextType | null>(null);
 
 export const usePopoverContext = () => {
     const context = useContext(PopoverContext);
@@ -18,9 +20,5 @@ export const usePopoverContext = () => {
 export default function Popover({children, ...options}: PropsWithChildren<PopoverOptions>) {
     const popover = usePopover(options);
 
-    return (
-        <PopoverContext.Provider value={popover}>
-            {children}
-        </PopoverContext.Provider>
-    );
+    return <PopoverContext.Provider value={popover}>{children}</PopoverContext.Provider>;
 }

@@ -1,22 +1,25 @@
-import {ControlType, PropertyControls} from "framer";
-import {attributeIdPropertyControls, AttributeIdProps} from "./attributeIdProps";
+import type {PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {AttributeIdProps} from "./attributeIdProps";
+import {attributeIdPropertyControls} from "./attributeIdProps";
 
 export type WizardAttributeRelationsProps = {
     wizardAttributeRelations: {
-        wizardSteps: WizardStep[]
-    }
-}
+        wizardSteps: WizardStep[];
+    };
+};
 
 export type WizardStep = {
-    name: string,
-    attributes: AttributeIdProps[]
-}
+    name: string;
+    attributes: AttributeIdProps[];
+};
 
 export const wizardAttributeRelationsPropertyControls = {
     wizardAttributeRelations: {
         title: "Wizard Attribute Relations",
         type: ControlType.Object,
-        defaultValue: null,
+        // Framer's type has no null here; the control passes null as its default.
+        defaultValue: null as unknown as undefined,
         buttonTitle: "Definition…",
         controls: {
             wizardSteps: {
@@ -27,20 +30,19 @@ export const wizardAttributeRelationsPropertyControls = {
                     controls: {
                         name: {
                             title: "Name",
-                            type: ControlType.String
+                            type: ControlType.String,
                         },
                         attributes: {
                             title: "Attributes",
                             type: ControlType.Array,
                             control: {
                                 type: ControlType.Object,
-                                controls: attributeIdPropertyControls
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
+                                controls: attributeIdPropertyControls,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
 } satisfies PropertyControls<WizardAttributeRelationsProps>;

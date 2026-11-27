@@ -1,4 +1,4 @@
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import styled from "styled-components";
 import {useExplainPopoverProps} from "../../../../props/explain/explainPopoverProps";
 import {useMemo} from "react";
@@ -21,21 +21,28 @@ const Root = styled.button`
         outline: var(--size-button-focus-outline) solid var(--color-button-focus-outline);
         outline-offset: var(--size-button-focus-outline-offset);
     }
-`
+`;
 
 export default function ShowMoreButton() {
-    const {decisionExplanations, switchMode} = useExplainProcess();
+    const {decisionExplanations, switchMode} = useOngoingExplainProcess();
     const {showMoreButton, showConstraintsButton} = useExplainPopoverProps();
-    const more = decisionExplanations.length - 1;
-    const showMoreText = useMemo(() => more > 0 && Mustache.render(showMoreButton.staticText, {amount: more}), [showMoreButton.text, more])
+    // Only shown below a successful explanation, so decisionExplanations is set.
+    const more = (decisionExplanations?.length ?? 0) - 1;
+    const showMoreText = useMemo(
+        () => more > 0 && Mustache.render(showMoreButton.staticText, {amount: more}),
+        [showMoreButton.text, more],
+    );
     const activeProps = more > 0 ? showMoreButton : showConstraintsButton;
 
     return (
-        <Root onClick={() => switchMode("dialog")} style={{
-            ...getButtonStyle(activeProps),
-            ...getMarginStyle(activeProps)
-        }}>
+        <Root
+            onClick={() => switchMode("dialog")}
+            style={{
+                ...getButtonStyle(activeProps),
+                ...getMarginStyle(activeProps),
+            }}
+        >
             {showMoreText || activeProps.staticText}
         </Root>
-    )
+    );
 }

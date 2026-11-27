@@ -1,20 +1,34 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {
+    ChoiceValue,
+    ConfiguratorError,
+    ExplicitDecision,
+    WhyIsStateNotPossible,
+} from "@viamedici-spc/configurator-ts";
 import {
-    AttributeType, ChoiceValue, ChoiceValueDecisionState, ComponentDecisionState, ConfiguratorError, ConfiguratorErrorType, ExplainQuestionSubject, ExplainQuestionType,
-    ExplicitDecision, WhyIsStateNotPossible
-} from "@viamedici-spc/configurator-ts"
-import {useAttributes, useChoiceAttribute, useMakeDecision} from "@viamedici-spc/configurator-react"
+    AttributeType,
+    ChoiceValueDecisionState,
+    ComponentDecisionState,
+    ConfiguratorErrorType,
+    ExplainQuestionSubject,
+    ExplainQuestionType,
+} from "@viamedici-spc/configurator-ts";
+import {useAttributes, useChoiceAttribute, useMakeDecision} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {PropsWithChildren} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
-import {choiceValueIdPropertyControls, ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import type {PropsWithChildren} from "react";
+import type {AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
+import type {ChoiceValueIdProps} from "../props/choiceValueIdProps";
+import {choiceValueIdPropertyControls} from "../props/choiceValueIdProps";
 import {match} from "ts-pattern";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
 import {explainableComponent} from "../common/componentComposites";
 import {useControlId} from "../common/controlId";
-import {explainPropertyControls, ExplainProps} from "../props/explainProps";
+import type {ExplainProps} from "../props/explainProps";
+import {explainPropertyControls} from "../props/explainProps";
 import {showMakeDecisionFailure} from "../common/failureAlerts";
 
 /*
@@ -24,11 +38,13 @@ import {showMakeDecisionFailure} from "../common/failureAlerts";
 
 type SelectionState = "undefined" | "included" | "excluded" | "true" | "false" | "numeric";
 
-type Props = AttributeIdProps & ChoiceValueIdProps & ExplainProps & {
-    setSelection: SelectionState,
-    numericValue: number,
-    attributeIds: []
-}
+type Props = AttributeIdProps &
+    ChoiceValueIdProps &
+    ExplainProps & {
+        setSelection: SelectionState;
+        numericValue: number;
+        attributeIds: [];
+    };
 
 /**
  * @framerSupportedLayoutWidth any
@@ -62,34 +78,59 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
         return <span>Attribute is not a Choice Attribute</span>;
     }
 
-    let choiceValue: ChoiceValue = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
+    let choiceValue: ChoiceValue | null | undefined = isChoiceAttribute ? attribute.values.get(choiceValueId) : null;
     if (hasChoiceValueId && choiceValue == null) {
         return <span>Choice Value not found</span>;
     }
 
+    // Including or excluding needs a choice value; only "undefined" works on the whole choice attribute (clears it).
+    if (isChoiceAttribute && !hasChoiceValueId && props.setSelection !== "undefined") {
+        return <span>Choice Value Id missing</span>;
+    }
+
     const mapSelectionStateToDecision = () =>
-        match({isChoiceAttribute, isBooleanAttribute, isComponentAttribute, isNumericAttribute, hasChoiceValueId, state: props.setSelection})
-            .with({isChoiceAttribute: true, hasChoiceValueId: true, state: "included"}, () => ChoiceValueDecisionState.Included)
-            .with({isChoiceAttribute: true, hasChoiceValueId: true, state: "excluded"}, () => ChoiceValueDecisionState.Excluded)
+        match({
+            isChoiceAttribute,
+            isBooleanAttribute,
+            isComponentAttribute,
+            isNumericAttribute,
+            hasChoiceValueId,
+            state: props.setSelection,
+        })
+            .with(
+                {isChoiceAttribute: true, hasChoiceValueId: true, state: "included"},
+                () => ChoiceValueDecisionState.Included,
+            )
+            .with(
+                {isChoiceAttribute: true, hasChoiceValueId: true, state: "excluded"},
+                () => ChoiceValueDecisionState.Excluded,
+            )
             .with({isBooleanAttribute: true, state: "true"}, () => true)
             .with({isBooleanAttribute: true, state: "false"}, () => false)
             .with({isComponentAttribute: true, state: "included"}, () => ComponentDecisionState.Included)
             .with({isComponentAttribute: true, state: "excluded"}, () => ComponentDecisionState.Excluded)
             .with({isNumericAttribute: true, state: "numeric"}, () => props.numericValue)
-            .otherwise(() => null)
+            .otherwise(() => null);
 
     const onClick = async () => {
         if (isChoiceAttribute && !hasChoiceValueId && props.setSelection === "undefined") {
             try {
-                await choiceAttribute.clearDecisions();
+                // Defined: useAttributes found this attribute as a choice attribute.
+                await choiceAttribute!.clearDecisions();
             } catch {
                 showMakeDecisionFailure();
             }
         } else {
             const targetDecision = mapSelectionStateToDecision();
-            const isComponentStatePossible = isComponentAttribute ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState) : false;
-            const isBooleanStatePossible = isBooleanAttribute ? attribute.possibleDecisionStates.includes(targetDecision as boolean) : false;
-            const isChoiceValueStatePossible = isChoiceAttribute ? choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState) : false;
+            const isComponentStatePossible = isComponentAttribute
+                ? attribute.possibleDecisionStates.includes(targetDecision as ComponentDecisionState)
+                : false;
+            const isBooleanStatePossible = isBooleanAttribute
+                ? attribute.possibleDecisionStates.includes(targetDecision as boolean)
+                : false;
+            const isChoiceValueStatePossible =
+                choiceValue != null &&
+                choiceValue.possibleDecisionStates.includes(targetDecision as ChoiceValueDecisionState);
             const isAnyStatePossible = isChoiceValueStatePossible || isBooleanStatePossible || isComponentStatePossible;
 
             // An immutable attribute / choice value can never change. Acting on it is
@@ -101,30 +142,41 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
             // (Numeric falls through as non-immutable here and keeps its existing path.)
             const isTargetImmutable = match(attribute)
                 .with({type: AttributeType.Choice}, () => choiceValue?.isPossibleDecisionStatesImmutable ?? false)
-                .with({type: AttributeType.Boolean}, (a) => a.isPossibleDecisionStatesImmutable)
-                .with({type: AttributeType.Component}, (a) => a.isPossibleDecisionStatesImmutable)
+                .with({type: AttributeType.Boolean}, a => a.isPossibleDecisionStatesImmutable)
+                .with({type: AttributeType.Component}, a => a.isPossibleDecisionStatesImmutable)
                 .otherwise(() => false);
 
             const explainMode = props.explain;
-            const maybeExplain = explainMode !== "disabled" && (async () => {
-                const subject = match({isComponentAttribute, isBooleanAttribute, isChoiceAttribute, isNumericAttribute})
-                    .returnType<ExplainQuestionSubject | null>()
-                    .with({isChoiceAttribute: true}, () => ExplainQuestionSubject.choiceValue)
-                    .with({isBooleanAttribute: true}, () => ExplainQuestionSubject.boolean)
-                    .with({isComponentAttribute: true}, () => ExplainQuestionSubject.component)
-                    .with({isNumericAttribute: true}, () => ExplainQuestionSubject.numeric)
-                    .otherwise(() => null);
+            const maybeExplain =
+                explainMode !== "disabled" &&
+                (async () => {
+                    const subject = match({
+                        isComponentAttribute,
+                        isBooleanAttribute,
+                        isChoiceAttribute,
+                        isNumericAttribute,
+                    })
+                        .returnType<ExplainQuestionSubject | null>()
+                        .with({isChoiceAttribute: true}, () => ExplainQuestionSubject.choiceValue)
+                        .with({isBooleanAttribute: true}, () => ExplainQuestionSubject.boolean)
+                        .with({isComponentAttribute: true}, () => ExplainQuestionSubject.component)
+                        .with({isNumericAttribute: true}, () => ExplainQuestionSubject.numeric)
+                        .otherwise(() => null);
 
-                if (subject) {
-                    await explain({
-                        question: ExplainQuestionType.whyIsStateNotPossible,
-                        subject: subject,
-                        attributeId: globalAttributeId,
-                        choiceValueId: choiceValueId,
-                        state: targetDecision
-                    } as WhyIsStateNotPossible, explainMode, controlId);
-                }
-            });
+                    if (subject) {
+                        await explain(
+                            {
+                                question: ExplainQuestionType.whyIsStateNotPossible,
+                                subject: subject,
+                                attributeId: globalAttributeId,
+                                choiceValueId: choiceValueId,
+                                state: targetDecision,
+                            } as WhyIsStateNotPossible,
+                            explainMode,
+                            controlId,
+                        );
+                    }
+                });
 
             if (isTargetImmutable) {
                 // No-op — Fixed or Unavailable target (see isTargetImmutable above).
@@ -134,24 +186,28 @@ const SetSelection = explainableComponent<HTMLElement, PropsWithChildren<Props>>
                         type: attribute.type,
                         attributeId: globalAttributeId,
                         choiceValueId: choiceValueId,
-                        state: targetDecision
+                        state: targetDecision,
                     } as ExplicitDecision);
                 } catch (e) {
                     const error = e as ConfiguratorError;
-                    if ((error.type === ConfiguratorErrorType.ConflictWithConsequence || error.type === ConfiguratorErrorType.SetDecisionConflict) && maybeExplain) {
+                    if (
+                        (error.type === ConfiguratorErrorType.ConflictWithConsequence ||
+                            error.type === ConfiguratorErrorType.SetDecisionConflict) &&
+                        maybeExplain
+                    ) {
                         await maybeExplain();
                         return;
                     }
                     showMakeDecisionFailure();
                 }
             } else if (maybeExplain) {
-                await maybeExplain()
+                await maybeExplain();
             }
         }
-    }
+    };
 
     return cloneChildrenWithProps(props.children, {onClick, ref});
-})
+});
 
 export default SetSelection;
 
@@ -173,7 +229,7 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
         type: ControlType.Number,
         defaultValue: 0,
     },
-    ...explainPropertyControls
-}
+    ...explainPropertyControls,
+};
 
 addPropertyControls(SetSelection, propertyControls);

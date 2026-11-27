@@ -1,9 +1,12 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import styled from "styled-components"
-import {BooleanAttribute, ConfiguratorError, ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts"
-import {useBooleanAttribute} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import styled from "styled-components";
+import type {BooleanAttribute, ConfiguratorError} from "@viamedici-spc/configurator-ts";
+import {ConfiguratorErrorType, DecisionKind} from "@viamedici-spc/configurator-ts";
+import {useBooleanAttribute} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
-import {getSelectStyle, selectPropertyControls, SelectProps} from "../props/selectProps";
+import type {SelectProps} from "../props/selectProps";
+import {getSelectStyle, selectPropertyControls} from "../props/selectProps";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
 import {match} from "ts-pattern";
 import useExplain from "../hooks/useExplain";
@@ -14,7 +17,7 @@ import {showMakeDecisionFailure} from "../common/failureAlerts";
 const Root = styled.select`
     color: inherit;
     cursor: inherit;
-`
+`;
 
 const resetValue = "<reset>";
 const nothingValue = "<nothing>";
@@ -22,9 +25,9 @@ const trueValue = "yes";
 const falseValue = "no";
 
 type Props = SelectProps & {
-    trueLabel?: string,
-    falseLabel?: string
-}
+    trueLabel?: string;
+    falseLabel?: string;
+};
 
 /**
  * @framerIntrinsicWidth 300
@@ -37,7 +40,7 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
     const renderPlaceholder = useRenderPlaceholder();
     if (renderPlaceholder) {
         const style = getSelectStyle(props, true, false);
-        return <Root style={style}/>
+        return <Root style={style} />;
     }
 
     const controlId = useControlId();
@@ -63,7 +66,10 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
             const value = optionValue === trueValue;
             const isValuePossible = attribute.possibleDecisionStates.includes(value);
             const explainMode = props.explain;
-            const maybeExplain = explainMode !== "disabled" && (() => explain(b => b.whyIsStateNotPossible.boolean(attribute.id).state(value), explainMode, controlId));
+            const maybeExplain =
+                explainMode !== "disabled" &&
+                (() =>
+                    explain(b => b.whyIsStateNotPossible.boolean(attribute.id).state(value), explainMode, controlId));
 
             if (isValuePossible) {
                 try {
@@ -107,54 +113,55 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
     // attribute (browser default disabled styling takes over).
     const noOptionsAvailable = allOptionsBlocked && isImmutable;
     const isSelectDisabled = props.excludeUnavailableOptions && noOptionsAvailable;
-    const style = getSelectStyle(props, attribute.isSatisfied, isImplicitSelected, isFixedSelected, allOptionsBlocked, noOptionsAvailable);
+    const style = getSelectStyle(
+        props,
+        attribute.isSatisfied,
+        isImplicitSelected,
+        isFixedSelected,
+        allOptionsBlocked,
+        noOptionsAvailable,
+    );
 
     const trueOption = (
         <option value={trueValue}>
             {decisionPrefix(attribute, true, isImmutable, props)}
             {props.trueLabel}
         </option>
-    )
+    );
 
     const falseOption = (
         <option value={falseValue}>
             {decisionPrefix(attribute, false, isImmutable, props)}
             {props.falseLabel}
         </option>
-    )
+    );
 
     const trueUnavailableOption = (
         <option value={trueValue} disabled>
             {props.trueLabel}
         </option>
-    )
+    );
 
     const falseUnavailableOption = (
         <option value={falseValue} disabled>
             {props.falseLabel}
         </option>
-    )
+    );
 
     const showBlockedGroup = isTrueBlocked || isFalseBlocked;
     const showUnavailableGroup = !props.excludeUnavailableOptions && (isTrueUnavailable || isFalseUnavailable);
 
     return (
-        <Root ref={ref}
-              value={selectedValue}
-              onChange={e => onChange(e.currentTarget.value)}
-              disabled={isSelectDisabled}
-              style={style}>
+        <Root
+            ref={ref}
+            value={selectedValue}
+            onChange={e => onChange(e.currentTarget.value)}
+            disabled={isSelectDisabled}
+            style={style}
+        >
+            {selectedValue === nothingValue && <option value={nothingValue}></option>}
 
-            {selectedValue === nothingValue && (
-                <option value={nothingValue}>
-                </option>
-            )}
-
-            {canReset && (
-                <option value={resetValue}>
-                    {props.resetLabel}
-                </option>
-            )}
+            {canReset && <option value={resetValue}>{props.resetLabel}</option>}
 
             {isTrueAllowed && trueOption}
             {isFalseAllowed && falseOption}
@@ -173,15 +180,15 @@ const BooleanSelect = explainableComponent<HTMLSelectElement, Props>((props, ref
                 </optgroup>
             )}
         </Root>
-    )
-})
+    );
+});
 
 export default BooleanSelect;
 
 const decisionPrefix = (a: BooleanAttribute, value: boolean, isImmutable: boolean, props: Props): string => {
     if (a.decision?.kind !== DecisionKind.Implicit || a.decision?.state !== value) return "";
     return isImmutable ? props.fixedLabelPrefix : props.implicitLabelPrefix;
-}
+};
 
 const propertyControls: PropertyControls<Props> = {
     ...selectPropertyControls,
@@ -194,7 +201,7 @@ const propertyControls: PropertyControls<Props> = {
         title: "False Label",
         type: ControlType.String,
         defaultValue: "No",
-    }
-}
+    },
+};
 
 addPropertyControls(BooleanSelect, propertyControls);

@@ -1,10 +1,18 @@
-import {ControlType, PropertyControls} from "framer";
-import {createContext, CSSProperties, ReactNode, useContext} from "react";
-import {createCommonExplainPropertyControls, CommonExplainProps} from "./commonExplainProps";
-import {BoxProps, createBoxPropertyControls} from "../boxProps";
-import {ButtonProps, createButtonPropertyControls} from "../buttonProps";
-import {createMarginPropertyControls, MarginProps} from "../marginProps";
-import {createStaticTextPropertyControls, StaticTextProps} from "../staticTextProps";
+import type {PropertyControls} from "framer";
+import {ControlType} from "framer";
+import type {CSSProperties, ReactNode} from "react";
+import {createContext} from "react";
+import useRequiredContext from "../../common/useRequiredContext";
+import type {CommonExplainProps} from "./commonExplainProps";
+import {createCommonExplainPropertyControls} from "./commonExplainProps";
+import type {BoxProps} from "../boxProps";
+import {createBoxPropertyControls} from "../boxProps";
+import type {ButtonProps} from "../buttonProps";
+import {createButtonPropertyControls} from "../buttonProps";
+import type {MarginProps} from "../marginProps";
+import {createMarginPropertyControls} from "../marginProps";
+import type {StaticTextProps} from "../staticTextProps";
+import {createStaticTextPropertyControls} from "../staticTextProps";
 
 export type ExplainPopoverProps = CommonExplainProps & {
     popoverBox: BoxProps;
@@ -13,8 +21,8 @@ export type ExplainPopoverProps = CommonExplainProps & {
     subline: StaticTextProps;
     showConstraintsButton: ButtonProps & MarginProps;
     showMoreButton: ButtonProps & MarginProps;
-    customPopover?: ReactNode // Expects an ExplainContent component (custom)
-}
+    customPopover?: ReactNode; // Expects an ExplainContent component (custom)
+};
 
 export const explainPopoverPropertyControls = {
     popoverBox: {
@@ -25,9 +33,9 @@ export const explainPopoverPropertyControls = {
             radius: 12,
             padding: 18,
             isMixedPadding: false,
-            filter: "drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.4))"
+            filter: "drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.4))",
         }),
-        hidden: (props) => props.useCustomExplain,
+        hidden: props => props.useCustomExplain === true,
     },
     subline: {
         title: "Subline",
@@ -39,11 +47,11 @@ export const explainPopoverPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 16,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
-            })
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
+            }),
         },
-        hidden: (props) => props.useCustomExplain,
+        hidden: props => props.useCustomExplain === true,
     },
     ...createCommonExplainPropertyControls({
         header: {
@@ -52,25 +60,25 @@ export const explainPopoverPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 19,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
             },
             suffix: {
                 color: "white",
                 text: {
                     fontWeight: "500",
                     fontSize: 19,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-                }
-            }
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+                },
+            },
         },
         attributeName: {
             color: "white",
             text: {
                 fontWeight: "400",
                 fontSize: 16,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-            }
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+            },
         },
         attributeValue: {
             add: {
@@ -78,30 +86,30 @@ export const explainPopoverPropertyControls = {
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 radius: 300,
                 fill: "rgba(255, 255, 255, 0.2)",
                 iconFill: "rgba(47, 255, 0, 0.2)",
-                iconColor: "#63e446"
+                iconColor: "#63e446",
             },
             remove: {
                 color: "white",
                 text: {
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 radius: 300,
                 fill: "rgba(255, 255, 255, 0.2)",
                 iconFill: "#ff00004a",
-                iconColor: "#ff6060"
+                iconColor: "#ff6060",
             },
             paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: 0,
             paddingRight: 10,
-            isMixedPadding: true
+            isMixedPadding: true,
         },
         applySolutionButton: {
             fill: "rgb(0, 161, 230)",
@@ -118,15 +126,15 @@ export const explainPopoverPropertyControls = {
                 textAlign: "center",
                 fontWeight: "600",
                 fontSize: 14,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
             },
             focusOutline: {
                 color: "rgba(255, 255, 255, 0.8)",
                 size: 2,
-                offset: -1
+                offset: -1,
             },
             marginTop: 18,
-            isMixedMargin: true
+            isMixedMargin: true,
         },
         closeButton: {
             fill: "transparent",
@@ -143,21 +151,21 @@ export const explainPopoverPropertyControls = {
                 textAlign: "center",
                 fontWeight: "400",
                 fontSize: 14,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
             },
             focusOutline: {
                 color: "rgba(255, 255, 255, 0.8)",
                 size: 2,
-                offset: -1
-            }
+                offset: -1,
+            },
         },
         infoMessage: {
             color: "white",
             text: {
                 fontWeight: "400",
                 fontSize: 16,
-                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
-            }
+                fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
+            },
         },
     }),
     showConstraintsButton: {
@@ -179,19 +187,19 @@ export const explainPopoverPropertyControls = {
                     textAlign: "center",
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 focusOutline: {
                     color: "rgba(255, 255, 255, 0.8)",
                     size: 2,
-                    offset: -1
-                }
+                    offset: -1,
+                },
             }),
             ...createMarginPropertyControls({
-                marginTop: 13
-            })
+                marginTop: 13,
+            }),
         },
-        hidden: (props) => props.useCustomExplain,
+        hidden: props => props.useCustomExplain === true,
     },
     showMoreButton: {
         title: "Show More Button",
@@ -212,25 +220,25 @@ export const explainPopoverPropertyControls = {
                     textAlign: "center",
                     fontWeight: "500",
                     fontSize: 14,
-                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)'
+                    fontFamily: 'var(--framer-font-family, "Inter", "Inter Placeholder", sans-serif)',
                 },
                 focusOutline: {
                     color: "rgba(255, 255, 255, 0.8)",
                     size: 2,
-                    offset: -1
-                }
+                    offset: -1,
+                },
             }),
             ...createMarginPropertyControls({
-                marginTop: 13
-            })
+                marginTop: 13,
+            }),
         },
-        hidden: (props) => props.useCustomExplain,
+        hidden: props => props.useCustomExplain === true,
     },
     listSeparator: {
         title: "List Separator",
         type: ControlType.Color,
         defaultValue: "rgba(255, 255, 255, 0.3)",
-        hidden: (props) => props.useCustomExplain,
+        hidden: props => props.useCustomExplain === true,
     },
     arrow: {
         title: "Arrow",
@@ -240,13 +248,14 @@ export const explainPopoverPropertyControls = {
     useCustomExplain: {
         title: "Use Custom Popover",
         type: ControlType.Boolean,
-        defaultValue: false
+        defaultValue: false,
     },
 } satisfies PropertyControls<ExplainPopoverProps>;
 
 export const getArrowStyle = (props: ExplainPopoverProps): CSSProperties => ({
-    fill: props.arrow ?? props.popoverBox?.fill
+    fill: props.arrow ?? props.popoverBox?.fill,
 });
 
-export const explainPopoverPropsContext = createContext<ExplainPopoverProps>(null);
-export const useExplainPopoverProps = (): ExplainPopoverProps => useContext(explainPopoverPropsContext);
+export const explainPopoverPropsContext = createContext<ExplainPopoverProps | null>(null);
+export const useExplainPopoverProps = (): ExplainPopoverProps =>
+    useRequiredContext(explainPopoverPropsContext, "Configuration");

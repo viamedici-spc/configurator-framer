@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useClick, useDismiss, useFloating, useInteractions, useRole} from "@floating-ui/react";
+import {useClick, useDismiss, useFloating, useInteractions} from "@floating-ui/react";
 
 export interface DialogOptions {
     initialOpen?: boolean;
@@ -8,11 +8,7 @@ export interface DialogOptions {
 }
 
 export default function useDialog(options: DialogOptions = {}) {
-    const {
-        initialOpen = false,
-        open: controlledOpen,
-        onOpenChange: setControlledOpen
-    } = options;
+    const {initialOpen = false, open: controlledOpen, onOpenChange: setControlledOpen} = options;
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen);
 
     const open = controlledOpen ?? uncontrolledOpen;
@@ -20,19 +16,17 @@ export default function useDialog(options: DialogOptions = {}) {
 
     const data = useFloating({
         open,
-        onOpenChange: setOpen
+        onOpenChange: setOpen,
     });
 
     const context = data.context;
 
     const click = useClick(context, {
-        enabled: controlledOpen == null
+        enabled: controlledOpen == null,
     });
     const dismiss = useDismiss(context, {outsidePressEvent: "mousedown"});
 
     const interactions = useInteractions([click, dismiss]);
 
-    return React.useMemo(() => ({open, setOpen, ...interactions, ...data}),
-        [open, setOpen, interactions, data]
-    );
+    return React.useMemo(() => ({open, setOpen, ...interactions, ...data}), [open, setOpen, interactions, data]);
 }

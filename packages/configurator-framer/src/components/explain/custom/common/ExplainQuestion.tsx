@@ -1,5 +1,7 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer";
-import React, {cloneElement, ReactElement, ReactNode} from "react";
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {ReactElement, ReactNode} from "react";
+import React, {cloneElement} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import Singleton from "../../../Singleton";
 import withErrorBoundary from "../../../../common/withErrorBoundary";
@@ -8,18 +10,19 @@ import useRenderPlaceholder from "../../../../hooks/useRenderPlaceholder";
 import useExplainProcess from "../../../../hooks/useExplainProcess";
 import {getItemTemplate} from "../../../../common/listRenderer";
 import {mapAttributeId} from "../../../../common/RawDataParsing";
-import {ComponentDecisionState, ExplainQuestion, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
+import type {ExplainQuestion as EngineExplainQuestion} from "@viamedici-spc/configurator-ts";
+import {ComponentDecisionState, ExplainQuestionSubject, ExplainQuestionType} from "@viamedici-spc/configurator-ts";
 import {match} from "ts-pattern";
 
 type Props = {
-    template: ReactNode,
-    filter: ExplainQuestionFilter,
-    useInDesignTime: boolean
-}
+    template: ReactNode;
+    filter: ExplainQuestionFilter;
+    useInDesignTime: boolean;
+};
 
 const Root = styled.div`
     display: contents;
-`
+`;
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -27,69 +30,65 @@ const GlobalStyle = createGlobalStyle`
             display: contents !important;
         }
     }
-`
+`;
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-const ExplainQuestion = withErrorBoundary(withControlId((props: Props) => {
-    const controlId = useControlId();
-    const renderPlaceholder = useRenderPlaceholder();
+const ExplainQuestion = withErrorBoundary(
+    withControlId((props: Props) => {
+        const controlId = useControlId();
+        const renderPlaceholder = useRenderPlaceholder();
 
-    const itemTemplate = getItemTemplate(props.template);
-    if (!itemTemplate) {
-        return <span>Template not defined.</span>;
-    }
+        const itemTemplate = getItemTemplate(props.template);
+        if (!itemTemplate) {
+            return <span>Template not defined.</span>;
+        }
 
-    if (renderPlaceholder) {
-        return props.useInDesignTime && (
+        if (renderPlaceholder) {
+            return props.useInDesignTime && <Inner>{renderPlaceholderItem(itemTemplate, controlId)}</Inner>;
+        }
+
+        const process = useExplainProcess();
+        const explainQuestion = process?.explainQuestion ?? null;
+        if (!explainQuestion) {
+            return null;
+        }
+
+        if (!matchExplainQuestionFilter(explainQuestion, props.filter)) {
+            return null;
+        }
+
+        const questionProps = buildQuestionProps(explainQuestion);
+        const layoutId = controlId;
+
+        return (
             <Inner>
-                {renderPlaceholderItem(itemTemplate, controlId)}
+                {cloneElement(itemTemplate, {
+                    key: layoutId,
+                    layoutId,
+                    ...questionProps,
+                })}
             </Inner>
         );
-    }
-
-    const process = useExplainProcess();
-    const explainQuestion = process?.explainQuestion ?? null;
-    if (!explainQuestion) {
-        return null;
-    }
-
-    if (!matchExplainQuestionFilter(explainQuestion, props.filter)) {
-        return null;
-    }
-
-    const questionProps = buildQuestionProps(explainQuestion);
-    const layoutId = controlId;
-
-    return (
-        <Inner>
-            {cloneElement(itemTemplate, {
-                key: layoutId,
-                layoutId,
-                ...questionProps
-            })}
-        </Inner>
-    );
-}));
+    }),
+);
 
 export default ExplainQuestion;
 
-function Inner(props: { children: ReactNode }) {
+function Inner(props: {children: ReactNode}) {
     return (
         <>
             <Singleton singletonId="CustomExplainQuestion">
-                <GlobalStyle/>
+                <GlobalStyle />
             </Singleton>
-            <Root>
-                {props.children}
-            </Root>
+            <Root>{props.children}</Root>
         </>
     );
 }
 
-function buildQuestionProps(question: ExplainQuestion) {
+function buildQuestionProps(question: EngineExplainQuestion) {
     const attributeId = "attributeId" in question ? question.attributeId : null;
     const choiceValueId = "choiceValueId" in question ? question.choiceValueId : null;
     const flattenedAttributeId = attributeId ? mapAttributeId(attributeId) : null;
@@ -113,11 +112,11 @@ function buildQuestionProps(question: ExplainQuestion) {
         sharedConfigurationModel: flattenedAttributeId?.sharedConfigurationModel ?? "",
         choiceValueId: choiceValueId ?? "",
         value,
-        numericValue
+        numericValue,
     };
 }
 
-function renderPlaceholderItem(itemTemplate: ReactElement, controlId: string) {
+function renderPlaceholderItem(itemTemplate: ReactElement, controlId: string | null) {
     const layoutId = `${controlId}_placeholder`;
     return cloneElement(itemTemplate, {
         key: layoutId,
@@ -129,7 +128,7 @@ function renderPlaceholderItem(itemTemplate: ReactElement, controlId: string) {
         sharedConfigurationModel: "",
         choiceValueId: "Red",
         value: null,
-        numericValue: null
+        numericValue: null,
     });
 }
 
@@ -142,35 +141,59 @@ type ExplainQuestionFilter =
     | "booleanValueBlocked"
     | "numericValueBlocked";
 
-function matchExplainQuestionFilter(question: ExplainQuestion, filter: ExplainQuestionFilter): boolean {
+function matchExplainQuestionFilter(question: EngineExplainQuestion, filter: ExplainQuestionFilter): boolean {
     if (filter === "any") {
         return true;
     }
 
     return match(filter)
-        .with("configurationNotSatisfied", () => match(question)
-            .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration}, () => true)
-            .otherwise(() => false)
+        .with("configurationNotSatisfied", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.configuration},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
-        .with("attributeNotSatisfied", () => match(question)
-            .with({question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute}, () => true)
-            .otherwise(() => false)
+        .with("attributeNotSatisfied", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsNotSatisfied, subject: ExplainQuestionSubject.attribute},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
-        .with("choiceValueBlocked", () => match(question)
-            .with({question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.choiceValue}, () => true)
-            .otherwise(() => false)
+        .with("choiceValueBlocked", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.choiceValue},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
-        .with("componentValueBlocked", () => match(question)
-            .with({question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.component}, () => true)
-            .otherwise(() => false)
+        .with("componentValueBlocked", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.component},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
-        .with("booleanValueBlocked", () => match(question)
-            .with({question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.boolean}, () => true)
-            .otherwise(() => false)
+        .with("booleanValueBlocked", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.boolean},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
-        .with("numericValueBlocked", () => match(question)
-            .with({question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.numeric}, () => true)
-            .otherwise(() => false)
+        .with("numericValueBlocked", () =>
+            match(question)
+                .with(
+                    {question: ExplainQuestionType.whyIsStateNotPossible, subject: ExplainQuestionSubject.numeric},
+                    () => true,
+                )
+                .otherwise(() => false),
         )
         .exhaustive();
 }
@@ -178,7 +201,7 @@ function matchExplainQuestionFilter(question: ExplainQuestion, filter: ExplainQu
 const propertyControls: PropertyControls<Props> = {
     template: {
         title: "Template",
-        type: ControlType.ComponentInstance
+        type: ControlType.ComponentInstance,
     },
     filter: {
         title: "Filter",
@@ -191,14 +214,14 @@ const propertyControls: PropertyControls<Props> = {
             "choiceValueBlocked",
             "componentValueBlocked",
             "booleanValueBlocked",
-            "numericValueBlocked"
-        ] satisfies ExplainQuestionFilter[]
+            "numericValueBlocked",
+        ] satisfies ExplainQuestionFilter[],
     },
     useInDesignTime: {
         title: "Design Time",
         type: ControlType.Boolean,
-        defaultValue: true
-    }
+        defaultValue: true,
+    },
 };
 
 addPropertyControls(ExplainQuestion, propertyControls);

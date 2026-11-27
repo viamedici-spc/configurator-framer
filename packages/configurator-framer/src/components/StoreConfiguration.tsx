@@ -1,42 +1,49 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {PropsWithChildren} from "react";
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import type {PropsWithChildren} from "react";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import {useConfigurationStoring} from "@viamedici-spc/configurator-react";
-import {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
+import type {StoredConfigurationEnvelop} from "../common/StoredConfiguration";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
+import withErrorBoundary from "../common/withErrorBoundary";
 
 type Props = {
-    target: "file" | "clipboard"
-    fileName: string,
-    fileExtension: string
-}
+    target: "file" | "clipboard";
+    fileName: string;
+    fileExtension: string;
+};
 
 /**
  * @framerSupportedLayoutWidth any
  * @framerSupportedLayoutHeight any
  */
-export default function StoreConfiguration(props: PropsWithChildren<Props>) {
-    const {children, fileExtension, fileName, target} = props
+const StoreConfiguration = withErrorBoundary(function StoreConfiguration(props: PropsWithChildren<Props>) {
+    const {children, fileExtension, fileName, target} = props;
     const renderPlaceholder = useRenderPlaceholder();
 
     if (renderPlaceholder) {
-        return children
+        return children;
     }
 
     const {storeConfiguration} = useConfigurationStoring();
 
     const onClick = async () => {
         const storedConfiguration = await storeConfiguration();
-        const envelop = {type: "spc-stored-configuration", storedConfiguration: storedConfiguration} satisfies StoredConfigurationEnvelop
+        const envelop = {
+            type: "spc-stored-configuration",
+            storedConfiguration: storedConfiguration,
+        } satisfies StoredConfigurationEnvelop;
         if (target === "file") {
-            downloadJsonFile(envelop, `${fileName}.${fileExtension}`)
+            downloadJsonFile(envelop, `${fileName}.${fileExtension}`);
         } else if (target === "clipboard") {
-            copyJsonToClipboard(envelop)
+            copyJsonToClipboard(envelop);
         }
-    }
+    };
 
-    return cloneChildrenWithProps(children, {onClick})
-}
+    return cloneChildrenWithProps(children, {onClick});
+});
+
+export default StoreConfiguration;
 
 const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
     children: {
@@ -50,44 +57,43 @@ const propertyControls: PropertyControls<PropsWithChildren<Props>> = {
         options: ["file", "clipboard"],
         optionTitles: ["File", "Clipboard"],
         displaySegmentedControl: true,
-        segmentedControlDirection: "vertical"
+        segmentedControlDirection: "vertical",
     },
     fileName: {
         title: "File Name",
         type: ControlType.String,
         defaultValue: "configuration",
-        hidden: p => p.target !== "file"
+        hidden: p => p.target !== "file",
     },
     fileExtension: {
         title: "File Extension",
         type: ControlType.String,
         defaultValue: "json",
-        hidden: p => p.target !== "file"
-    }
-}
+        hidden: p => p.target !== "file",
+    },
+};
 
 addPropertyControls(StoreConfiguration, propertyControls);
 
-function downloadJsonFile(data: Object, filename: string) {
-    const json = JSON.stringify(data)
-    const blob = new Blob([json], {type: "application/json"})
-    const url = window.URL.createObjectURL(blob)
+function downloadJsonFile(data: object, filename: string) {
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], {type: "application/json"});
+    const url = window.URL.createObjectURL(blob);
 
-    const link = document.createElement("a")
-    link.href = url
-    link.download = filename
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
 
-    document.body.appendChild(link)
-    link.click()
+    document.body.appendChild(link);
+    link.click();
 
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
 }
 
-function copyJsonToClipboard(data: Object) {
-    const json = JSON.stringify(data)
-    navigator.clipboard.writeText(json)
-        .catch((error) => {
-            alert("Failed to copy the configuration to clipboard: " + error)
-        })
+function copyJsonToClipboard(data: object) {
+    const json = JSON.stringify(data);
+    navigator.clipboard.writeText(json).catch(error => {
+        alert("Failed to copy the configuration to clipboard: " + error);
+    });
 }

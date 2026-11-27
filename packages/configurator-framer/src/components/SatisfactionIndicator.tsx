@@ -1,20 +1,24 @@
-import {addPropertyControls, ControlType, PropertyControls} from "framer"
-import {useAttributes, useConfigurationSatisfaction} from "@viamedici-spc/configurator-react"
+import type {PropertyControls} from "framer";
+import {addPropertyControls, ControlType} from "framer";
+import {useAttributes, useConfigurationSatisfaction} from "@viamedici-spc/configurator-react";
 import useRenderPlaceholder from "../hooks/useRenderPlaceholder";
 import parseGlobalAttributeId from "../common/parseGlobalAttributeId";
-import {PropsWithChildren, ReactNode} from "react";
-import {attributeIdPropertyControls, AttributeIdProps} from "../props/attributeIdProps";
+import type {PropsWithChildren, ReactNode} from "react";
+import type {AttributeIdProps} from "../props/attributeIdProps";
+import {attributeIdPropertyControls} from "../props/attributeIdProps";
 import cloneChildrenWithProps from "../common/cloneChildrenWithProps";
 import useExplain from "../hooks/useExplain";
-import {explainPropertyControls, ExplainProps} from "../props/explainProps";
+import type {ExplainProps} from "../props/explainProps";
+import {explainPropertyControls} from "../props/explainProps";
 import {useControlId} from "../common/controlId";
 import {explainableComponent} from "../common/componentComposites";
 
-type Props = AttributeIdProps & ExplainProps & {
-    satisfiedChildren: ReactNode,
-    unsatisfiedChildren: ReactNode,
-    attributes: AttributeIdProps[]
-}
+type Props = AttributeIdProps &
+    ExplainProps & {
+        satisfiedChildren: ReactNode;
+        unsatisfiedChildren: ReactNode;
+        attributes: AttributeIdProps[];
+    };
 
 /**
  * @framerSupportedLayoutWidth any
@@ -34,17 +38,19 @@ const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildre
     const attributeIds = [...attributeId, ...props.attributes.map(parseGlobalAttributeId)];
 
     const getAttributesSatisfied = () => {
-        const attributes: { isSatisfied?: boolean, error?: ReactNode }[] = useAttributes(attributeIds, false).map(attribute => {
-            if (!attribute) {
-                return {
-                    error: <span>Attribute not found</span>
-                };
-            }
+        const attributes: {isSatisfied?: boolean; error?: ReactNode}[] = useAttributes(attributeIds, false).map(
+            attribute => {
+                if (!attribute) {
+                    return {
+                        error: <span>Attribute not found</span>,
+                    };
+                }
 
-            return {
-                isSatisfied: attribute.isSatisfied
-            }
-        });
+                return {
+                    isSatisfied: attribute.isSatisfied,
+                };
+            },
+        );
 
         const error = attributes.find(a => a.error)?.error;
         if (error) {
@@ -52,7 +58,7 @@ const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildre
         }
 
         return attributes.every(a => a.isSatisfied);
-    }
+    };
 
     const onClick = async () => {
         if (props.explain === "disabled") return;
@@ -61,11 +67,11 @@ const SatisfactionIndicator = explainableComponent<HTMLElement, PropsWithChildre
         } else if (attributeIds.length === 1) {
             await explain(b => b.whyIsNotSatisfied.attribute(attributeIds[0]), props.explain, controlId);
         }
-    }
+    };
 
     const isSatisfied = attributeIds.length > 0 ? getAttributesSatisfied() : isConfigurationSatisfied;
     return isSatisfied ? props.satisfiedChildren : cloneChildrenWithProps(props.unsatisfiedChildren, {onClick, ref});
-})
+});
 
 export default SatisfactionIndicator;
 
@@ -85,11 +91,11 @@ const propertyControls: PropertyControls<Props> = {
         control: {
             type: ControlType.Object,
             controls: {
-                ...attributeIdPropertyControls
-            }
-        }
+                ...attributeIdPropertyControls,
+            },
+        },
     },
-    ...explainPropertyControls
-}
+    ...explainPropertyControls,
+};
 
 addPropertyControls(SatisfactionIndicator, propertyControls);

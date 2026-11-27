@@ -1,6 +1,7 @@
 import {useMergeRefs} from "@floating-ui/react";
 import {useDialogContext} from "./Dialog";
-import {Children, cloneElement, forwardRef, isValidElement, PropsWithChildren} from "react";
+import type {PropsWithChildren} from "react";
+import {Children, cloneElement, forwardRef, isValidElement} from "react";
 
 const DialogTrigger = forwardRef<Element, PropsWithChildren>(function DialogTrigger(props, propRef) {
     const children = Children.toArray(props.children)[0];
@@ -15,12 +16,12 @@ const DialogTrigger = forwardRef<Element, PropsWithChildren>(function DialogTrig
                 ref,
                 ...props,
                 ...children.props,
-                "data-state": context.open ? "open" : "closed"
-            })
+                "data-state": context.open ? "open" : "closed",
+            }),
         );
     }
 
-    return <span>Not valid children for DialogTrigger</span>
+    return <span>Not valid children for DialogTrigger</span>;
 });
 
 export default DialogTrigger;

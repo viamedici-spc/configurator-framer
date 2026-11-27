@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useExplainProcess from "../../../../hooks/useExplainProcess";
+import {useOngoingExplainProcess} from "../../../../hooks/useExplainProcess";
 import AttributeList from "../common/AttributeList";
 import ShowMoreButton from "./ShowMoreButton";
 import ApplySolutionButton from "../common/ApplySolutionButton";
@@ -10,7 +10,7 @@ import {getExplainAttributes} from "../../common/explainAttributes";
 
 const SolutionTitle = styled.div`
     margin-bottom: var(--space-xs);
-`
+`;
 
 const Separator = styled.div`
     height: 1px;
@@ -21,13 +21,13 @@ const Separator = styled.div`
     @media only screen and (min-resolution: 2dppx) {
         height: 0.5px;
     }
-`
+`;
 
 const Actions = styled.div`
     display: flex;
     flex-direction: column;
     container: explain-actions / inline-size;
-`
+`;
 
 const StyledAttributeList = styled(AttributeList)`
     display: grid;
@@ -39,7 +39,7 @@ const StyledAttributeList = styled(AttributeList)`
     margin-right: calc(var(--size-explain-popover-box-padding-right) * -1);
     overflow: auto;
     max-height: 200px;
-`
+`;
 
 const StyledApplySolutionButton = styled(ApplySolutionButton)`
     align-self: stretch;
@@ -47,28 +47,28 @@ const StyledApplySolutionButton = styled(ApplySolutionButton)`
     @container explain-actions (min-width: 300px) {
         align-self: center;
     }
-`
+`;
 
 const StyledInfoMessage = styled(InfoMessage)`
     width: min-content;
     min-width: 300px;
-`
+`;
 
 export default function ExplainContent() {
-    const {decisionExplanations, constraintExplanations, hasError} = useExplainProcess();
+    const {decisionExplanations, constraintExplanations, hasError} = useOngoingExplainProcess();
     const {subline} = useExplainPopoverProps();
 
     if (hasError) {
-        return <StyledInfoMessage variant="failedToExplain"/>
+        return <StyledInfoMessage variant="failedToExplain" />;
     }
 
     const explanation = decisionExplanations[0];
     if (!explanation) {
-        return <StyledInfoMessage variant="noExplanationFound"/>
+        return <StyledInfoMessage variant="noExplanationFound" />;
     }
 
     if (!explanation.solution) {
-        return <StyledInfoMessage variant="noSolutionFound"/>
+        return <StyledInfoMessage variant="noSolutionFound" />;
     }
 
     const attributes = getExplainAttributes(explanation);
@@ -76,14 +76,14 @@ export default function ExplainContent() {
         <>
             <SolutionTitle style={getStaticTextStyle(subline)}>{subline.staticText}</SolutionTitle>
 
-            <Separator/>
-            <StyledAttributeList attributes={attributes}/>
-            <Separator/>
+            <Separator />
+            <StyledAttributeList attributes={attributes} />
+            <Separator />
 
             <Actions>
-                <StyledApplySolutionButton explanation={explanation}/>
+                <StyledApplySolutionButton explanation={explanation} />
 
-                {(decisionExplanations.length > 1 || constraintExplanations.length > 0) && <ShowMoreButton/>}
+                {(decisionExplanations.length > 1 || constraintExplanations.length > 0) && <ShowMoreButton />}
             </Actions>
         </>
     );

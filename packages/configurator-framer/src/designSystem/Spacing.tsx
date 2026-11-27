@@ -20,6 +20,6 @@ const Spacing = createGlobalStyle`
         --space-xl-fixed: calc(3.25 * var(--space-unit-fixed));
         --space-xxl-fixed: calc(5.25 * var(--space-unit-fixed));
     }
-`
+`;
 
 export default Spacing;
