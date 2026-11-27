@@ -18,9 +18,11 @@ From the repository root, before a change counts as done. It is the one gate, an
 checks: the build must leave `package.json` unchanged (`packages/configurator-framer/package-check/build.ts`); a
 consumer type check imports every entry of the `exports` map by the package name and uses each of its runtime exports as
 a value (`packages/configurator-framer/package-check/consumer.ts`), which catches a declaration that does not declare
-what the JavaScript exports; publint and arethetypeswrong check how the package resolves. The build is part of it only
-because the package checks need the artifact; on its own it proves nothing. `bun fmt` is not a verdict either: it
-rewrites rather than reports, so it always succeeds; the format check is the one that answers.
+what the JavaScript exports; publint and arethetypeswrong check how the package resolves. They live in
+`packages/configurator-framer/package-check/` inside the library's own package, not in a workspace package of their own:
+the consumer type check imports the library by its own name, and that resolves only from inside the package. The build
+is part of it only because the package checks need the artifact; on its own it proves nothing. `bun fmt` is not a
+verdict either: it rewrites rather than reports, so it always succeeds; the format check is the one that answers.
 
 The test step is Vitest with jsdom (React 18.3, the version Framer runs). The tests mock the session.
 **A step is green when its exit code is 0, and only then.** Silence is not green. Never wrap a check so that failing
